@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+
+    </h:head>
+    <h:body>
+
+
+        <ui:composition template="/template/common/homeLayout.xhtml">
+
+
+
+            <ui:define name="leftBar">
+                
+                <h:form> 
+                <p:selectManyCheckbox id="calendarLeftBoxGrid" value="#{scheduleBean.chosenCalendars}" layout="grid" columns="1" >
+                    <f:selectItems value="#{scheduleBean.userCalendars}" var="cal" itemLabel="#{cal.title} #{scheduleBean.colorCalendarString}" itemValue="#{cal.id}" />
+                    
+                </p:selectManyCheckbox> 
+                    <p:commandButton update=":home:schedule" value="Update" action="#{scheduleBean.updateScheduleModel()}"/>    
+                </h:form>    
+
+            </ui:define>
+            <ui:define name="content">
+
+                <h:form id="home">
+                <p:schedule id="schedule" value="#{scheduleBean.model}" aspectRatio="2" styleClass="scheduleHome"  ignoreTimezone="false" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule">
+                    <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}"
+                            update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                    <p:ajax event="eventSelect" listener="#{scheduleBean.onEventSelect}"
+                            update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                </p:schedule>
+                
+                    
+                <p:dialog widgetVar="eventDialog" header="Event Details" resizable="false" style="height:50% !important; height:40% !important; top:25% !important; left: 30% !important;">
+                    <h:form id="eventDetails" >
+                        <h:panelGrid columns="2">
+                            <h:outputLabel for="title" value="Title:" />
+                            <p:inputText id="title" value="#{scheduleBean.event.title}" required="true"/>
+                            <h:outputLabel for="startdatetime" value="From:" />
+                            <p:calendar id="startdatetime" value="#{scheduleBean.event.startDate}" pattern="MM/dd/yyyy HH:mm:ss" />
+
+                            <h:outputLabel for="enddatetime" value="To:" />
+                            <p:calendar id="enddatetime" value="#{scheduleBean.event.endDate}" pattern="MM/dd/yyyy HH:mm:ss" />
+
+                            <h:outputLabel for="CalendarForEvent" value="Calendar:" />
+                            <p:selectOneMenu id="CalendarForEvent" value="#{scheduleBean.calendarId}" >
+                                <f:selectItem itemLabel="Select Calendar"  noSelectionOption="false" />
+                                <f:selectItems value="#{scheduleBean.userCalendars}" var="cal" itemValue="#{cal.id}" itemLabel="#{cal.title}" />
+                            </p:selectOneMenu>
+                            
+                            <h:outputLabel for="TypeForEvent" value="EventType:" />
+                            <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" >
+                                <f:selectItem itemLabel="Select Calendar"  noSelectionOption="false" />
+                                <f:selectItems value="#{scheduleBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
+                            </p:selectOneMenu>
+
+                            <h:form id="eventLocation">
+                                <p:inputText id="addressForEvent" onchange="" />
+                            </h:form>
+                            <p:commandButton value="Geocode" icon="ui-icon-search" onclick="codeAddress()" type="button" />             
+
+                            <h:outputLabel for="allDay" value="All Day:" />
+                            <h:selectBooleanCheckbox id="allDay" value="#{scheduleBean.event.allDay}" />
+                            <p:commandButton type="reset" value="Reset" />
+                            <p:commandButton value="Save" actionListener="#{scheduleBean.addEvent()}"
+                                             oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+
+
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+                <h:form>
+                    <p:remoteCommand name="gc" process="@this @form" autoRun="false"  actionListener="#{scheduleBean.onGeolocation()}" />
+
+                </h:form>
+               </h:form>     
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body> 
+</html>
+
