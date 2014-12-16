@@ -74,7 +74,7 @@ public class User implements Serializable,SearchResult {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private Collection<Calendar> calendarCollection;
     private static final long serialVersionUID = 1L;
-  //  @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Insert a valid Email address")
     @Id
     @Basic(optional = false)
     @NotNull
@@ -83,12 +83,12 @@ public class User implements Serializable,SearchResult {
     private String email;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 30)
+    @Size(min = 1, max = 30, message="Insert a valid name")
     @Column(name = "Name")
     private String name;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 30)
+    @Size(min = 1, max = 30, message="Insert a valid surname")
     @Column(name = "Surname")
     private String surname;
     @Size(max = 70)
@@ -100,7 +100,7 @@ public class User implements Serializable,SearchResult {
     private int phoneNumber;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
+    @Size(min = 1, max = 255, message="Insert a valid password")
     @Column(name = "Password")
     private String password;
 
@@ -178,17 +178,6 @@ public class User implements Serializable,SearchResult {
          sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
         }
         this.password = sb.toString();
-            /*          byte[] hash = digest.digest(password.getBytes("UTF-8"));
-            BigInteger bigInt = new BigInteger(1, hash);
-            this.password = bigInt.toString(16);
-            StringBuilder hexString = new StringBuilder();
-            for (int i = 0; i < hash.length; i++) {
-            hexString.append(Integer.toHexString(0xFF & hash[i]));
-            }
-            this.password = hexString.toString();
-            } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-            } */
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }

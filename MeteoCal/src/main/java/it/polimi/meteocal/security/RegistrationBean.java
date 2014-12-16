@@ -53,16 +53,15 @@ public class RegistrationBean {
     }
 
     public String register() {
-        try {
+         if (um.notExist(user)) {
             um.save(user);
             return "user/home?faces-redirect=true";           
-        } catch (Exception e) {
+        } else {
             FacesContext context = FacesContext.getCurrentInstance();
             FacesMessage msg = new FacesMessage("This Email address is already registered");
             context.addMessage(inputEmail.getClientId(context), msg);
-            return "index?faces-redirect=false";           
-        }
-        
+            return "index?faces-redirect=false"; 
+        } 
     }
 
 }

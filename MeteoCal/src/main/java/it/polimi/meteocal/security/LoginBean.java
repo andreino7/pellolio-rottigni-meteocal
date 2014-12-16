@@ -52,7 +52,7 @@ public class LoginBean {
         try {
             request.login(this.email, this.password);
         } catch (ServletException e) {
-            context.addMessage(null, new FacesMessage("Login failed."));
+            context.addMessage(null, new FacesMessage("Invalid Email or password."));
             return "login";
         }
         return "/user/home";

@@ -54,6 +54,10 @@ public class UserManager {
         return false;
     }
     
+    public boolean notExist(User user) {
+       return (em.find(user.getClass(), user.getEmail()) == null);
+    }
+    
     public User findUserforId(String id){
         if (id!=null ){
         return   em.find(User.class, id);
