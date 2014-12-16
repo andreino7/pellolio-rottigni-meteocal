@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition>
+            <div id="topleftbar">
+                <h:link outcome="/faces/user/home.xhtml"> 
+                    <h:graphicImage id="top-bar-logo" value="/resources/img/smalllogo.png"/> 
+                </h:link> 
+
+                <div id="searchBoxDiv">
+                    <div id="searchBoxCenterer">
+                        <h:form>
+                            <p:autoComplete value="#{searchBean.res}" var="res" itemLabel="#{res.title}" 
+                                            completeMethod="#{searchBean.complete}" itemValue="val" 
+                                            converter="UserConverter" maxResults="5" 
+                                            groupBy="#{res.group}">
+                                
+                                <p:column>
+                                    
+                                </p:column>
+                                
+                                <p:column>
+                                    <h:link outcome="/user/UserProfile.xhtml" value="#{res.title}">
+                                        <f:param name="id" value="#{res.prime}"/>
+                                    </h:link>
+                                </p:column>
+                                
+                                    
+                            </p:autoComplete>
+                            <h:commandButton styleClass="searchbutton" action="#" value=" "/>
+                        </h:form>
+                    </div>    
+                </div>    
+            </div>
+
+            <div id="userBar">
+                <h:graphicImage value="/resources/#{userBean.profilePhoto}" id="userPhotoBar"/>
+                <p:link id="userBarNameButton" outcome="/user/UserProfile.xhtml" value="#{userBean.name} #{userBean.surname}">
+                    <f:param name="id" value="#{userBean.email}"/>
+                </p:link>
+                <h:button styleClass="userBarLogoutButton" outcome="/faces/user/logout.xhtml" value="Logout"/>
+
+            </div>
+        </ui:composition>
+    </body>
+</html>
+
+

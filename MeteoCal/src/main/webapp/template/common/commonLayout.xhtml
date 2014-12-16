@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+
+	<h:head>
+		<h:outputStylesheet name="common-style.css" library="css" />
+                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvQMT2jUvbqqp32py6OeStXM7sVu8ASNg"/>
+                <h:outputScript name="geoloc.js" library="js"/>
+                <title> MeteoCal </title>
+	</h:head>
+    
+    <h:body>
+
+	<div id="page">
+		
+		<div id="header">
+			<ui:insert name="header" >
+				<ui:include src="/WEB-INF/commonHeader.xhtml" />
+			</ui:insert>
+	    </div>
+	    
+	    <div id="content">
+
+		   	<ui:insert name="content" >
+		   		<ui:include src="/WEB-INF/commonContent.xhtml" />
+		   	</ui:insert>
+	    </div>
+		    
+	    <div id="footer">
+	    	<ui:insert name="footer" >
+	    		<ui:include src="/WEB-INF/commonFooter.xhtml" />
+	    	</ui:insert>
+    	</div>
+    	
+    </div>
+    
+    </h:body>
+
+</html>
