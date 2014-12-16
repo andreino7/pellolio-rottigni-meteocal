@@ -7,7 +7,13 @@ package it.polimi.meteocal.entity;
 
 import it.polimi.meteocal.security.SearchResult;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +24,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -67,7 +74,7 @@ public class User implements Serializable,SearchResult {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private Collection<Calendar> calendarCollection;
     private static final long serialVersionUID = 1L;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+  //  @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Id
     @Basic(optional = false)
     @NotNull
@@ -159,8 +166,34 @@ public class User implements Serializable,SearchResult {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+             md.update(password.getBytes());
+ 
+        byte byteData[] = md.digest();
+ 
+        //convert the byte to hex format method 1
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+         sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        this.password = sb.toString();
+            /*          byte[] hash = digest.digest(password.getBytes("UTF-8"));
+            BigInteger bigInt = new BigInteger(1, hash);
+            this.password = bigInt.toString(16);
+            StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < hash.length; i++) {
+            hexString.append(Integer.toHexString(0xFF & hash[i]));
+            }
+            this.password = hexString.toString();
+            } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            } */
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+
 
     @Override
     public int hashCode() {
