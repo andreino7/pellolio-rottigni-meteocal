@@ -1,0 +1,165 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 4-dic-2014, 17.48.04
+    Author     : Andrea
+*/
+
+.input {
+  display: block;
+  
+}
+.labelName {
+  position: absolute;
+  cursor: text;
+  pointer-events: none;
+  color: #999;
+  /* Input padding + input border */
+  padding-top: 25px;
+  /* Firefox does not respond well to different line heights. Use padding instead. */
+  line-height: 1px;
+  /* This gives a little gap between the cursor and the label */
+  margin-left: 6px;
+  font-weight: lighter;
+  font-size: 20px;
+  font-family:"Helvetica";
+  height: 40px;
+  width:300px;
+}
+
+.labelSurname {
+  position: absolute;
+  cursor: text;
+  pointer-events: none;
+  color: #999;
+  /* Input padding + input border */
+  padding-top: 70px;
+  /* Firefox does not respond well to different line heights. Use padding instead. */
+  line-height: 1px;
+  /* This gives a little gap between the cursor and the label */
+  margin-left: 6px;
+  font-weight: lighter;
+  font-size: 20px;
+  font-family:"Helvetica";
+  height: 40px;
+  width:300px;
+}
+
+.labelEmail {
+  position: absolute;
+  cursor: text;
+  pointer-events: none;
+  color: #999;
+  /* Input padding + input border */
+  padding-top: 115px;
+  /* Firefox does not respond well to different line heights. Use padding instead. */
+  line-height: 1px;
+  /* This gives a little gap between the cursor and the label */
+  margin-left: 6px;
+  font-weight: lighter;
+  font-size: 20px;
+  font-family:"Helvetica";
+  height: 40px;
+  width:300px;
+}
+
+.labelPassword {
+  position: absolute;
+  cursor: text;
+  pointer-events: none;
+  color: #999;
+  /* Input padding + input border */
+  padding-top: 160px;
+  /* Firefox does not respond well to different line heights. Use padding instead. */
+  line-height: 1px;
+  /* This gives a little gap between the cursor and the label */
+  margin-left: 6px;
+  font-weight: lighter;
+  font-size: 20px;
+  font-family:"Helvetica";
+  height: 40px;
+  width:300px;
+}
+
+
+.inputStyle{
+    height:40px;
+    width:300px;
+    color: black;
+    font-size:20px;
+    font-family:"Helvetica";
+    font-weight: lighter;
+    margin-bottom: 0px;
+}
+
+.buttonStyle{
+     position: absolute;
+     width: 305px;
+     height: 45px;
+     border: 0;
+     color: white;
+     background-color: sandybrown;
+     font-size: 20px;
+     margin-top: 190px;
+     margin-left: 3.5px;
+}
+
+.formall{
+    height: 250px;
+    width: 600px;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -125px;
+    margin-left: -156px;
+}
+
+.errorMessage {
+    color: red;
+    font-family: "Helvetica";
+    font-size: 14px;
+}
+
+.panel1{
+    position: absolute;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.panel2{
+    position: absolute;
+    margin-top: 45px;
+    padding-top: 0px;   
+}
+
+.panel3{
+    position: absolute;
+    margin-top: 90px;
+    padding-top: 0px;
+}
+
+.panel4{
+    position: absolute;
+    margin-top: 135px;
+    padding-top: 0px;
+}
+
+.labelPanel{
+    position: fixed;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+
+
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}

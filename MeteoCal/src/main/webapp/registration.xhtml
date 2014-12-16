@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <h:outputStylesheet name="styles.css"/>
+        <h:outputScript name="jquery-1.11.1.js" target="head"/>
+        <h:outputScript name="registrationScript.js" target="head" />
+    </h:head>
+    <h:body>
+        
+        <h:form id="regForm" class="formall">
+            <h:panelGrid columns="2" class="panel1" >
+                    <h:inputText id="inputName" class="inputStyle" value="#{registrationBean.user.name}"/>
+                    <h:message id="nameMsg" for="inputName" class="errorMessage"/>
+            </h:panelGrid>
+            <h:panelGrid columns="2" class="panel2">
+                    <h:inputText id="inputSurname" class="inputStyle" value="#{registrationBean.user.surname}" />
+                    <h:message id="surnameMsg" for="inputSurname" class="errorMessage" />
+            </h:panelGrid>
+            <h:panelGrid columns="3" class="panel3" >
+                    <h:inputText id="inputEmail" class="inputStyle" value="#{registrationBean.user.email}"
+                                 binding="#{registrationBean.inputEmail}"/>
+                    <h:message id="emailMsg" for="inputEmail" class="errorMessage"  />
+            </h:panelGrid>
+            <h:panelGrid columns="2" class="panel4">
+                    <h:inputSecret id="inputPassword" class="inputStyle" value="#{registrationBean.user.password}"/>
+                    <h:message id="passwordMsg" for="inputPassword" class="errorMessage" />
+            </h:panelGrid>
+                <h:outputLabel id="labelName" class="labelName" value="Name"/>
+                <h:outputLabel id="labelSurname" class="labelSurname" value="Surname"/>
+                <h:outputLabel id="labelEmail" class="labelEmail" value="Email"/>
+                <h:outputLabel id="labelPassword" class="labelPassword" value="Password"/>
+            <h:commandButton class="buttonStyle" value="Register" 
+                             action="#{registrationBean.register()}"/>
+
+        </h:form>
+    </h:body>
+</html>
+
