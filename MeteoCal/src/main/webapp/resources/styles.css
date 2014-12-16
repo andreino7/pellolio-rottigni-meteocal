@@ -66,23 +66,6 @@ and open the template in the editor.
   width:300px;
 }
 
-.labelPassword {
-  position: absolute;
-  cursor: text;
-  pointer-events: none;
-  color: #999;
-  /* Input padding + input border */
-  padding-top: 160px;
-  /* Firefox does not respond well to different line heights. Use padding instead. */
-  line-height: 1px;
-  /* This gives a little gap between the cursor and the label */
-  margin-left: 6px;
-  font-weight: lighter;
-  font-size: 20px;
-  font-family:"Helvetica";
-  height: 40px;
-  width:300px;
-}
 
 
 .inputStyle{
@@ -104,6 +87,18 @@ and open the template in the editor.
      background-color: sandybrown;
      font-size: 20px;
      margin-top: 190px;
+     margin-left: 3.5px;
+}
+
+.buttonLoginStyle{
+     position: absolute;
+     width: 305px;
+     height: 45px;
+     border: 0;
+     color: white;
+     background-color: sandybrown;
+     font-size: 20px;
+     margin-top: 105px;
      margin-left: 3.5px;
 }
 
@@ -155,6 +150,78 @@ and open the template in the editor.
 }
 
 
+.loginPanel1{
+    position: absolute;
+    margin-top: 5px;
+    padding-top: 0px;
+}
+
+.loginPanel2{
+    position: absolute;
+    margin-top: 50px;
+    padding-top: 0px;
+}
+
+.labelPassword {
+  position: absolute;
+  cursor: text;
+  pointer-events: none;
+  color: #999;
+  /* Input padding + input border */
+  padding-top: 160px;
+  /* Firefox does not respond well to different line heights. Use padding instead. */
+  line-height: 1px;
+  /* This gives a little gap between the cursor and the label */
+  margin-left: 6px;
+  font-weight: lighter;
+  font-size: 20px;
+  font-family:"Helvetica";
+  height: 40px;
+  width:300px;
+}
+
+.labelEmailLog {
+  position: absolute;
+  cursor: text;
+  pointer-events: none;
+  color: #999;
+  /* Input padding + input border */
+  padding-top: 30px;
+  /* Firefox does not respond well to different line heights. Use padding instead. */
+  line-height: 1px;
+  /* This gives a little gap between the cursor and the label */
+  margin-left: 6px;
+  font-weight: lighter;
+  font-size: 20px;
+  font-family:"Helvetica";
+  height: 40px;
+  width:300px;
+}
+
+.labelPasswordLog {
+  position: absolute;
+  cursor: text;
+  pointer-events: none;
+  color: #999;
+  /* Input padding + input border */
+  padding-top: 75px;
+  /* Firefox does not respond well to different line heights. Use padding instead. */
+  line-height: 1px;
+  /* This gives a little gap between the cursor and the label */
+  margin-left: 6px;
+  font-weight: lighter;
+  font-size: 20px;
+  font-family:"Helvetica";
+  height: 40px;
+  width:300px;
+}
+
+.linkStyle {
+    position: absolute;
+    margin-top: 155px;
+    margin-left: 125px;
+    font-size: 20px;
+}
 
 
 input:focus,

@@ -23,9 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequestScoped
 public class LoginBean {
 
-    @EJB
-    private UserManager userManager;
-
     
     private String email;
     private String password;
@@ -49,6 +46,17 @@ public class LoginBean {
         this.password = password;
     }
 
+     public String login() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        try {
+            request.login(this.email, this.password);
+        } catch (ServletException e) {
+            context.addMessage(null, new FacesMessage("Login failed."));
+            return "login";
+        }
+        return "/user/home";
+    }
   
 
     public void logout() {
