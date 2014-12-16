@@ -223,6 +223,16 @@ and open the template in the editor.
     font-size: 20px;
 }
 
+#loginMsg{
+    height: 250px;
+    width: 600px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -70px;
+    margin-left: 155px;
+    font-size: 16px;
+}
 
 input:focus,
 select:focus,

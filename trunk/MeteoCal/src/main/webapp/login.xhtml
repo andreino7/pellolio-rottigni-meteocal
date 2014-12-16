@@ -14,11 +14,11 @@
     <h:body style="width: 100%">
         <h:form id="loginForm" class="formall">
             <div id="logoBox"/>
-            <h:panelGrid columns="3" class="loginPanel1" >
+            <h:panelGrid columns="1" class="loginPanel1" >
                 <h:inputText id="inputEmail" class="inputStyle" value="#{loginBean.email}"/>
                     <h:message id="emailMsg" for="inputEmail" class="errorMessage"  />
             </h:panelGrid>
-            <h:panelGrid columns="2" class="loginPanel2">
+            <h:panelGrid columns="1" class="loginPanel2">
                 <h:inputSecret id="inputPassword" class="inputStyle" value="#{loginBean.password}"/>
                     <h:message id="passwordMsg" for="inputPassword" class="errorMessage" />
             </h:panelGrid>
@@ -28,6 +28,8 @@
                              action="#{loginBean.login()}"/>
             <h:link outcome="registration.xhtml" value="Register" class="linkStyle"/>
         </h:form>
+        <h:messages id="loginMsg" layout="table" class="errorMessage" />
+
     </h:body>
 </html>
 
