@@ -41,11 +41,16 @@
             </div>
 
             <div id="userBar">
+                <h:form styleClass="ButtonNotificationsForm">
+                <p:menuButton value="" styleClass="ButtonNotifications">
+                    
+                </p:menuButton>
+                    </h:form>    
                 <h:graphicImage value="/resources/#{userBean.profilePhoto}" id="userPhotoBar"/>
                 <p:link id="userBarNameButton" outcome="/user/UserProfile.xhtml" value="#{userBean.name} #{userBean.surname}">
                     <f:param name="id" value="#{userBean.email}"/>
                 </p:link>
-                <h:button styleClass="userBarLogoutButton" outcome="/faces/user/logout.xhtml" value="Logout"/>
+                <p:link styleClass="userBarLogoutButton" outcome="/faces/user/logout.xhtml" value="Logout"/>
 
             </div>
         </ui:composition>

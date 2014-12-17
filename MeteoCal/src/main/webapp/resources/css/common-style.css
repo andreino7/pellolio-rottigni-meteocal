@@ -154,8 +154,42 @@ html, body { margin: 0;
     height: 100%;
     display: block;
     float:right;
+    
+    vertical-align: middle;
+    text-decoration: none;
+    line-height: 50px;
+    margin-left: 5px;
+}     
 
-}                     
+.ButtonNotificationsForm{
+    border: 0;
+    background-color: #eab936;
+    height: 50px;
+    display: block;
+    float:left;
+}
+.ButtonNotifications .ui-button {
+        background-color: #eab936;
+       
+      
+        height: 50px;
+        display: block;
+        position: auto;
+}
+.ButtonNotifications .ui-icon { 
+    background: url(http://localhost:8080/MeteoCal/faces/javax.faces.resource/img/notifications.png) 50% 50% / 80% no-repeat no-repeat;
+    height:50px;
+    left:0;
+    margin:0 !important;
+    position:absolute;
+    top:0 !important;
+    width:40px;
+}
+.ButtonNotifications .ui-button .ui-button-text{
+        background-color: #eab936;
+        height: 50px;
+        display: block;
+}
 #userBarNameButton{
     border: 0;
     background-color: #eab936;
