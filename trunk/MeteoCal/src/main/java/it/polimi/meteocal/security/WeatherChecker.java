@@ -23,7 +23,7 @@ import javax.ws.rs.core.MediaType;
  * @author Andrea
  */
 @Stateless
-public class WeatherCheacker {
+public class WeatherChecker {
 
     private static final String APPID ="9d8f6daef04fa46457a706f694d929b7";
     private static final String BASEURL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";

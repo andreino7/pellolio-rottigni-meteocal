@@ -7,8 +7,11 @@ package it.polimi.meteocal.security;
 
 import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.Event;
+import java.util.Date;
+import java.util.List;
 import it.polimi.meteocal.entity.EventCalendar;
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -18,6 +21,8 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class EventManager {
+
+
 
     @PersistenceContext
     private EntityManager em;
@@ -47,6 +52,14 @@ public class EventManager {
         em.merge(e);
     }
     
+    public List<Event> findByDay(Date d1, Date d2) {
+        Query q = em.createNamedQuery("Event.findByDay");
+        q.setParameter("date1", d1);
+        q.setParameter("date2", d2);
+        List<Event> events = q.getResultList();
+        return events;
+    }
+
     public void linkToCalendar(Event e,Calendar c){
         EventCalendar ec= new EventCalendar();
         ec.setEvent(e);
