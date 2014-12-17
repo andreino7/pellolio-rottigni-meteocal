@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.entity;
 
+import it.polimi.meteocal.security.Notification;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -32,13 +33,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "ResponseNotification.findAll", query = "SELECT r FROM ResponseNotification r"),
     @NamedQuery(name = "ResponseNotification.findById", query = "SELECT r FROM ResponseNotification r WHERE r.id = :id"),
+    @NamedQuery(name = "ResponseNotification.findByReceiver", query = "SELECT w FROM ResponseNotification w WHERE w.receiver.email = :user"),
+
     @NamedQuery(name = "ResponseNotification.findByState", query = "SELECT r FROM ResponseNotification r WHERE r.state = :state")})
-public class ResponseNotification implements Serializable {
+public class ResponseNotification implements Serializable,Notification {
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Column(name = "Answer")
-    private byte[] answer;
+    private boolean answer;
+    public static final String findByReceiver= "ResponseNotification.findByReceiver";
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,7 +74,7 @@ public class ResponseNotification implements Serializable {
         this.id = id;
     }
 
-    public ResponseNotification(Integer id, String state, byte[] answer) {
+    public ResponseNotification(Integer id, String state, boolean answer) {
         this.id = id;
         this.state = state;
         this.answer = answer;
@@ -150,11 +154,20 @@ public class ResponseNotification implements Serializable {
         return "it.polimi.meteocal.entity.ResponseNotification[ id=" + id + " ]";
     }
 
-    public byte[] getAnswer() {
+
+    @Override
+    public String getText() {
+        
+       
+        
+        return  sender.getTitle()+" has answered: "+(answer?"Yes":"NO") +" to your invite at the event: "+about.getTitle();
+    }
+
+    public boolean getAnswer() {
         return answer;
     }
 
-    public void setAnswer(byte[] answer) {
+    public void setAnswer(boolean answer) {
         this.answer = answer;
     }
     
