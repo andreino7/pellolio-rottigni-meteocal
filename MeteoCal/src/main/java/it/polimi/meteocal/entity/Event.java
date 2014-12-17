@@ -46,6 +46,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Event.findByEndDate", query = "SELECT e FROM Event e WHERE e.endDate = :endDate"),
     @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location")})
 public class Event implements Serializable,SearchResult {
+    @Size(max = 45)
+    @Column(name = "Weather")
+    private String weather;
     public static final String findByPartOfTitle="Event.findByPartOfTitle";
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "about")
     private Collection<WeatherNotification> weatherNotificationCollection;
@@ -258,6 +261,14 @@ public class Event implements Serializable,SearchResult {
     @Override
     public String getPrime() {
         return String.valueOf(this.id);
+    }
+
+    public String getWeather() {
+        return weather;
+    }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
     }
 
    

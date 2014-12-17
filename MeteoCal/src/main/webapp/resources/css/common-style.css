@@ -194,4 +194,13 @@ html, body { margin: 0;
     margin: auto;
 }
 
+.sunny{
+    background: url(img/sunny.png) no-repeat center center;
+    background-size: auto 100%;
+    background-position: bottom right;
+}
+
+.red{
+    background-color: red !important;
+}
 

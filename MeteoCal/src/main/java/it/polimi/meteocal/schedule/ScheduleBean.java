@@ -10,6 +10,8 @@ import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.EventCalendar;
 import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.entity.User;
+import it.polimi.meteocal.security.CalendarManager;
+import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.UserManager;
 import java.io.Serializable;
 import java.util.Date;
@@ -36,14 +38,23 @@ import org.primefaces.model.ScheduleModel;
 @SessionScoped
 public class ScheduleBean implements Serializable {
 
-    private ScheduleModel model;
+    private static final Integer eventNotInDB = -1;
+    private MeteoCalScheduleModel model;
     @EJB
     private UserManager userManager;
+
+    @EJB
+    private CalendarManager calendarManager;
+
+    @EJB
+    private EventManager eventManager;
+
     @PersistenceContext
     private EntityManager em;
 
     private Integer calendarId;
 
+    private List<String> visibilities = new LinkedList<String>();
     private List<EventType> userTypes;
     private List<Calendar> userCalendars;
     private List<String> chosenCalendars;
@@ -54,6 +65,12 @@ public class ScheduleBean implements Serializable {
     private String color;
     private List<String> colors;
 
+    public List<String> getVisibilities() {
+        return visibilities;
+    }
+    
+    
+
     public String getColor() {
         return color;
     }
@@ -63,7 +80,7 @@ public class ScheduleBean implements Serializable {
     }
 
     public List<String> getColors() {
-       List<String> ls= new LinkedList<String>();
+        List<String> ls = new LinkedList<String>();
         ls.add("Red");
         ls.add("Green");
         return ls;
@@ -72,7 +89,6 @@ public class ScheduleBean implements Serializable {
     public void setColors(List<String> colors) {
         this.colors = colors;
     }
-    
 
     public String getColorCalendarString() {
         return "<p:selectOneMenu id=\"car\" rendered=\"true\" value=\"#{scheduleBean.color}\">\n"
@@ -132,7 +148,7 @@ public class ScheduleBean implements Serializable {
     }
 
     public ScheduleBean() {
-        model = new DefaultScheduleModel();
+        model = new MeteoCalScheduleModel();
 
         System.out.println("aaaaaaa");
     }
@@ -146,17 +162,11 @@ public class ScheduleBean implements Serializable {
     private void postConstruct() {
         User user = userManager.getLoggedUser();
 
-        List<Event> evList;
+        updateScheduleModel();
 
-        evList = (List<Event>) em.createNamedQuery(EventCalendar.findEventsForUser, Event.class).setParameter("userSelected", user.getEmail()).getResultList();
-
-        for (Event ev : evList) {
-            DefaultScheduleEvent scheduleEvent = new DefaultScheduleEvent(ev.getTitle(), ev.getDate(), ev.getEndDate());
-
-            model.addEvent(scheduleEvent);
-
-        }
-
+        visibilities.add(Visibility.Private);
+        visibilities.add(Visibility.Public);
+        event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
         userTypes = (List<EventType>) em.createNamedQuery(EventType.findAllTypesForUser, EventType.class).setParameter("user", user.getEmail()).getResultList();
         /* userCalendars=new HashMap<String,Calendar>();
@@ -175,6 +185,8 @@ public class ScheduleBean implements Serializable {
     }
 
     public void addEvent() {
+
+        this.save();
         if (event.getId() == null) {
             model.addEvent(event);
 
@@ -185,39 +197,67 @@ public class ScheduleBean implements Serializable {
     }
 
     public void onEventSelect(SelectEvent e) {
-        event = (MeteoCalScheduleEvent) e.getObject();
+        System.out.println("Event Selected");
+        ScheduleEvent ev = (ScheduleEvent) e.getObject();
+
+        event = model.getMeteoEvent(ev.getId());
+
     }
 
     public void onDateSelect(SelectEvent e) {
         Date date = (Date) e.getObject();
-        event = new MeteoCalScheduleEvent("", date, date);
+        event = new MeteoCalScheduleEvent(eventNotInDB, "", date, date, null, null);
     }
 
     public void onGeolocation() {
-        String Lat;
-        Lat = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("Lat");
-        String Long;
-        Long = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("Long");
+        String City;
+        City = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("City");
+        String Country;
+        Country = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("Country");
 
-        System.out.println(Lat + "de  " + Long);
+        event.setLocation(City + ", " + Country);
 
     }
 
     public void updateScheduleModel() {
-        model = new DefaultScheduleModel();
+        model = new MeteoCalScheduleModel();
 
-        List<Integer> chosenCalendarsId = new LinkedList<Integer>();
+        if (chosenCalendars != null) {
+            for (String c : chosenCalendars) {
+                List<Event> evList = (List<Event>) em.createNamedQuery(EventCalendar.findEventsForCalendar, Event.class).setParameter("calendar", Integer.parseInt(c)).getResultList();
 
-        if (chosenCalendars != null & !chosenCalendars.isEmpty()) {
-            List<Event> evList = (List<Event>) em.createNamedQuery(EventCalendar.findEventsForCalendars, Event.class).setParameter("calendars", chosenCalendars).getResultList();
-
-            for (Event ev : evList) {
-                DefaultScheduleEvent scheduleEvent = new DefaultScheduleEvent(ev.getTitle(), ev.getDate(), ev.getEndDate());
-                scheduleEvent.setStyleClass("");
-                model.addEvent(scheduleEvent);
+                for (Event ev : evList) {
+                    MeteoCalScheduleEvent scheduleEvent = new MeteoCalScheduleEvent(ev.getId(), ev.getTitle(), ev.getDate(), ev.getEndDate(), calendarManager.findCalendarForId(c), ev.getType());
+                    scheduleEvent.setStyleClass("sunny red");
+                    scheduleEvent.setDescription("sunny");
+                    model.addEvent(scheduleEvent);
+                }
             }
         }
         //FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("schedule");
+
+    }
+
+    public void save() {
+        if (eventManager.findEventForId(event.getDbId()) != null) {
+            Event ev = eventManager.findEventForId(event.getDbId());
+            ev.setId(event.getDbId());
+            ev.setTitle(event.getTitle());
+            ev.setDate(event.getStartDate());
+            ev.setEndDate(event.getEndDate());
+            ev.setType(event.getType());
+            ev.setLocation(event.getLocation());
+            ev.setVisibility(event.getVisibility());
+            eventManager.update(ev);
+
+        } else {
+            //TODO location and visibility
+            Event ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
+            ev.setType(event.getType());
+            ev.setLocation(event.getLocation());
+            ev.setVisibility(event.getVisibility());
+            eventManager.save(ev);
+        }
 
     }
 

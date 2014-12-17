@@ -55,7 +55,7 @@ public class LoginBean {
             context.addMessage(null, new FacesMessage("Invalid Email or password."));
             return "login";
         }
-        return "/user/home";
+        return "/user/home.xhtml?faces-redirect=true";
     }
   
 
