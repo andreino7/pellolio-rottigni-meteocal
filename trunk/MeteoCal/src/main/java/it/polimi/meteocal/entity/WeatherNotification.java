@@ -124,7 +124,7 @@ public class WeatherNotification implements Serializable,Notification {
 
     @Override
     public String getText() {
-        return "The forecasted weather conditions aren't suitable for your event: "+about.getTitle()+" ";
+        return "The forecasted weather conditions aren't suitable for your event: "+about.getTitle()+"  ";
     }
     
 }

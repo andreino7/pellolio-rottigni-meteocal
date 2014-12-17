@@ -42,29 +42,24 @@ import javax.xml.bind.annotation.XmlTransient;
 public class EventType implements Serializable {
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Column(name = "Sun")
-    private byte[] sun;
+    private boolean sun;
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Column(name = "Rain")
-    private byte[] rain;
+    private boolean rain;
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Column(name = "Snow")
-    private byte[] snow;
+    private boolean snow;
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Column(name = "Cloud")
-    private byte[] cloud;
+    private boolean cloud;
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Column(name = "Personalized")
-    private byte[] personalized;
+    private boolean personalized;
     public static final String findAllTypesForUser="EventType.findAllTypesForUser";
     private static final long serialVersionUID = 1L;
     @Id
@@ -90,7 +85,7 @@ public class EventType implements Serializable {
         this.id = id;
     }
 
-    public EventType(Integer id, String title, byte[] sun, byte[] rain, byte[] snow, byte[] cloud, byte[] personalized) {
+    public EventType(Integer id, String title, boolean sun, boolean rain, boolean snow, boolean cloud, boolean personalized) {
         this.id = id;
         this.title = title;
         this.sun = sun;
@@ -159,43 +154,43 @@ public class EventType implements Serializable {
         return "it.polimi.meteocal.entity.EventType[ id=" + id + " ]";
     }
 
-    public byte[] getSun() {
+    public boolean getSun() {
         return sun;
     }
 
-    public void setSun(byte[] sun) {
+    public void setSun(boolean sun) {
         this.sun = sun;
     }
 
-    public byte[] getRain() {
+    public boolean getRain() {
         return rain;
     }
 
-    public void setRain(byte[] rain) {
+    public void setRain(boolean rain) {
         this.rain = rain;
     }
 
-    public byte[] getSnow() {
+    public boolean getSnow() {
         return snow;
     }
 
-    public void setSnow(byte[] snow) {
+    public void setSnow(boolean snow) {
         this.snow = snow;
     }
 
-    public byte[] getCloud() {
+    public boolean getCloud() {
         return cloud;
     }
 
-    public void setCloud(byte[] cloud) {
+    public void setCloud(boolean cloud) {
         this.cloud = cloud;
     }
 
-    public byte[] getPersonalized() {
+    public boolean getPersonalized() {
         return personalized;
     }
 
-    public void setPersonalized(byte[] personalized) {
+    public void setPersonalized(boolean personalized) {
         this.personalized = personalized;
     }
     

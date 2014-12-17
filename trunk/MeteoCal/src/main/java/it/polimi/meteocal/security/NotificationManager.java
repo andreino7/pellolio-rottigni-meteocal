@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.security;
 
+import it.polimi.meteocal.entity.ResponseNotification;
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.entity.WeatherNotification;
 import java.util.LinkedList;
@@ -26,6 +27,8 @@ public class NotificationManager {
     public List<Notification> getNotificationForUser(User u){
          List<Notification> res= new LinkedList<>();
          res.addAll(em.createNamedQuery(WeatherNotification.findByReceiver, WeatherNotification.class).setParameter("user", u.getEmail()).getResultList());
+         res.addAll(em.createNamedQuery(ResponseNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+
          return res;
     }
 
