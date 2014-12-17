@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.entity;
 
+import it.polimi.meteocal.security.Notification;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -29,8 +30,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "ChangedEventNotification.findAll", query = "SELECT c FROM ChangedEventNotification c"),
     @NamedQuery(name = "ChangedEventNotification.findById", query = "SELECT c FROM ChangedEventNotification c WHERE c.id = :id"),
+    @NamedQuery(name = "ChangedEventNotification.findByReceiver", query = "SELECT w FROM ChangedEventNotification w WHERE w.receiver.email = :user"),        
     @NamedQuery(name = "ChangedEventNotification.findByState", query = "SELECT c FROM ChangedEventNotification c WHERE c.state = :state")})
-public class ChangedEventNotification implements Serializable {
+public class ChangedEventNotification implements Serializable,Notification {
+    public static final String findByReceiver= "ChangedEventNotification.findByReceiver";
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -116,6 +119,11 @@ public class ChangedEventNotification implements Serializable {
     @Override
     public String toString() {
         return "it.polimi.meteocal.entity.ChangedEventNotification[ id=" + id + " ]";
+    }
+
+    @Override
+    public String getText() {
+        return "The event: "+about.getTitle()+" has been changed";
     }
     
 }
