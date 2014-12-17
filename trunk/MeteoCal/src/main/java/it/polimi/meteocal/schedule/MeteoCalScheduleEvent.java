@@ -60,6 +60,10 @@ public class MeteoCalScheduleEvent extends DefaultScheduleEvent {
         
 
     }
+    
+    public Calendar getOld(){
+        return old;
+    }
 
     public Calendar getCalendar() {
         return calendar;

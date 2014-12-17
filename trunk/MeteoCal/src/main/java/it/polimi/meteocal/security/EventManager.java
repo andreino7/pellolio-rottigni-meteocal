@@ -67,6 +67,13 @@ public class EventManager {
         em.persist(ec);
     }
     
+    public void toggleLink(Event e,Calendar c){
+        EventCalendar ec=em.createNamedQuery(EventCalendar.findEventCalendarForEventAndCalendar,EventCalendar.class).setParameter("event", e.getId()).setParameter("calendar", c.getId()).getSingleResult();
+        if (ec!=null){
+            em.remove(ec);
+        }
+    }
+    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 }

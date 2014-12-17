@@ -31,12 +31,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EventCalendar.findAll", query = "SELECT e FROM EventCalendar e"),
     @NamedQuery(name = "EventCalendar.findEventsForCalendars", query = "SELECT ev FROM Event ev WHERE ev.id IN( SELECT e.event.id FROM EventCalendar e WHERE e.calendar.id IN :calendars)"),
     @NamedQuery(name = "EventCalendar.findEventsForCalendar", query = "SELECT ev FROM Event ev WHERE ev.id IN( SELECT e.event.id FROM EventCalendar e WHERE e.calendar.id = :calendar)"),
-
+    @NamedQuery(name = "EventCalendar.findEventCalendarForEventAndCalendar", query = "SELECT e FROM EventCalendar e WHERE e.event.id = :event AND e.calendar.id = :calendar"),
     @NamedQuery(name = "EventCalendar.findById", query = "SELECT e FROM EventCalendar e WHERE e.id = :id")})
 public class EventCalendar implements Serializable {
     public static final String findEventsForUser="EventCalendar.findEventsForUser";
     public static final String findEventsForCalendars="EventCalendar.findEventsForCalendars";
     public static final String findEventsForCalendar="EventCalendar.findEventsForCalendar";
+    public static final String findEventCalendarForEventAndCalendar="EventCalendar.findEventCalendarForEventAndCalendar";
 
     
     private static final long serialVersionUID = 1L;
