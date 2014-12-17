@@ -47,6 +47,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByClearance", query = "SELECT u FROM User u WHERE u.clearance = :clearance"),
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")})
 public class User implements Serializable,SearchResult {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventOwner")
+    private Collection<Event> eventCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiver")
     private Collection<WeatherNotification> weatherNotificationCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "receiver")
@@ -313,5 +315,14 @@ public class User implements Serializable,SearchResult {
     @Override
     public String getGroup() {
 return "User";    }
+
+    @XmlTransient
+    public Collection<Event> getEventCollection() {
+        return eventCollection;
+    }
+
+    public void setEventCollection(Collection<Event> eventCollection) {
+        this.eventCollection = eventCollection;
+    }
     
 }

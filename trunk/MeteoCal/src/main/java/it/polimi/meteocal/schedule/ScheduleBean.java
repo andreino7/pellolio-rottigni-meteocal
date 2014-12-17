@@ -41,6 +41,7 @@ public class ScheduleBean implements Serializable {
 
     private static final Integer eventNotInDB = 0;
     private MeteoCalScheduleModel model;
+    private User user;
     @EJB
     private UserManager userManager;
 
@@ -170,7 +171,7 @@ public class ScheduleBean implements Serializable {
 
     @PostConstruct
     private void postConstruct() {
-        User user = userManager.getLoggedUser();
+        user = userManager.getLoggedUser();
 
         updateScheduleModel();
 
@@ -264,6 +265,7 @@ public class ScheduleBean implements Serializable {
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
+            ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()));
             eventManager.update(ev);
             if (event.getCalendar()!=event.getOld()){
                 eventManager.linkToCalendar(ev, event.getCalendar());
@@ -277,6 +279,7 @@ public class ScheduleBean implements Serializable {
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
             ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()));
+            ev.setEventOwner(user);
             eventManager.save(ev);
             eventManager.linkToCalendar(ev, event.getCalendar());
 
