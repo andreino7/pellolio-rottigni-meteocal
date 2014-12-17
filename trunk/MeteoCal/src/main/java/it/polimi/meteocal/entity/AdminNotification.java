@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.entity;
 
+import it.polimi.meteocal.security.Notification;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -29,8 +30,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "AdminNotification.findAll", query = "SELECT a FROM AdminNotification a"),
     @NamedQuery(name = "AdminNotification.findById", query = "SELECT a FROM AdminNotification a WHERE a.id = :id"),
+    @NamedQuery(name = "AdminNotification.findByReceiver", query = "SELECT w FROM AdminNotification w WHERE w.receiver.email = :user"),    
+    
     @NamedQuery(name = "AdminNotification.findByState", query = "SELECT a FROM AdminNotification a WHERE a.state = :state")})
-public class AdminNotification implements Serializable {
+public class AdminNotification implements Serializable,Notification {
+    public static final String findByReceiver= "AdminNotification.findByReceiver";
+   
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -116,6 +121,11 @@ public class AdminNotification implements Serializable {
     @Override
     public String toString() {
         return "it.polimi.meteocal.entity.AdminNotification[ id=" + id + " ]";
+    }
+
+    @Override
+    public String getText() {
+        return "Your Event "+about.getTitle()+" has been changed by the admin";
     }
     
 }

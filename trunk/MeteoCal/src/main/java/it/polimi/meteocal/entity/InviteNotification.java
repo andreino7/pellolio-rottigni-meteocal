@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.entity;
 
+import it.polimi.meteocal.security.Notification;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -35,8 +36,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "InviteNotification.findAll", query = "SELECT i FROM InviteNotification i"),
     @NamedQuery(name = "InviteNotification.findById", query = "SELECT i FROM InviteNotification i WHERE i.id = :id"),
+    @NamedQuery(name = "InviteNotification.findByReceiver", query = "SELECT w FROM InviteNotification w WHERE w.receiver.email = :user"),    
     @NamedQuery(name = "InviteNotification.findByState", query = "SELECT i FROM InviteNotification i WHERE i.state = :state")})
-public class InviteNotification implements Serializable {
+public class InviteNotification implements Serializable,Notification {
+    public static final String findByReceiver= "InviteNotification.findByReceiver";
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -144,6 +148,11 @@ public class InviteNotification implements Serializable {
     @Override
     public String toString() {
         return "it.polimi.meteocal.entity.InviteNotification[ id=" + id + " ]";
+    }
+
+    @Override
+    public String getText() {
+        return "You've been invited to: "+about.getTitle()+" by: "+sender.getTitle();
     }
     
 }
