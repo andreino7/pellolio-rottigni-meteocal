@@ -199,13 +199,14 @@ public class ScheduleBean implements Serializable {
     }
 
     public void addEvent() {
-
+        if (event.getLocation()!=null){
         this.save();
         if (event.getId() == null) {
             model.addEvent(event);
 
         } else {
             model.updateEvent(event);
+        }
         }
         event = new MeteoCalScheduleEvent(); //reset dialog form
     }
@@ -255,6 +256,8 @@ public class ScheduleBean implements Serializable {
     }
 
     public void save() {
+        
+        
         if (eventManager.findEventForId(event.getDbId()) != null) {
             Event ev = eventManager.findEventForId(event.getDbId());
             ev.setId(event.getDbId());
@@ -275,6 +278,7 @@ public class ScheduleBean implements Serializable {
             ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()));
             eventManager.save(ev);
         }
+        
 
     }
 
