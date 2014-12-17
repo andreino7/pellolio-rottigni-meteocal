@@ -265,6 +265,10 @@ public class ScheduleBean implements Serializable {
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
             eventManager.update(ev);
+            if (event.getCalendar()!=event.getOld()){
+                eventManager.linkToCalendar(ev, event.getCalendar());
+                eventManager.toggleLink(ev, event.getOld());
+            }
 
         } else {
             //TODO location and visibility
