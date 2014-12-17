@@ -7,9 +7,16 @@ package it.polimi.meteocal.schedule;
 
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.security.UserManager;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.rmi.server.UID;
 import java.security.Principal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -26,6 +33,8 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -40,18 +49,19 @@ public class userProfile implements Serializable {
      */
     @PersistenceContext
     private EntityManager em;
-    
+
     @EJB
     private UserManager userManager;
 
-     @Inject
+    @Inject
     Principal principal;
-  
+
     private User user;
     private boolean ownprofile;
     private String value;
     private String name;
     private String surname;
+    private Object FilenameUtils;
 
     public String getSurname() {
         return surname;
@@ -70,7 +80,6 @@ public class userProfile implements Serializable {
         this.name = name;
         user.setName(name);
     }
-    
 
     public String getValue() {
         return value;
@@ -78,10 +87,9 @@ public class userProfile implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
-         init();
-        
+        init();
+
     }
-    
 
     public boolean isOwnprofile() {
         return ownprofile;
@@ -90,8 +98,6 @@ public class userProfile implements Serializable {
     public void setOwnprofile(boolean ownprofile) {
         this.ownprofile = ownprofile;
     }
-    
-    
 
     public User getUser() {
         return user;
@@ -100,49 +106,64 @@ public class userProfile implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    
-   
-    
-    
-    
-    public userProfile() {
-        
-    }
-    
-    @PostConstruct
-    public void postConstruct(){
-        initParam();
-        this.user=new User();
-        ownprofile= userManager.getLoggedUser().equals(userManager.findUserforId(value));
-    }
-    
-    
-    public void init(){
-        
-        this.user = userManager.findUserforId(value);
-        
-        ownprofile = em.find(User.class, principal.getName()).equals(this.user);
-        
-        
-    }
-     
-    public void initParam(){
-        HttpServletRequest request=(HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
-        value=request.getParameter("id");
-       
+    public userProfile() {
+
     }
-    
-    public void reset(){
-       
-      this.user= userManager.findUserforId(user.getEmail());
-    
-}
-    
+
+    @PostConstruct
+    public void postConstruct() {
+        initParam();
+        this.user = new User();
+        ownprofile = userManager.getLoggedUser().equals(userManager.findUserforId(value));
+    }
+
+    public void init() {
+
+        this.user = userManager.findUserforId(value);
+
+        ownprofile = em.find(User.class, principal.getName()).equals(this.user);
+
+    }
+
+    public void initParam() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        value = request.getParameter("id");
+
+    }
+
+    public void reset() {
+
+        this.user = userManager.findUserforId(user.getEmail());
+
+    }
+
     public void save() {
         System.err.println(user.getName());
 
-        userManager.update(user); 
+        userManager.update(user);
     }
-    
+
+    public void handleFileUpload(FileUploadEvent event) {
+        UploadedFile file = event.getFile();
+        System.out.println("aaaaa");
+        File folder = new File("/resources/avatars");
+        String filename = new UID().toString();
+        String extension = file.getContentType();
+
+        try {
+            File file2 = File.createTempFile(filename + "-", "." + extension, folder);
+            InputStream input = file.getInputstream();
+            Files.copy(input, file2.toPath());
+            System.out.println(file2.getAbsolutePath());
+        }catch (IOException ex) {
+            System.err.println(ex.getMessage());
+            Logger.getLogger(userProfile.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+       //application code
+    }
+
 }

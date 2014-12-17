@@ -23,6 +23,14 @@
                             <p:graphicImage value="/resources/#{userProfile.user.profilePhoto}"/>
                         </p:column>
                     </p:row>
+                    
+                    <p:row >//rendered="#{userProfile.ownprofile?true:false}">
+                        <p:column colspan="2">
+                            <p:fileUpload fileUploadListener="#{userProfile.handleFileUpload}"
+                                            allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                        </p:column>
+                    </p:row>
+                    
 
                     <p:row>
                         <p:column>

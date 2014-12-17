@@ -23,6 +23,7 @@ public class MeteoCalScheduleEvent extends DefaultScheduleEvent {
     private Integer dbId;
     private String location;
     private String visibility;
+    private Calendar old;
     
     
 
@@ -83,10 +84,23 @@ public class MeteoCalScheduleEvent extends DefaultScheduleEvent {
         super();
         this.setTitle(e.getTitle());
         this.setEndDate(e.getEndDate());
-        this.setStartDate(e.getEndDate());
+        this.setStartDate(e.getStartDate());
         this.setStyleClass(e.getStyleClass());
         
         
+    }
+    
+    public MeteoCalScheduleEvent(Event e,Calendar c){
+        
+        this.setTitle(e.getTitle());
+        this.setEndDate(e.getEndDate());
+        this.setStartDate(e.getDate());
+        this.dbId=e.getId();
+        this.calendar=c;
+        this.location=e.getLocation();
+        this.type=e.getType();
+        this.visibility=e.getVisibility();
+        this.old=c;
     }
     
    
