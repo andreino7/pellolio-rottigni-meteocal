@@ -13,7 +13,7 @@ import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.security.CalendarManager;
 import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.UserManager;
-import it.polimi.meteocal.security.WeatherCheacker;
+import it.polimi.meteocal.security.WeatherChecker;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
@@ -51,7 +51,7 @@ public class ScheduleBean implements Serializable {
     private EventManager eventManager;
 
     @EJB
-    private WeatherCheacker weather;
+    private WeatherChecker weather;
 
     @PersistenceContext
     private EntityManager em;
