@@ -31,7 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "AdminNotification.findAll", query = "SELECT a FROM AdminNotification a"),
     @NamedQuery(name = "AdminNotification.findById", query = "SELECT a FROM AdminNotification a WHERE a.id = :id"),
     @NamedQuery(name = "AdminNotification.findByReceiver", query = "SELECT w FROM AdminNotification w WHERE w.receiver.email = :user"),    
-    
     @NamedQuery(name = "AdminNotification.findByState", query = "SELECT a FROM AdminNotification a WHERE a.state = :state")})
 public class AdminNotification implements Serializable,Notification {
     public static final String findByReceiver= "AdminNotification.findByReceiver";
