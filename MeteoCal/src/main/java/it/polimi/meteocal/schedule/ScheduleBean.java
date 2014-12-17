@@ -49,16 +49,16 @@ public class ScheduleBean implements Serializable {
 
     @EJB
     private EventManager eventManager;
-    
+
     @EJB
     private WeatherCheacker weather;
-    
+
     @PersistenceContext
     private EntityManager em;
 
     private Integer calendarId;
     private String geoLoc;
-    
+
     private List<String> visibilities = new LinkedList<String>();
     private List<EventType> userTypes;
     private List<Calendar> userCalendars;
@@ -77,14 +77,10 @@ public class ScheduleBean implements Serializable {
     public void setGeoLoc(String geoLoc) {
         this.geoLoc = geoLoc;
     }
-    
-    
 
     public List<String> getVisibilities() {
         return visibilities;
     }
-    
-    
 
     public String getColor() {
         return color;
@@ -199,14 +195,16 @@ public class ScheduleBean implements Serializable {
     }
 
     public void addEvent() {
-        if (event.getLocation()!=null){
-        this.save();
-        if (event.getId() == null) {
-            model.addEvent(event);
+        if (event.getLocation() != null) {
+            this.save();
+            if (event.getId() == null) {
+                model.addEvent(event);
 
-        } else {
-            model.updateEvent(event);
-        }
+            } else {
+                model.updateEvent(event);
+            }
+        }else{
+            System.out.println("No Location");
         }
         event = new MeteoCalScheduleEvent(); //reset dialog form
     }
@@ -216,14 +214,14 @@ public class ScheduleBean implements Serializable {
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
 
         event = model.getMeteoEvent(ev.getId());
-        geoLoc= event.getLocation();
+        geoLoc = event.getLocation();
 
     }
 
     public void onDateSelect(SelectEvent e) {
         Date date = (Date) e.getObject();
         event = new MeteoCalScheduleEvent(eventNotInDB, "", date, date, null, null);
-        geoLoc="";
+        geoLoc = "";
     }
 
     public void onGeolocation() {
@@ -256,8 +254,7 @@ public class ScheduleBean implements Serializable {
     }
 
     public void save() {
-        
-        
+
         if (eventManager.findEventForId(event.getDbId()) != null) {
             Event ev = eventManager.findEventForId(event.getDbId());
             ev.setId(event.getDbId());
@@ -277,8 +274,9 @@ public class ScheduleBean implements Serializable {
             ev.setVisibility(event.getVisibility());
             ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()));
             eventManager.save(ev);
+            eventManager.linkToCalendar(ev, event.getCalendar());
+
         }
-        
 
     }
 

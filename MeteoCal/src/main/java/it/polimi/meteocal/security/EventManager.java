@@ -5,7 +5,9 @@
  */
 package it.polimi.meteocal.security;
 
+import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.Event;
+import it.polimi.meteocal.entity.EventCalendar;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -43,6 +45,13 @@ public class EventManager {
     
     public void update(Event e){
         em.merge(e);
+    }
+    
+    public void linkToCalendar(Event e,Calendar c){
+        EventCalendar ec= new EventCalendar();
+        ec.setEvent(e);
+        ec.setCalendar(c);
+        em.persist(ec);
     }
     
     // Add business logic below. (Right-click in editor and choose

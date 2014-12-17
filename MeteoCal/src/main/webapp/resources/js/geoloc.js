@@ -26,11 +26,12 @@ function codeAddress() {
                             }
                             
 
-                            
+                            document.getElementById("eventDetails:addressForEvent").style.color='green';
                             gc ([{name:'City',value: city }, {name:'Country',value: country }]);//
                            
                         } else {
-                            alert("Geocode was not successful for the following reason: " + status);
+                            document.getElementById("eventDetails:addressForEvent").style.color="red";
+                            //alert("Geocode was not successful for the following reason: " + status);
                         }
                     });
                     }
