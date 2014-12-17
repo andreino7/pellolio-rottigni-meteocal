@@ -39,7 +39,7 @@ import org.primefaces.model.ScheduleModel;
 @SessionScoped
 public class ScheduleBean implements Serializable {
 
-    private static final Integer eventNotInDB = -1;
+    private static final Integer eventNotInDB = 0;
     private MeteoCalScheduleModel model;
     @EJB
     private UserManager userManager;
@@ -57,7 +57,8 @@ public class ScheduleBean implements Serializable {
     private EntityManager em;
 
     private Integer calendarId;
-
+    private String geoLoc;
+    
     private List<String> visibilities = new LinkedList<String>();
     private List<EventType> userTypes;
     private List<Calendar> userCalendars;
@@ -68,6 +69,16 @@ public class ScheduleBean implements Serializable {
     private String colorCalendarString;
     private String color;
     private List<String> colors;
+
+    public String getGeoLoc() {
+        return geoLoc;
+    }
+
+    public void setGeoLoc(String geoLoc) {
+        this.geoLoc = geoLoc;
+    }
+    
+    
 
     public List<String> getVisibilities() {
         return visibilities;
@@ -96,7 +107,6 @@ public class ScheduleBean implements Serializable {
 
     public String getColorCalendarString() {
         return "<p:selectOneMenu id=\"car\" rendered=\"true\" value=\"#{scheduleBean.color}\">\n"
-                + "            <f:selectItem itemLabel=\"Select One\" itemValue=\"\" />\n"
                 + "            <f:selectItems value=\"#{scheduleBean.colors}\" itemLabel=\" \"/>\n"
                 + "        </p:selectOneMenu>";
     }
@@ -205,12 +215,14 @@ public class ScheduleBean implements Serializable {
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
 
         event = model.getMeteoEvent(ev.getId());
+        geoLoc= event.getLocation();
 
     }
 
     public void onDateSelect(SelectEvent e) {
         Date date = (Date) e.getObject();
         event = new MeteoCalScheduleEvent(eventNotInDB, "", date, date, null, null);
+        geoLoc="";
     }
 
     public void onGeolocation() {
@@ -231,7 +243,7 @@ public class ScheduleBean implements Serializable {
                 List<Event> evList = (List<Event>) em.createNamedQuery(EventCalendar.findEventsForCalendar, Event.class).setParameter("calendar", Integer.parseInt(c)).getResultList();
 
                 for (Event ev : evList) {
-                    MeteoCalScheduleEvent scheduleEvent = new MeteoCalScheduleEvent(ev.getId(), ev.getTitle(), ev.getDate(), ev.getEndDate(), calendarManager.findCalendarForId(c), ev.getType());
+                    MeteoCalScheduleEvent scheduleEvent = new MeteoCalScheduleEvent(ev, calendarManager.findCalendarForId(c));
                     scheduleEvent.setStyleClass("sunny red");
                     scheduleEvent.setDescription("sunny");
                     model.addEvent(scheduleEvent);
