@@ -13,6 +13,7 @@ import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.security.CalendarManager;
 import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.UserManager;
+import it.polimi.meteocal.security.WeatherCheacker;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
@@ -48,7 +49,10 @@ public class ScheduleBean implements Serializable {
 
     @EJB
     private EventManager eventManager;
-
+    
+    @EJB
+    private WeatherCheacker weather;
+    
     @PersistenceContext
     private EntityManager em;
 
@@ -215,7 +219,7 @@ public class ScheduleBean implements Serializable {
         String Country;
         Country = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("Country");
 
-        event.setLocation(City + ", " + Country);
+        event.setLocation(City + "," + Country);
 
     }
 
@@ -256,6 +260,7 @@ public class ScheduleBean implements Serializable {
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
+            ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()));
             eventManager.save(ev);
         }
 

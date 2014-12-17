@@ -249,9 +249,7 @@ public class Event implements Serializable,SearchResult {
         this.inviteNotificationCollection = inviteNotificationCollection;
     }
 
-    
 
-   
 
     @Override
     public String getGroup() {
