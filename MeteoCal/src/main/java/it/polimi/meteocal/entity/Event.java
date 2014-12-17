@@ -47,6 +47,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location"),
     @NamedQuery(name = "Event.findByDay", query = "SELECT e FROM Event e WHERE e.date >= :date1 AND e.date < :date2") })
 public class Event implements Serializable,SearchResult {
+    @JoinColumn(name = "EventOwner", referencedColumnName = "Email")
+    @ManyToOne(optional = false)
+    private User eventOwner;
     @Size(max = 45)
     @Column(name = "Weather")
     private String weather;
@@ -268,6 +271,14 @@ public class Event implements Serializable,SearchResult {
 
     public void setWeather(String weather) {
         this.weather = weather;
+    }
+
+    public User getEventOwner() {
+        return eventOwner;
+    }
+
+    public void setEventOwner(User eventOwner) {
+        this.eventOwner = eventOwner;
     }
 
    

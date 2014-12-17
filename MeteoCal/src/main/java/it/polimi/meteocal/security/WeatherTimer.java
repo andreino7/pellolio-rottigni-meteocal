@@ -45,5 +45,12 @@ public class WeatherTimer {
        Date d1 = cal.getTime();
        cal.add(Calendar.DATE, 1);
        Date d2 = cal.getTime();
+       List<Event> events = findEventToCheck(d1, d2);
+       for (Event e: events) {
+           weather.addWeather(e.getLocation(), d2);
+       }
+       for (Event e: events) {
+           
+       }
    }
 }
