@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.entity;
 
+import it.polimi.meteocal.security.Notification;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -29,8 +30,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "WeatherNotification.findAll", query = "SELECT w FROM WeatherNotification w"),
     @NamedQuery(name = "WeatherNotification.findById", query = "SELECT w FROM WeatherNotification w WHERE w.id = :id"),
+    @NamedQuery(name = "WeatherNotification.findByReceiver", query = "SELECT w FROM WeatherNotification w WHERE w.receiver.email = :user"),
+
     @NamedQuery(name = "WeatherNotification.findByState", query = "SELECT w FROM WeatherNotification w WHERE w.state = :state")})
-public class WeatherNotification implements Serializable {
+public class WeatherNotification implements Serializable,Notification {
+    public static final String findByReceiver= "WeatherNotification.findByReceiver";
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -116,6 +120,11 @@ public class WeatherNotification implements Serializable {
     @Override
     public String toString() {
         return "it.polimi.meteocal.entity.WeatherNotification[ id=" + id + " ]";
+    }
+
+    @Override
+    public String getText() {
+        return "The forecasted weather conditions aren't suitable for your event: "+about.getTitle()+" ";
     }
     
 }
