@@ -228,18 +228,18 @@ html, body { margin: 0;
     margin: auto;
 }
 
-.Clear{
+.CLEAR{
     background: url(img/sunny.png) no-repeat center center;
     background-size: auto 100%;
     background-position: bottom right;
 }
-.cloud{
+.CLOUD{
     background: url(img/cloud.png) no-repeat center center;
     background-size: auto 100%;
     background-position: bottom right;
 }
 
-.Rain{
+.RAIN{
     background: url(img/rain.png) no-repeat center center;
     background-size: auto 100%;
     background-position: bottom right;
