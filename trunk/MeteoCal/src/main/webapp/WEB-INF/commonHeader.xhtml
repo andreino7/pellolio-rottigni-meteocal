@@ -46,7 +46,7 @@
                     
                 </p:menuButton>
                     </h:form>    
-                <h:graphicImage value="/resources/#{userBean.profilePhoto}" id="userPhotoBar"/>
+                <h:graphicImage value="#{userBean.profilePhoto}" id="userPhotoBar"/>
                 <p:link id="userBarNameButton" outcome="/user/UserProfile.xhtml" value="#{userBean.name} #{userBean.surname}">
                     <f:param name="id" value="#{userBean.email}"/>
                 </p:link>

@@ -20,14 +20,16 @@
                 <p:panelGrid styleClass="centered">
                     <p:row>
                         <p:column colspan="2">
-                            <p:graphicImage value="/resources/#{userProfile.user.profilePhoto}"/>
+                            <p:graphicImage value="#{userProfile.user.profilePhoto}"/>
                         </p:column>
                     </p:row>
                     
-                    <p:row >//rendered="#{userProfile.ownprofile?true:false}">
-                        <p:column colspan="2">
-                            <p:fileUpload fileUploadListener="#{userProfile.handleFileUpload}"
-                                            allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                    <p:row rendered="#{userProfile.ownprofile?true:false}">
+                        <p:column>
+                            <h:outputText value="Profile photo URL:"></h:outputText>
+                        </p:column>
+                        <p:column>
+                            <h:inputText value="#{userProfile.photoUrl}"></h:inputText>
                         </p:column>
                     </p:row>
                     
@@ -86,9 +88,7 @@
                        
                 </p:panelGrid>
                 </h:form>
-                <h:form>
-                 
-                </h:form>    
+                   
             </ui:define>
         </ui:composition>
     </h:body>

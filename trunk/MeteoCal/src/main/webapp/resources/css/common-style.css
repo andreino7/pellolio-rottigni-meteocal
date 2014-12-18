@@ -228,13 +228,58 @@ html, body { margin: 0;
     margin: auto;
 }
 
-.sunny{
+.Clear{
     background: url(img/sunny.png) no-repeat center center;
+    background-size: auto 100%;
+    background-position: bottom right;
+}
+.cloud{
+    background: url(img/cloud.png) no-repeat center center;
+    background-size: auto 100%;
+    background-position: bottom right;
+}
+
+.Rain{
+    background: url(img/rain.png) no-repeat center center;
     background-size: auto 100%;
     background-position: bottom right;
 }
 
 .red{
     background-color: red !important;
+}
+.green{
+    background-color: green !important;
+}
+
+.aqua{
+    background-color: aqua !important;
+}
+
+.blue{
+    background-color: blue !important;
+}
+
+.yellow{
+    background-color: yellow !important;
+    color: black !important;
+}
+.sienna{
+    background-color: sienna !important;
+}
+
+.violet{
+    background-color: violet !important;
+}
+.purple{
+    background-color: purple !important;
+}
+
+.colorbox{
+    height: 10px;
+    width: 10px;
+    margin-left: 5px;
+    display: box;
+    float: right;
 }
 
