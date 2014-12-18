@@ -42,7 +42,6 @@ public class ResponseNotification implements Serializable,Notification {
     @Column(name = "Answer")
     private boolean answer;
     public static final String findByReceiver= "ResponseNotification.findByReceiver";
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -153,6 +152,7 @@ public class ResponseNotification implements Serializable,Notification {
     public String toString() {
         return "it.polimi.meteocal.entity.ResponseNotification[ id=" + id + " ]";
     }
+
 
 
     @Override

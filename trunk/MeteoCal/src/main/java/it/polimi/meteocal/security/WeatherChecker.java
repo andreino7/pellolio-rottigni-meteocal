@@ -7,8 +7,11 @@ package it.polimi.meteocal.security;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.TreeMap;
 import javax.ejb.Stateless;
 import javax.json.JsonArray;
 import javax.json.JsonNumber;
@@ -28,6 +31,14 @@ public class WeatherChecker {
     private static final String APPID ="9d8f6daef04fa46457a706f694d929b7";
     private static final String BASEURL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
 
+   
+    private String commonTranslationOperation(JsonObject inner) {
+        JsonArray weather = inner.getJsonArray(JsonWeatherParam.WEATHER.toString().toLowerCase());
+        JsonObject mainWeather = weather.getJsonObject(0);
+        JsonString s = mainWeather.getJsonString(JsonWeatherParam.MAIN.toString().toLowerCase());
+        return s.getString();
+    }
+    
     private String translateWeather(JsonObject model, Date date) {
         JsonArray list = model.getJsonArray(JsonWeatherParam.LIST.toString().toLowerCase());
         Iterator i = list.iterator();
@@ -36,13 +47,23 @@ public class WeatherChecker {
             JsonNumber dt = inner.getJsonNumber(JsonWeatherParam.DT.toString().toLowerCase());
             Date d = timestampConverter(dt.intValue());
             if (d.equals(date)) {
-                JsonArray weather = inner.getJsonArray(JsonWeatherParam.WEATHER.toString().toLowerCase());
-                JsonObject mainWeather = weather.getJsonObject(0);
-                JsonString s = mainWeather.getJsonString(JsonWeatherParam.MAIN.toString().toLowerCase());
-                return s.getString();
+                return commonTranslationOperation(inner);
             } 
         } 
         return "no weather information";
+    }
+    
+    private Map<Date, WeatherConditions> translateWeather(JsonObject model) {
+        JsonArray list = model.getJsonArray(JsonWeatherParam.LIST.toString().toLowerCase());
+        Iterator i = list.iterator();
+        Map<Date, WeatherConditions> weatherForecast = new TreeMap<>();
+        while (i.hasNext()) {            
+            JsonObject inner = (JsonObject) i.next();
+            JsonNumber dt = inner.getJsonNumber(JsonWeatherParam.DT.toString().toLowerCase());
+            Date d = timestampConverter(dt.intValue());
+                weatherForecast.put(d,toWeatherConditions(commonTranslationOperation(inner)));
+        } 
+       return weatherForecast;
     }
     
     private Date timestampConverter(int timestamp) {
@@ -71,8 +92,29 @@ public class WeatherChecker {
         return model;
     }
     
-    public String addWeather(String city, Date date) {
+    public WeatherConditions addWeather(String city, Date date) {
         JsonObject model = getWeather(city);
-        return translateWeather(model, date);
+        String s = translateWeather(model, date);
+        return toWeatherConditions(s);
+    }
+    
+    public Map<Date, WeatherConditions> getForecast(String city) {
+        JsonObject model = getWeather(city);
+        return translateWeather(model);
+    }
+
+    private WeatherConditions toWeatherConditions(String s) {
+        switch (s) {
+            case ("Clear"):
+                return WeatherConditions.CLEAR;
+            case ("Rain"):
+                return WeatherConditions.RAIN;
+            case ("Clouds"):
+                return WeatherConditions.CLOUD;
+            case ("Snow"):
+                return WeatherConditions.SNOW;
+            default:
+                return WeatherConditions.UNAVAILABLE;
+        }
     }
 }

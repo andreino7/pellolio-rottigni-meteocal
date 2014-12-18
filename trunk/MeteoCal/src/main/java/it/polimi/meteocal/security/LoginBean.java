@@ -5,10 +5,8 @@
  */
 package it.polimi.meteocal.security;
 
-import it.polimi.meteocal.entity.User;
-import javax.ejb.EJB;
+import javax.annotation.PostConstruct;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -73,6 +71,11 @@ public class LoginBean {
         }catch(Exception e){
             
         }
+    }
+    
+    @PostConstruct
+    public void ciao() {
+        System.out.println("ciao");
     }
     
 }

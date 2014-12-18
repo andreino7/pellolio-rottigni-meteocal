@@ -10,6 +10,7 @@ import it.polimi.meteocal.entity.Event;
 import java.util.Date;
 import java.util.List;
 import it.polimi.meteocal.entity.EventCalendar;
+import java.util.ArrayList;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
@@ -53,9 +54,12 @@ public class EventManager {
     }
     
     public List<Event> findByDay(Date d1, Date d2) {
+        System.out.println("d1: " + d1);
+        System.out.println("d2: " + d2);
         Query q = em.createNamedQuery("Event.findByDay");
         q.setParameter("date1", d1);
         q.setParameter("date2", d2);
+        List<Event> prova = q.getResultList();
         List<Event> events = q.getResultList();
         return events;
     }
