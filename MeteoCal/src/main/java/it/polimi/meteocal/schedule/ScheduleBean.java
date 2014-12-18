@@ -15,9 +15,14 @@ import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.UserManager;
 import it.polimi.meteocal.security.WeatherChecker;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -66,10 +71,9 @@ public class ScheduleBean implements Serializable {
     private List<String> chosenCalendars;
     private MeteoCalScheduleEvent event = new MeteoCalScheduleEvent();
     private String title;
-    private String style;
-    private String colorCalendarString;
-    private String color;
-    private List<String> colors;
+
+    List<String> colorclass;
+    Map<Integer, String> colorForCalendar;
 
     public String getGeoLoc() {
         return geoLoc;
@@ -83,41 +87,21 @@ public class ScheduleBean implements Serializable {
         return visibilities;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public List<String> getColors() {
-        List<String> ls = new LinkedList<String>();
-        ls.add("Red");
-        ls.add("Green");
-        return ls;
-    }
-
-    public void setColors(List<String> colors) {
-        this.colors = colors;
-    }
-
-    public String getColorCalendarString() {
-        return "<p:selectOneMenu id=\"car\" rendered=\"true\" value=\"#{scheduleBean.color}\">\n"
-                + "            <f:selectItems value=\"#{scheduleBean.colors}\" itemLabel=\" \"/>\n"
-                + "        </p:selectOneMenu>";
-    }
-
-    public String getStyle() {
-        return "<input></input>";
-    }
-
     public List<EventType> getUserTypes() {
         return userTypes;
     }
 
     public void setUserTypes(List<EventType> userTypes) {
         this.userTypes = userTypes;
+    }
+    
+    public String getClassForCalendar(Calendar c){
+        return colorForCalendar.get(c.getId());
+    }
+    
+    public String getColorBoxForCalendar(Calendar c){
+        System.out.println("<div class=\" colorBox "+getClassForCalendar(c)+"\" ></div>");
+        return "<div class=\" colorbox "+getClassForCalendar(c)+"\" ></div>";
     }
 
     public List<String> getChosenCalendars() {
@@ -204,7 +188,7 @@ public class ScheduleBean implements Serializable {
             } else {
                 model.updateEvent(event);
             }
-        }else{
+        } else {
             System.out.println("No Location");
         }
         event = new MeteoCalScheduleEvent(); //reset dialog form
@@ -237,15 +221,24 @@ public class ScheduleBean implements Serializable {
 
     public void updateScheduleModel() {
         model = new MeteoCalScheduleModel();
+        colorclass = new LinkedList<>(Arrays.asList("red", "green", "aqua", "blue", "yellow", "sienna", "violet", "purple"));
+        colorForCalendar = new HashMap<>();
+        Random r = new Random();
 
+        
         if (chosenCalendars != null) {
             for (String c : chosenCalendars) {
+                Integer colid=r.nextInt(colorclass.size());
+                colorForCalendar.put(Integer.parseInt(c), colorclass.get(colid));
+                colorclass.remove(colorclass.get(colid));
+                System.out.println(colorclass);
+                
                 List<Event> evList = (List<Event>) em.createNamedQuery(EventCalendar.findEventsForCalendar, Event.class).setParameter("calendar", Integer.parseInt(c)).getResultList();
 
                 for (Event ev : evList) {
                     MeteoCalScheduleEvent scheduleEvent = new MeteoCalScheduleEvent(ev, calendarManager.findCalendarForId(c));
-                    scheduleEvent.setStyleClass("sunny red");
-                    scheduleEvent.setDescription("sunny");
+                    scheduleEvent.setStyleClass(ev.getWeather() + " "+ colorForCalendar.get(Integer.parseInt(c)));
+                    scheduleEvent.setDescription(ev.getWeather());
                     model.addEvent(scheduleEvent);
                 }
             }
@@ -267,7 +260,7 @@ public class ScheduleBean implements Serializable {
             ev.setVisibility(event.getVisibility());
             ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
             eventManager.update(ev);
-            if (event.getCalendar()!=event.getOld()){
+            if (event.getCalendar() != event.getOld()) {
                 eventManager.linkToCalendar(ev, event.getCalendar());
                 eventManager.toggleLink(ev, event.getOld());
             }

@@ -55,6 +55,8 @@ public class userProfile implements Serializable {
 
     @Inject
     Principal principal;
+    
+    private String photoUrl;
 
     private User user;
     private boolean ownprofile;
@@ -63,6 +65,16 @@ public class userProfile implements Serializable {
     private String surname;
     private Object FilenameUtils;
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    
     public String getSurname() {
         return surname;
     }
@@ -140,17 +152,18 @@ public class userProfile implements Serializable {
     }
 
     public void save() {
-        System.err.println(user.getName());
+        
 
+        user.setProfilePhoto(photoUrl);
         userManager.update(user);
     }
 
     public void handleFileUpload(FileUploadEvent event) {
         UploadedFile file = event.getFile();
         System.out.println("aaaaa");
-        File folder = new File("/resources/avatars");
-        String filename = new UID().toString();
-        String extension = file.getContentType();
+        File folder = new File("/uploads");
+        String filename = "csac";
+        String extension = file.getContentType().substring(file.getContentType().lastIndexOf("/")+1);
 
         try {
             File file2 = File.createTempFile(filename + "-", "." + extension, folder);
