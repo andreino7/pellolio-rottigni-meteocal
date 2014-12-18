@@ -265,7 +265,7 @@ public class ScheduleBean implements Serializable {
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
-            ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()));
+            ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
             eventManager.update(ev);
             if (event.getCalendar()!=event.getOld()){
                 eventManager.linkToCalendar(ev, event.getCalendar());
@@ -278,7 +278,7 @@ public class ScheduleBean implements Serializable {
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
-            ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()));
+            ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
             ev.setEventOwner(user);
             eventManager.save(ev);
             eventManager.linkToCalendar(ev, event.getCalendar());

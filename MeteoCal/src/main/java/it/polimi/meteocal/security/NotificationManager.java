@@ -14,6 +14,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+
 /**
  *
  * @author Filippo
@@ -28,8 +29,11 @@ public class NotificationManager {
          List<Notification> res= new LinkedList<>();
          res.addAll(em.createNamedQuery(WeatherNotification.findByReceiver, WeatherNotification.class).setParameter("user", u.getEmail()).getResultList());
          res.addAll(em.createNamedQuery(ResponseNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-
          return res;
+    }
+    
+    public void createWeatherNotification(WeatherNotification notification) {
+        em.persist(notification);
     }
 
     // Add business logic below. (Right-click in editor and choose

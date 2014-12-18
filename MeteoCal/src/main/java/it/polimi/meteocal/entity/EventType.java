@@ -5,8 +5,13 @@
  */
 package it.polimi.meteocal.entity;
 
+import it.polimi.meteocal.security.WeatherConditions;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -190,8 +195,26 @@ public class EventType implements Serializable {
         return personalized;
     }
 
+
     public void setPersonalized(boolean personalized) {
         this.personalized = personalized;
+    }
+
+    public List<String> getAllowedCondition() {
+        List<String> allowed = new LinkedList<>();
+        if (sun) {
+            allowed.add(WeatherConditions.CLEAR.toString());
+        }
+        if (rain) {
+            allowed.add(WeatherConditions.RAIN.toString());
+        }
+        if (snow) {
+            allowed.add(WeatherConditions.SNOW.toString());
+        }
+        if (cloud) {
+            allowed.add(WeatherConditions.CLOUD.toString());
+        }
+        return allowed;
     }
     
 }

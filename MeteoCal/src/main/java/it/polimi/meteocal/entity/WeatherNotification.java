@@ -7,22 +7,26 @@ package it.polimi.meteocal.entity;
 
 import it.polimi.meteocal.security.Notification;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Filippo
+ * @author Andrea
  */
 @Entity
 @Table(name = "WeatherNotification")
@@ -30,39 +34,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "WeatherNotification.findAll", query = "SELECT w FROM WeatherNotification w"),
     @NamedQuery(name = "WeatherNotification.findById", query = "SELECT w FROM WeatherNotification w WHERE w.id = :id"),
+    @NamedQuery(name = "WeatherNotification.findByState", query = "SELECT w FROM WeatherNotification w WHERE w.state = :state"),
     @NamedQuery(name = "WeatherNotification.findByReceiver", query = "SELECT w FROM WeatherNotification w WHERE w.receiver.email = :user"),
-
-    @NamedQuery(name = "WeatherNotification.findByState", query = "SELECT w FROM WeatherNotification w WHERE w.state = :state")})
-public class WeatherNotification implements Serializable,Notification {
+    @NamedQuery(name = "WeatherNotification.findBySuggestedDate", query = "SELECT w FROM WeatherNotification w WHERE w.suggestedDate = :suggestedDate")})
+public class WeatherNotification implements Serializable, Notification {
+    
     public static final String findByReceiver= "WeatherNotification.findByReceiver";
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ID")
-    private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "State")
-    private String state;
+
+    
     @JoinColumn(name = "About", referencedColumnName = "ID")
     @ManyToOne(optional = false)
     private Event about;
     @JoinColumn(name = "Receiver", referencedColumnName = "Email")
     @ManyToOne(optional = false)
     private User receiver;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "ID")
+    private Integer id;
+    @Size(max = 45)
+    @Column(name = "State")
+    private String state;
+    @Column(name = "SuggestedDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date suggestedDate;
 
     public WeatherNotification() {
     }
 
     public WeatherNotification(Integer id) {
         this.id = id;
-    }
-
-    public WeatherNotification(Integer id, String state) {
-        this.id = id;
-        this.state = state;
     }
 
     public Integer getId() {
@@ -81,20 +84,12 @@ public class WeatherNotification implements Serializable,Notification {
         this.state = state;
     }
 
-    public Event getAbout() {
-        return about;
+    public Date getSuggestedDate() {
+        return suggestedDate;
     }
 
-    public void setAbout(Event about) {
-        this.about = about;
-    }
-
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
+    public void setSuggestedDate(Date suggestedDate) {
+        this.suggestedDate = suggestedDate;
     }
 
     @Override
@@ -122,9 +117,25 @@ public class WeatherNotification implements Serializable,Notification {
         return "it.polimi.meteocal.entity.WeatherNotification[ id=" + id + " ]";
     }
 
+    public Event getAbout() {
+        return about;
+    }
+
+    public void setAbout(Event about) {
+        this.about = about;
+    }
+
+    public User getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
+    }
+
     @Override
     public String getText() {
-        return "The forecasted weather conditions aren't suitable for your event: "+about.getTitle()+"  ";
+        return "For your event " + this.about + "is forecasted " + this.about.getWeather() + ". Do you want to postpone on " + this.suggestedDate + "?";
     }
     
 }

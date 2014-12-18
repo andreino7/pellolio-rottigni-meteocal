@@ -84,14 +84,13 @@ public class MeteoCalScheduleEvent extends DefaultScheduleEvent {
         this.calendar=c;
         this.type=t;
     }
+    
     public MeteoCalScheduleEvent(DefaultScheduleEvent e){
         super();
         this.setTitle(e.getTitle());
         this.setEndDate(e.getEndDate());
         this.setStartDate(e.getStartDate());
-        this.setStyleClass(e.getStyleClass());
-        
-        
+        this.setStyleClass(e.getStyleClass());   
     }
     
     public MeteoCalScheduleEvent(Event e,Calendar c){
