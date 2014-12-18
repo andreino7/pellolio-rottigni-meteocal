@@ -10,7 +10,9 @@ import it.polimi.meteocal.entity.Event;
 import java.util.Date;
 import java.util.List;
 import it.polimi.meteocal.entity.EventCalendar;
+import it.polimi.meteocal.entity.User;
 import java.util.ArrayList;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
@@ -27,6 +29,9 @@ public class EventManager {
 
     @PersistenceContext
     private EntityManager em;
+    
+    @EJB
+    private UserManager userManager;
 
     public Event findEventForId(String id) {
         if (id != null) {
@@ -76,6 +81,16 @@ public class EventManager {
         if (ec!=null){
             em.remove(ec);
         }
+    }
+    
+    public boolean isMyEvent(String id){
+        Event ev=findEventForId(id);
+        return ev.getEventOwner().equals(userManager.getLoggedUser());
+    }
+    
+    public List<User> getParticipant(Event e){
+        List<User> ls=(List<User>) em.createNamedQuery(EventCalendar.findParticipant, User.class).setParameter("event", e.getId()).getResultList();
+        return ls;
     }
     
     // Add business logic below. (Right-click in editor and choose
