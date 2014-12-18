@@ -282,4 +282,12 @@ html, body { margin: 0;
     display: box;
     float: right;
 }
+.ui-menu {
+   height: 300px;
+   overflow: scroll;
+}
 
+.participantlist .ui-datalist-content{
+    height: 150px !important; 
+    overflow: scroll;
+}

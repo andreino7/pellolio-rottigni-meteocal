@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/common/commonLayout.xhtml">
+            <ui:define name="content">
+                <h:form id="eventDetails">
+                    <p:panelGrid styleClass="centered" style="width: 50%;">
+                        <p:row>
+                            <p:column colspan="2">
+                                <h1 style="text-align: center;">#{eventPageBean.event.title}</h1>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Start Date"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{eventPageBean.event.date}" >
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="End Date"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{eventPageBean.event.endDate}" >
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Event Type"/>                            
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{eventPageBean.event.type.title}"/>                            
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Visibility"/>                            
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{eventPageBean.event.visibility}"/>                            
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Location"/>                            
+                            </p:column>
+                            <p:column>
+                                <h:outputText id="addressForEvent" value="#{eventPageBean.event.location}"/>   
+                                <p:commandButton id="btn" type="button"  value="Show" style="margin-left:5px;" onclick="PF('dlg').show();
+                                        centerMapOnLocation();" />
+
+                                <p:dialog id="gmapDialog" widgetVar="dlg" width="30%" height="30%" modal="true">
+                                    <p:gmap id="gmap" widgetVar="gmap" center="36.1699412, -115.13982959999998" 
+                                            zoom="15" type="HYBRID" style="width:100%;height:50vh;" 
+                                            disableDefaultUI="false" />
+                                </p:dialog>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Forecast"/>                            
+                            </p:column>
+                            <p:column>
+                                <div class="#{eventPageBean.event.weather}" style="height:100px;width:100px"></div>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Participant"/>                            
+                            </p:column>
+                            <p:column>
+                                <p:dataList value="#{eventPageBean.participant}" styleClass="participantlist" var="par" type="definition">
+                                    <p:outputPanel style="height:50px; width: 100%; display: block; line-height: 50px;">
+                                        <p:graphicImage style="height: 100%; display: block; float: left;" name="#{par.profilePhoto}"/> 
+                                        #{par.title}
+                                    </p:outputPanel>
+                                </p:dataList>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+
+                            </p:column>
+                            <p:column>
+
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
