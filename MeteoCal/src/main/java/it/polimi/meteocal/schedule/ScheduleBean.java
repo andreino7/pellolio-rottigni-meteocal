@@ -239,6 +239,7 @@ public class ScheduleBean implements Serializable {
                     MeteoCalScheduleEvent scheduleEvent = new MeteoCalScheduleEvent(ev, calendarManager.findCalendarForId(c));
                     scheduleEvent.setStyleClass(ev.getWeather() + " "+ colorForCalendar.get(Integer.parseInt(c)));
                     scheduleEvent.setDescription(ev.getWeather());
+                    
                     model.addEvent(scheduleEvent);
                 }
             }
