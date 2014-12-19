@@ -17,9 +17,8 @@ import javax.persistence.PersistenceContext;
  *
  * @author Filippo
  */
-@FacesConverter("UserConverter")
-public class UserConverter implements Converter {
-
+@FacesConverter("searchResultConverter")
+public class searchResultConverter implements Converter{
     @PersistenceContext
     EntityManager em;
 
@@ -35,11 +34,10 @@ public class UserConverter implements Converter {
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object object) {
         if (object != null) {
-           return String.valueOf(((User) object).getEmail());
-          
+          //  return String.valueOf(((User) object).getEmail());
+          return (String) object; 
         } else {
             return null;
         }
     }
-
 }

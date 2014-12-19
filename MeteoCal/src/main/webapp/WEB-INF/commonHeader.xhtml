@@ -19,7 +19,7 @@
                         <h:form>
                             <p:autoComplete value="#{searchBean.res}" var="res" itemLabel="#{res.title}" 
                                             completeMethod="#{searchBean.complete}" itemValue="val" 
-                                            converter="UserConverter" maxResults="5" 
+                                            converter="searchResultConverter" maxResults="5" 
                                             groupBy="#{res.group}">
                                 
                                 <p:column>
@@ -27,7 +27,7 @@
                                 </p:column>
                                 
                                 <p:column>
-                                    <h:link outcome="/user/UserProfile.xhtml" value="#{res.title}">
+                                    <h:link outcome="#{res.pageLink}" value="#{res.title}">
                                         <f:param name="id" value="#{res.prime}"/>
                                     </h:link>
                                 </p:column>

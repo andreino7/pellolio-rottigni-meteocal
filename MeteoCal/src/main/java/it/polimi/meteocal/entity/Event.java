@@ -283,5 +283,10 @@ public class Event implements Serializable,SearchResult {
         this.eventOwner = eventOwner;
     }
 
+    @Override
+    public String getPageLink() {
+        return "/user/event.xhtml";
+    }
+
    
 }

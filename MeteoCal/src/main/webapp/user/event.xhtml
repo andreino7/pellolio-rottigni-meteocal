@@ -93,10 +93,23 @@
                         </p:row>
                         <p:row>
                             <p:column>
-
+                                <h:outputText value="Invite"/>                            
                             </p:column>
                             <p:column>
+                                <p:autoComplete id="toInvite" multiple="true" value="#{eventPageBean.toInvite}" completeMethod="#{eventPageBean.complete}"
+                                                var="user" itemLabel="#{user.title}" itemValue="#{user}" converter="UserConverter" forceSelection="true">
+                                    <f:param name="id" value="#{eventPageBean.event.id}"/>
+                                    <p:column style="width:10%">
+                                        
+                                    </p:column>
 
+                                    <p:column>
+                                        <h:outputText value="#{user.title}" />
+                                   
+                                    </p:column>
+                                </p:autoComplete>     
+                                
+                                <p:commandButton id="sendInvitesButton" value="Send Invites" action="#{eventPageBean.sendInvites}" update="@form"/>
                             </p:column>
                         </p:row>
                     </p:panelGrid>
