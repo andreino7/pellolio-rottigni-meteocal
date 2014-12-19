@@ -13,6 +13,7 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>theme</param-value>
     </context-param>
+   
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>

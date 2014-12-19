@@ -13,4 +13,5 @@ public interface SearchResult {
     public String getTitle();
     public String getGroup();
     public String getPrime();
+    public String getPageLink();
 }

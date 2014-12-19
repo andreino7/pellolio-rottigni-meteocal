@@ -323,6 +323,11 @@ return "User";    }
 
     public void setEventCollection(Collection<Event> eventCollection) {
         this.eventCollection = eventCollection;
+    } 
+
+    @Override
+    public String getPageLink() {
+        return "/user/UserProfile.xhtml";
     }
     
 }

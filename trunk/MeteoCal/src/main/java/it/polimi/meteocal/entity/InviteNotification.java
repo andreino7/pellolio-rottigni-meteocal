@@ -36,11 +36,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "InviteNotification.findAll", query = "SELECT i FROM InviteNotification i"),
     @NamedQuery(name = "InviteNotification.findById", query = "SELECT i FROM InviteNotification i WHERE i.id = :id"),
+    @NamedQuery(name = "InviteNotification.findByReceiverAndEvent", query = "SELECT i FROM InviteNotification i WHERE i.about.id = :event AND i.receiver.email = :user"),
     @NamedQuery(name = "InviteNotification.findByReceiver", query = "SELECT w FROM InviteNotification w WHERE w.receiver.email = :user"),    
     @NamedQuery(name = "InviteNotification.findByState", query = "SELECT i FROM InviteNotification i WHERE i.state = :state")})
 public class InviteNotification implements Serializable,Notification {
     public static final String findByReceiver= "InviteNotification.findByReceiver";
-    
+    public static final String findByReceiverAndEvent= "InviteNotification.findByReceiverAndEvent";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

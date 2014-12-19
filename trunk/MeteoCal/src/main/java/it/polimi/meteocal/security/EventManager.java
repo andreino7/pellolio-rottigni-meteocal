@@ -10,12 +10,14 @@ import it.polimi.meteocal.entity.Event;
 import java.util.Date;
 import java.util.List;
 import it.polimi.meteocal.entity.EventCalendar;
+import it.polimi.meteocal.entity.InviteNotification;
 import it.polimi.meteocal.entity.User;
 import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 /**
@@ -24,15 +26,13 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class EventManager {
-
-
-
+    
     @PersistenceContext
     private EntityManager em;
     
     @EJB
     private UserManager userManager;
-
+    
     public Event findEventForId(String id) {
         if (id != null) {
             return em.find(Event.class, Integer.parseInt(id));
@@ -49,12 +49,12 @@ public class EventManager {
         }
     }
     
-    public void save(Event e){
+    public void save(Event e) {
         System.out.println(e);
         em.persist(e);
     }
     
-    public void update(Event e){
+    public void update(Event e) {
         em.merge(e);
     }
     
@@ -68,31 +68,63 @@ public class EventManager {
         List<Event> events = q.getResultList();
         return events;
     }
-
-    public void linkToCalendar(Event e,Calendar c){
-        EventCalendar ec= new EventCalendar();
+    
+    public void linkToCalendar(Event e, Calendar c) {
+        EventCalendar ec = new EventCalendar();
         ec.setEvent(e);
         ec.setCalendar(c);
         em.persist(ec);
     }
     
-    public void toggleLink(Event e,Calendar c){
-        EventCalendar ec=em.createNamedQuery(EventCalendar.findEventCalendarForEventAndCalendar,EventCalendar.class).setParameter("event", e.getId()).setParameter("calendar", c.getId()).getSingleResult();
-        if (ec!=null){
+    public void toggleLink(Event e, Calendar c) {
+        EventCalendar ec = em.createNamedQuery(EventCalendar.findEventCalendarForEventAndCalendar, EventCalendar.class).setParameter("event", e.getId()).setParameter("calendar", c.getId()).getSingleResult();
+        if (ec != null) {
             em.remove(ec);
         }
     }
     
-    public boolean isMyEvent(String id){
-        Event ev=findEventForId(id);
+    public boolean isMyEvent(String id) {
+        Event ev = findEventForId(id);
         return ev.getEventOwner().equals(userManager.getLoggedUser());
     }
     
-    public List<User> getParticipant(Event e){
-        List<User> ls=(List<User>) em.createNamedQuery(EventCalendar.findParticipant, User.class).setParameter("event", e.getId()).getResultList();
+    public List<User> getParticipant(Event e) {
+        List<User> ls = (List<User>) em.createNamedQuery(EventCalendar.findParticipant, User.class).setParameter("event", e.getId()).getResultList();
         return ls;
     }
     
+    public List<User> getNonParticipant(Event e) {
+        List<User> ls = (List<User>) em.createNamedQuery(EventCalendar.findNonParticipant, User.class).setParameter("event", e.getId()).getResultList();
+        return ls;
+    }
+    
+    public List<User> getNonParticipantByPart(Event e, String query) {
+        List<User> ls = (List<User>) em.createNamedQuery(EventCalendar.findNonParticipantByPart, User.class).setParameter("event", e.getId()).setParameter("part", "%" + query + "%").getResultList();
+        return ls;        
+    }
+    
+    public boolean UserAlreadyInvited(Event e, User u) {
+        InviteNotification i=null;
+        try{
+            i=(InviteNotification) em.createNamedQuery(InviteNotification.findByReceiverAndEvent, InviteNotification.class).setParameter("user", u.getEmail()).setParameter("event", e.getId()).getSingleResult();
+        }catch(NoResultException ex){
+             
+        }
+        return i!=null;
+    }
+    
+    public void inviteUsersToEvent(List<User> toInvite, Event e) {
+        for (User u : toInvite) {
+            if (!UserAlreadyInvited(e, u)) {
+                InviteNotification invite = new InviteNotification(0, "UNREAD");
+                invite.setReceiver(u);
+                invite.setSender(userManager.getLoggedUser());
+                invite.setAbout(e);
+                em.persist(invite);
+            }
+        }
+    }
+
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 }
