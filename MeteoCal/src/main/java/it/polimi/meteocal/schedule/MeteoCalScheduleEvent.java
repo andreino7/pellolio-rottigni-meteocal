@@ -24,6 +24,16 @@ public class MeteoCalScheduleEvent extends DefaultScheduleEvent {
     private String location;
     private String visibility;
     private Calendar old;
+    private boolean visible;
+    private boolean common;
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public boolean isCommon() {
+        return common;
+    }
     
     
 
@@ -73,6 +83,7 @@ public class MeteoCalScheduleEvent extends DefaultScheduleEvent {
         this.calendar = calendar;
         System.out.println(calendar);
     }
+  
     
     public MeteoCalScheduleEvent(){
         super();
@@ -105,8 +116,28 @@ public class MeteoCalScheduleEvent extends DefaultScheduleEvent {
         this.visibility=e.getVisibility();
         this.old=c;
     }
-    
-   
+     //aggiunto
+       public MeteoCalScheduleEvent(Event e, boolean common){
+        if (e.getVisibility().equals(Visibility.Public) || common == true) {
+            this.setTitle(e.getTitle());
+            this.setEndDate(e.getEndDate());
+            this.setStartDate(e.getDate());
+            this.dbId=e.getId();
+            this.location=e.getLocation();
+            this.type=e.getType();
+            this.visibility=e.getVisibility();
+            visible = true;
+            this.common = common;
+        } else {
+            this.setTitle("Private Event");
+            this.setEndDate(e.getEndDate());
+            this.setStartDate(e.getDate());
+            this.dbId=e.getId();
+            visible = false;
+        }
+    }
+       
+
     
     public String toString(){
         return "MeteocalEvent id:"+getId()+" Calendar: "+calendar.getTitle();

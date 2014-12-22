@@ -51,7 +51,7 @@ public class NotificationBean {
         
     }
     
-    @PostConstruct
+  //  @PostConstruct
     public void postConstruct(){
         
         List<Notification> notif= notificationManager.getNotificationForUser(userManager.getLoggedUser());
