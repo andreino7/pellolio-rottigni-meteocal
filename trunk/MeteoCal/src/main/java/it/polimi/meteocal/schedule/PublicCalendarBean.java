@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,7 +31,7 @@ import org.primefaces.model.ScheduleEvent;
  * @author Andrea
  */
 @Named(value = "publicCalendarBean")
-@SessionScoped
+@ViewScoped
 public class PublicCalendarBean implements Serializable {
     
     private String value; 
@@ -131,7 +132,7 @@ public class PublicCalendarBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         initParam();
-        this.user = new User();
+        init();
     }
     
     
