@@ -106,11 +106,20 @@ public class PublicCalendarBean implements Serializable {
             if (allLoggedEvents.contains(e)) {
                 common = true;
                 MeteoCalScheduleEvent se = new MeteoCalScheduleEvent(e, common);
+                se.setStyleClass("blue");
                 model.addEvent(se);
             } else {
-                common = false;
-                MeteoCalScheduleEvent se = new MeteoCalScheduleEvent(e, common);
-                model.addEvent(se);
+                if (e.getVisibility().equals(Visibility.Private)) {
+                    common = false;
+                    MeteoCalScheduleEvent se = new MeteoCalScheduleEvent(e, common);
+                    se.setStyleClass("red");
+                    model.addEvent(se);
+                } else {
+                    common = false;
+                    MeteoCalScheduleEvent se = new MeteoCalScheduleEvent(e, common);
+                    se.setStyleClass("green");
+                    model.addEvent(se);
+                }
             }
         }
     }
