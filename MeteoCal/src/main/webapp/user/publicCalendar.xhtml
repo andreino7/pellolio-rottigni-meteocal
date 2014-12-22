@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <f:metadata>
+            <f:viewParam name="id" value="#{publicCalendarBean.value}" />
+         </f:metadata>
+    </h:head>
+    <h:body>
+
+
+        <ui:composition template="/template/common/homeLayout.xhtml">
+
+
+
+            <ui:define name="leftBar">   
+                <p:graphicImage value="/resources/#{publicCalendarBean.user.profilePhoto}" width="100%"/>
+            </ui:define>
+            <ui:define id="mainContent" name="content">
+                <p:schedule id="schedule" value="#{publicCalendarBean.model}" aspectRatio="2" styleClass="scheduleHome"  
+                            ignoreTimezone="false" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
+                            tooltip="true">
+                    <p:ajax event="eventSelect" listener="#{publicCalendarBean.onEventSelect}"
+                            update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                </p:schedule>
+
+
+                <p:dialog widgetVar="eventDialog" header="Event Details" resizable="false" 
+                          style="height:50% !important; height:40% !important; top:25% !important; 
+                          left: 30% !important;">
+                    <h:form id="eventDetails" >
+                        <h:panelGrid columns="2"  >
+                            <h:outputLabel for="title" value="Title:" />
+                            <p:outputLabel id="title" value="#{publicCalendarBean.event.title}" rendered="#{(publicCalendarBean.event.visible or publicCalendarBean.event.common)?true:false}" />
+                            <p:outputLabel id="titlePrivate" value="This is a private event" rendered="#{(publicCalendarBean.event.visible or publicCalendarBean.event.common)?false:true}" />
+
+                
+                            <h:outputLabel for="startdatetime" value="From:" />
+                            <p:outputLabel id="startdatetime" value="#{publicCalendarBean.event.startDate}" />
+                          
+                            <h:outputLabel for="enddatetime" value="To:" />
+                            <p:outputLabel id="enddatetime" value="#{publicCalendarBean.event.endDate}" />
+
+
+                            
+
+                            <h:outputLabel for="addressForEvent" value="Location:" rendered="#{(publicCalendarBean.event.visible or publicCalendarBean.event.common)?true:false}" />
+
+                            <p:outputLabel id="addressForEvent" value="#{publicCalendarBean.event.location}" rendered="#{(publicCalendarBean.event.visible or publicCalendarBean.event.common)?true:false}" />
+
+                            <h:outputLabel for="CalendarForEvent" value="Calendar:" rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common)?true:false}"/>
+                            <p:selectOneMenu id="CalendarForEvent" value="#{publicCalendarBean.event.calendar}" required="true" converter="CalendarConverter" rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common)?true:false}">
+                                <f:selectItem itemLabel="Select Calendar"  noSelectionOption="false" />
+                                <f:selectItems value="#{publicCalendarBean.loggedUserCalendars}" var="cal" itemValue="#{cal}" itemLabel="#{cal.title}" />
+                            </p:selectOneMenu>
+
+                            <p:messages autoUpdate="true" globalOnly="false"/>
+                            <p:commandButton id="button" value="Add" action="#{publicCalendarBean.add()}"  rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common)?true:false}"
+                                             oncomplete="#{publicCalendarBean.updateScheduleModel()}; PF('eventDialog').hide();">
+                                <f:ajax execute="button" render="schedule" />
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+
+        </ui:composition>
+
+    </h:body> 
+</html>
+

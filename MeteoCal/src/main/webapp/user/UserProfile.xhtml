@@ -64,8 +64,17 @@
                             <h:outputText value="#{userProfile.user.phoneNumber}" rendered="#{userProfile.ownprofile?false:true}"/>
                             <h:inputText value="#{userProfile.user.phoneNumber}" rendered="#{userProfile.ownprofile?true:false}"/>
                         </p:column>
+        
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:link outcome="/user/publicCalendar.xhtml" value="view public calendars" rendered="#{userProfile.ownprofile?false:true}">
+                                <f:param name="id" value="#{userProfile.user.email}"/>
+                            </h:link>
+                        </p:column>
                     </p:row>
                     
+
                     <p:row rendered="#{userProfile.ownprofile?true:false}">
                         <p:column>
                             <p:commandButton update="@form" value="Discard" action="#{userProfile.reset()}">
