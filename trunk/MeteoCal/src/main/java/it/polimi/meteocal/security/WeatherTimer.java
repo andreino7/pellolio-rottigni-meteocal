@@ -11,6 +11,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -42,31 +44,40 @@ public class WeatherTimer {
        return eventManager.findByDay(d1,d2);
    }
    
-//   @Schedule(second = "0", minute = "0", hour = "*/00", persistent = false)
-   private void checkWeather() {
+  // @Schedule(second = "*/30", minute = "*", hour = "*", persistent = false)
+   public void checkWeather() {
        System.out.println("timeout");
        Calendar cal = Calendar.getInstance();
        calendarSetUp(cal);
-       cal.add(Calendar.DATE, 3);
+       cal.add(Calendar.DATE, 2);
        Date d1 = cal.getTime();
        cal.add(Calendar.DATE, 1);
        Date d2 = cal.getTime();
        List<Event> events = findEventToCheck(d1, d2);
        for (Event e: events) {
             Map<Date, WeatherConditions> forecast = weather.getForecast(e.getLocation());
-            e.setWeather(forecast.get(d1).toString());
+      //      e.setWeather(forecast.get(d1).toString());
             List<String> allowed = e.getType().getAllowedCondition();
             if (!allowed.contains(e.getWeather())) {
-                Date d = lookForOkDay(allowed, forecast, d2);
+                Date d = lookForOkDay(allowed, forecast, d2, e);
                 createOwnerWeatherNotification(e, d);
             }
        }
    }
 
-    private Date lookForOkDay(List<String> allowed, Map<Date, WeatherConditions> forecast, Date date) {
+    private Date lookForOkDay(List<String> allowed, Map<Date, WeatherConditions> forecast, Date date, Event e) {
         for (Date d: forecast.keySet()) {
             if (d.after(date) && allowed.contains(forecast.get(d).toString())) {
-                return d;
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(e.getDate());
+                int hour = cal.get(Calendar.HOUR_OF_DAY);
+                int minute = cal.get(Calendar.MINUTE);
+                int second = cal.get(Calendar.SECOND);
+                cal.setTime(d);
+                cal.set(Calendar.HOUR_OF_DAY, hour);
+                cal.set(Calendar.MINUTE, minute);
+                cal.set(Calendar.SECOND, second);
+                return cal.getTime();
             }
         }
         return null;
@@ -80,6 +91,12 @@ public class WeatherTimer {
         wn.setAbout(e);
         wn.setSuggestedDate(d);
         notificationManager.createWeatherNotification(wn);
+    }
+    
+    @PostConstruct
+    public void setTimeZone() {
+        TimeZone tz = TimeZone.getTimeZone("GMT");
+        TimeZone.setDefault(tz);
     }
 
 }

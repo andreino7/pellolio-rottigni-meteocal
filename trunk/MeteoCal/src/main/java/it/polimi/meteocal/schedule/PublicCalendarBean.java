@@ -137,11 +137,14 @@ public class PublicCalendarBean implements Serializable {
     }
     
     public void onEventSelect(SelectEvent e) {
+        System.out.println(e);
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
-        event = model.getMeteoEvent(ev.getId());
-        geoLoc = event.getLocation();
+        if (ev != null) {
+            event = model.getMeteoEvent(ev.getId());
+            geoLoc = event.getLocation();
+        }
 
-    }
+    } 
     
     public void add() {
         Event e = em.find(Event.class, event.getDbId());
