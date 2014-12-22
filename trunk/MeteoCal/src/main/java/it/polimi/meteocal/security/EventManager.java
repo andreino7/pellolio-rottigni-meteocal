@@ -49,6 +49,7 @@ public class EventManager {
         }
     }
     
+    
     public void save(Event e) {
         System.out.println(e);
         em.persist(e);
