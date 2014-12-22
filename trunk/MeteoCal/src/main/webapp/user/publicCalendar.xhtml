@@ -61,7 +61,7 @@
 
                             <p:messages autoUpdate="true" globalOnly="false"/>
                             <p:commandButton id="button" value="Add" action="#{publicCalendarBean.add()}"  rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common)?true:false}"
-                                             oncomplete="#{publicCalendarBean.updateScheduleModel()}; PF('eventDialog').hide();">
+                                             oncomplete="PF('eventDialog').hide();">
                                 <f:ajax execute="button" render="schedule" />
                             </p:commandButton>
                         </h:panelGrid>

@@ -8,7 +8,6 @@ package it.polimi.meteocal.schedule;
 import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.EventCalendar;
-import static it.polimi.meteocal.entity.EventCalendar_.event;
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.UserManager;
@@ -22,7 +21,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.ScheduleEvent;
@@ -66,12 +64,6 @@ public class PublicCalendarBean implements Serializable {
     public MeteoCalScheduleModel getModel() {
         return model;
     }
-
-    
-    
-
-    
-    
 
     
     public String getValue() {
@@ -137,11 +129,26 @@ public class PublicCalendarBean implements Serializable {
     }
     
     public void onEventSelect(SelectEvent e) {
-        System.out.println(e);
+        System.out.println("select: " + e);
+        event = (MeteoCalScheduleEvent) model.getMeteoEvent(((MeteoCalScheduleEvent) e.getObject()).getId());
+    /*    System.out.println(e);
+        Object o = e.getObject();
+        System.out.println(o);
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
         if (ev != null) {
+            System.out.println("qua");
             event = model.getMeteoEvent(ev.getId());
-            geoLoc = event.getLocation();
+            geoLoc = event.getLocation();        
+        } else {
+            System.err.println("qua");
+        } */
+        List<ScheduleEvent> lista = model.getEvents();
+        if (lista.isEmpty()) {
+            System.out.println("vuota");
+        } else {
+            for (ScheduleEvent a: lista) {
+                System.out.println(a.getId());
+            }
         }
 
     } 
