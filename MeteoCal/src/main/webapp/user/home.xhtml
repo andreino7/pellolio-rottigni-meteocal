@@ -56,19 +56,19 @@
 
                             <h:outputLabel for="CalendarForEvent" value="Calendar:" />
                             <p:selectOneMenu id="CalendarForEvent"  value="#{scheduleBean.event.calendar}" required="true" converter="CalendarConverter" >
-                                <f:selectItem itemLabel="Select Calendar"  noSelectionOption="false"  />
+                                <f:selectItem itemLabel="Select Calendar"  noSelectionOption="true"  />
                                 <f:selectItems value="#{scheduleBean.userCalendars}" var="cal" itemValue="#{cal}" itemLabel="#{cal.title}" />
                             </p:selectOneMenu>
 
                             <h:outputLabel for="TypeForEvent" value="EventType:" />
                             <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" required="true" converter="EventTypeConverter" >
-                                <f:selectItem itemLabel="Select Type"  noSelectionOption="false" />
+                                <f:selectItem itemLabel="Select Type"  noSelectionOption="true" />
                                 <f:selectItems value="#{scheduleBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
                             </p:selectOneMenu>
-                            
-                             <h:outputLabel for="VisForEvent" value="EventType:" />
+
+                            <h:outputLabel for="VisForEvent" value="EventType:" />
                             <p:selectOneMenu id="VisForEvent" required="true" value="#{scheduleBean.event.visibility}" >
-                                <f:selectItem itemLabel="Select Visibility"  noSelectionOption="false" />
+                                <f:selectItem itemLabel="Select Visibility"  noSelectionOption="true" />
                                 <f:selectItems value="#{scheduleBean.visibilities}" var="vis" itemValue="#{vis}" itemLabel="#{vis}" />
                             </p:selectOneMenu>
 
@@ -78,7 +78,9 @@
 
 
                             <p:messages autoUpdate="true" globalOnly="false"/>
-                            <h:selectBooleanCheckbox id="allDay" value="#{scheduleBean.event.allDay}" />
+                            <h:link outcome="/user/event.xhtml" value="Go to Event Page">
+                                <f:param name="id" value="#{scheduleBean.event.dbId}"/>
+                            </h:link>
                             <p:commandButton type="reset" value="Reset" />
                             <p:commandButton value="Save" actionListener="#{scheduleBean.addEvent}" onstart="codeAddress()"
                                              oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>

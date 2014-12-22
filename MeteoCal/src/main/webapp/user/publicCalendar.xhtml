@@ -19,7 +19,7 @@
 
 
             <ui:define name="leftBar">   
-                <p:graphicImage value="/resources/#{publicCalendarBean.user.profilePhoto}" width="100%"/>
+                <p:graphicImage value="#{publicCalendarBean.user.profilePhoto}" width="100%"/>
             </ui:define>
             <ui:define id="mainContent" name="content">
                 <p:schedule id="schedule" value="#{publicCalendarBean.model}" aspectRatio="2" styleClass="scheduleHome"  

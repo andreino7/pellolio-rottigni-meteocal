@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.entity;
 
+import it.polimi.meteocal.schedule.Visibility;
 import it.polimi.meteocal.security.SearchResult;
 import java.io.Serializable;
 import java.util.Collection;
@@ -40,7 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e"),
     @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id"),
     @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title"),
-    @NamedQuery(name = "Event.findByPartOfTitle", query = "SELECT e FROM Event e WHERE e.title LIKE :part AND e.visibility='public'"),
+    @NamedQuery(name = "Event.findByPartOfTitle", query = "SELECT e FROM Event e WHERE e.title LIKE :part AND e.visibility='"+Visibility.Public+"'" ),
     @NamedQuery(name = "Event.findByVisibility", query = "SELECT e FROM Event e WHERE e.visibility = :visibility"),
     @NamedQuery(name = "Event.findByDate", query = "SELECT e FROM Event e WHERE e.date = :date"),
     @NamedQuery(name = "Event.findByEndDate", query = "SELECT e FROM Event e WHERE e.endDate = :endDate"),
