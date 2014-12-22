@@ -76,13 +76,16 @@ public class PublicCalendarBean implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
-        init();
 
     }
     
     public void init() {
         this.user = userManager.findUserforId(value);
         updateScheduleModel();
+    }
+    
+    public PublicCalendarBean(){
+        this.model= new MeteoCalScheduleModel();
     }
 
     public void setUser(User user) {
@@ -144,6 +147,7 @@ public class PublicCalendarBean implements Serializable {
         Object o = e.getObject();
         System.out.println(o);
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
+       
         if (ev != null) {
             System.out.println("qua");
             event = model.getMeteoEvent(ev.getId());
