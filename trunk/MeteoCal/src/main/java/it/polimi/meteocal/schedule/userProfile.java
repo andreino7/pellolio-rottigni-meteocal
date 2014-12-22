@@ -131,17 +131,14 @@ public class userProfile implements Serializable {
     }
 
     public void init() {
-
         this.user = userManager.findUserforId(value);
-
         ownprofile = em.find(User.class, principal.getName()).equals(this.user);
-
     }
 
     public void initParam() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
         value = request.getParameter("id");
+        System.out.println("id: " + value);
 
     }
 

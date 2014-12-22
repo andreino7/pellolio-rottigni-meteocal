@@ -37,11 +37,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Calendar.findById", query = "SELECT c FROM Calendar c WHERE c.id = :id"),
     @NamedQuery(name = "Calendar.findByOwner", query = "SELECT c FROM Calendar c WHERE c.owner.email = :ownerEmail"),
     @NamedQuery(name = "Calendar.findByTitle", query = "SELECT c FROM Calendar c WHERE c.title = :title"),
-    @NamedQuery(name = "Calendar.findByVisibility", query = "SELECT c FROM Calendar c WHERE c.visibility = :visibility")})
+    @NamedQuery(name = "Calendar.findByVisibility", query = "SELECT c FROM Calendar c WHERE c.visibility = :visibility"),
+    @NamedQuery(name = "Calendar.findPublicByOwner", query = "SELECT c FROM Calendar c WHERE c.owner.email = :ownerEmail AND c.visibility = 'public'")})
 public class Calendar implements Serializable {
     public static final String findByOwner="Calendar.findByOwner";
     public static final String findById="Calendar.findById";
     private static final long serialVersionUID = 1L;
+    public static String findPublicByOwner="Calendar.findPublicByOwner";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)

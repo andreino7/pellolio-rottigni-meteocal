@@ -30,6 +30,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
@@ -74,6 +75,8 @@ public class ScheduleBean implements Serializable {
 
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
+    private String value;
+    private boolean ownCalendar;
 
     public String getGeoLoc() {
         return geoLoc;
@@ -158,7 +161,6 @@ public class ScheduleBean implements Serializable {
         user = userManager.getLoggedUser();
 
         updateScheduleModel();
-
         visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
         event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
@@ -169,6 +171,7 @@ public class ScheduleBean implements Serializable {
          for (Calendar c:Calendars){
          userCalendars.put(c.getTitle(), c);
          }*/
+   //     }
     }
 
     public MeteoCalScheduleEvent getEvent() {
@@ -280,5 +283,7 @@ public class ScheduleBean implements Serializable {
         }
 
     }
+
+
 
 }
