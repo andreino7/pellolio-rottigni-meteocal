@@ -12,6 +12,7 @@ import java.util.List;
 import it.polimi.meteocal.entity.EventCalendar;
 import it.polimi.meteocal.entity.InviteNotification;
 import it.polimi.meteocal.entity.User;
+import it.polimi.meteocal.schedule.Visibility;
 import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -75,6 +76,10 @@ public class EventManager {
         ec.setEvent(e);
         ec.setCalendar(c);
         em.persist(ec);
+    }
+    
+    public boolean invitePermission(Event e){
+        return e.getVisibility()==Visibility.Public || e.getEventOwner().equals(userManager.getLoggedUser());
     }
     
     public void toggleLink(Event e, Calendar c) {

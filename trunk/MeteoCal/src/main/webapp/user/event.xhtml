@@ -22,52 +22,72 @@
                             <p:column>
                                 <h:outputText value="Start Date"/>
                             </p:column>
-                            <p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?false:true}">
                                 <h:outputText value="#{eventPageBean.event.date}" >
                                     <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss"/>
                                 </h:outputText>
+                            </p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?true:false}">
+                                <p:calendar value="#{eventPageBean.event.date}" pattern="MM/dd/yyyy HH:mm:ss"/>
+
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
                                 <h:outputText value="End Date"/>
                             </p:column>
-                            <p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?false:true}">
                                 <h:outputText value="#{eventPageBean.event.endDate}" >
                                     <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss"/>
                                 </h:outputText>
+                            </p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?true:false}">
+                                <p:calendar value="#{eventPageBean.event.endDate}" pattern="MM/dd/yyyy HH:mm:ss"/>
+
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
                                 <h:outputText value="Event Type"/>                            
                             </p:column>
-                            <p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?false:true}">
                                 <h:outputText value="#{eventPageBean.event.type.title}"/>                            
+                            </p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?true:false}">
+                                <p:selectOneMenu id="TypeForEvent" value="#{eventPageBean.event.type}" required="true" converter="EventTypeConverter" >
+                                    <f:selectItem itemLabel="Select Type"  noSelectionOption="true" /> 
+                                    <f:selectItems value="#{eventPageBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
+                                </p:selectOneMenu>
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
                                 <h:outputText value="Visibility"/>                            
                             </p:column>
-                            <p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?false:true}">
                                 <h:outputText value="#{eventPageBean.event.visibility}"/>                            
+                            </p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?true:false}">
+                                <p:selectOneMenu id="VisibilityForEvent" value="#{eventPageBean.event.visibility}" required="true">
+                                    <f:selectItems value="#{eventPageBean.visibilities}" />
+                                </p:selectOneMenu>
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
                                 <h:outputText value="Location"/>                            
                             </p:column>
-                            <p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?false:true}">
                                 <h:outputText id="addressForEvent" value="#{eventPageBean.event.location}"/>   
                                 <p:commandButton id="btn" type="button"  value="Show" style="margin-left:5px;" onclick="PF('dlg').show();
                                         centerMapOnLocation();" />
 
-                                <p:dialog id="gmapDialog" widgetVar="dlg" width="30%" height="30%" modal="true">
-                                    <p:gmap id="gmap" widgetVar="gmap" center="36.1699412, -115.13982959999998" 
-                                            zoom="15" type="HYBRID" style="width:100%;height:50vh;" 
-                                            disableDefaultUI="false" />
-                                </p:dialog>
+
+                            </p:column>
+                            <p:column rendered="#{eventPageBean.ownedEvent?true:false}">
+                                <p:inputText id="addressForEventInput" value="#{eventPageBean.geoLoc}" onblur="codeAddressInput()" onkeyup="codeAddressInput()" />
+                                <p:commandButton id="btn2" type="button"  value="Show" style="margin-left:5px;" onclick="PF('dlg').show();
+                                        centerMapOnLocationWithInput();" />
                             </p:column>
                         </p:row>
                         <p:row>
@@ -85,13 +105,13 @@
                             <p:column>
                                 <p:dataList value="#{eventPageBean.participant}" styleClass="participantlist" var="par" type="definition">
                                     <p:outputPanel style="height:50px; width: 100%; display: block; line-height: 50px;">
-                                        <p:graphicImage style="height: 100%; display: block; float: left;" name="#{par.profilePhoto}"/> 
+                                        <p:graphicImage style="height: 100%; display: block; float: left;" value="#{par.profilePhoto}"/> 
                                         #{par.title}
                                     </p:outputPanel>
                                 </p:dataList>
                             </p:column>
                         </p:row>
-                        <p:row>
+                        <p:row rendered="#{eventPageBean.invitePermission}">
                             <p:column>
                                 <h:outputText value="Invite"/>                            
                             </p:column>
@@ -99,20 +119,36 @@
                                 <p:autoComplete id="toInvite" multiple="true" value="#{eventPageBean.toInvite}" completeMethod="#{eventPageBean.complete}"
                                                 var="user" itemLabel="#{user.title}" itemValue="#{user}" converter="UserConverter" forceSelection="true">
                                     <f:param name="id" value="#{eventPageBean.event.id}"/>
-                                    <p:column style="width:10%">
-                                        
-                                    </p:column>
-
                                     <p:column>
-                                        <h:outputText value="#{user.title}" />
-                                   
+                                        <p:outputPanel style="height:50px; width: 100%; display: block; line-height: 50px;">
+                                            <p:graphicImage style="height: 100%; display: block; float: left;" value="#{user.profilePhoto}"/> 
+                                            #{user.title}
+                                        </p:outputPanel>
                                     </p:column>
                                 </p:autoComplete>     
-                                
+
                                 <p:commandButton id="sendInvitesButton" value="Send Invites" action="#{eventPageBean.sendInvites}" update="@form"/>
                             </p:column>
                         </p:row>
+                        <p:row rendered="#{eventPageBean.ownedEvent}">
+                            <p:column>
+                                <p:commandButton action="#{eventPageBean.reset}" value="Reset" update="@form"/>
+
+                            </p:column>
+                            <p:column>
+                                <p:commandButton action="#{eventPageBean.save}" value="Save" update="@form"/>
+                            </p:column>
+                        </p:row>
                     </p:panelGrid>
+                    <p:dialog id="gmapDialog" widgetVar="dlg" width="30%" height="30%" modal="true">
+                        <p:gmap id="gmap" widgetVar="gmap" center="36.1699412, -115.13982959999998" 
+                                zoom="15" type="HYBRID" style="width:100%;height:50vh;" 
+                                disableDefaultUI="false" />
+                    </p:dialog>
+                </h:form>
+                <h:form>
+                    <p:remoteCommand name="gc" process="@this @form" autoRun="false"  actionListener="#{eventPageBean.onGeolocation()}" />
+
                 </h:form>
             </ui:define>
         </ui:composition>
