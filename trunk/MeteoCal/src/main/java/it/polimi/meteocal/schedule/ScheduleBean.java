@@ -234,7 +234,6 @@ public class ScheduleBean implements Serializable {
                 Integer colid=r.nextInt(colorclass.size());
                 colorForCalendar.put(Integer.parseInt(c), colorclass.get(colid));
                 colorclass.remove(colorclass.get(colid));
-                System.out.println(colorclass);
                 
                 List<Event> evList = (List<Event>) em.createNamedQuery(EventCalendar.findEventsForCalendar, Event.class).setParameter("calendar", Integer.parseInt(c)).getResultList();
 

@@ -110,7 +110,7 @@ public class PublicCalendarBean implements Serializable {
         for (Calendar calendar : calendars) {
             allEvents.addAll(em.createNamedQuery(EventCalendar.findEventsForCalendar, Event.class).setParameter("calendar", calendar.getId()).getResultList());
         }
-        for (Event e: allEvents) {
+        for (Event e: allEvents){
             if (allLoggedEvents.contains(e)) {
                 common = true;
                 MeteoCalScheduleEvent se = new MeteoCalScheduleEvent(e, common);
