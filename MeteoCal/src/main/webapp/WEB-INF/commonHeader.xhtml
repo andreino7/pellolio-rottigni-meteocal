@@ -42,10 +42,10 @@
 
             <div id="userBar">
                 <h:form styleClass="ButtonNotificationsForm">
+                    <h:outputLabel class="count" value="#{notificationBean.notificationNumber}" rendered="#{notificationBean.thereNotification?true:false}" />
                     <p:menuButton value="" styleClass="ButtonNotifications" model="#{notificationBean.model}">
-                    
-                </p:menuButton>
-                    </h:form>    
+                    </p:menuButton>
+                </h:form>    
                 <h:graphicImage value="#{userBean.profilePhoto}" id="userPhotoBar"/>
                 <p:link id="userBarNameButton" outcome="/user/UserProfile.xhtml" value="#{userBean.name} #{userBean.surname}">
                     <f:param name="id" value="#{userBean.email}"/>
@@ -53,7 +53,12 @@
                 <p:link styleClass="userBarLogoutButton" outcome="/faces/user/logout.xhtml" value="Logout"/>
 
             </div>
+
         </ui:composition>
+        <div class="icon">
+            <span class="count">12</span>
+
+        </div>  
     </body>
 </html>
 
