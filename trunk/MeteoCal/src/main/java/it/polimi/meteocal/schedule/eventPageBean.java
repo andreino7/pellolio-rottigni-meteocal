@@ -141,6 +141,7 @@ public class eventPageBean implements Serializable {
         visibilities.add(Visibility.Public);
         InvitePermission=eventManager.invitePermission(event);
         forecasts = weather.getWeatherForecast(event.getLocation());
+        updateWeather();
         
     }
 
@@ -185,6 +186,14 @@ public class eventPageBean implements Serializable {
      public void reset(){
          event=eventManager.findEventForId(event.getId());
      }
+
+    private void updateWeather() {
+        for (Forecast f: forecasts) {
+            if (f.getDate().equals(event.getDate())) {
+                event.setWeather(f.getCondition());
+            }
+        }
+    }
      
      
      

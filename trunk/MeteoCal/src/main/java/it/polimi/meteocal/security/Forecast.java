@@ -6,9 +6,7 @@
 package it.polimi.meteocal.security;
 
 import java.text.SimpleDateFormat;
-import static java.util.Collections.list;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
