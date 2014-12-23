@@ -72,11 +72,18 @@ public class ScheduleBean implements Serializable {
     private List<String> chosenCalendars;
     private MeteoCalScheduleEvent event = new MeteoCalScheduleEvent();
     private String title;
+    private Calendar newCalendar;
 
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
-    private String value;
-    private boolean ownCalendar;
+
+    public Calendar getNewCalendar() {
+        return newCalendar;
+    }
+
+    public void setNewCalendar(Calendar newCalendar) {
+        this.newCalendar = newCalendar;
+    }
 
     public String getGeoLoc() {
         return geoLoc;
@@ -97,14 +104,14 @@ public class ScheduleBean implements Serializable {
     public void setUserTypes(List<EventType> userTypes) {
         this.userTypes = userTypes;
     }
-    
-    public String getClassForCalendar(Calendar c){
+
+    public String getClassForCalendar(Calendar c) {
         return colorForCalendar.get(c.getId());
     }
-    
-    public String getColorBoxForCalendar(Calendar c){
-        System.out.println("<div class=\" colorBox "+getClassForCalendar(c)+"\" ></div>");
-        return "<div class=\" colorbox "+getClassForCalendar(c)+"\" ></div>";
+
+    public String getColorBoxForCalendar(Calendar c) {
+        System.out.println("<div class=\" colorBox " + getClassForCalendar(c) + "\" ></div>");
+        return "<div class=\" colorbox " + getClassForCalendar(c) + "\" ></div>";
     }
 
     public List<String> getChosenCalendars() {
@@ -135,6 +142,7 @@ public class ScheduleBean implements Serializable {
     }
 
     public List<Calendar> getUserCalendars() {
+
         return userCalendars;
     }
 
@@ -164,6 +172,7 @@ public class ScheduleBean implements Serializable {
         visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
         event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
+        
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
         userTypes = (List<EventType>) em.createNamedQuery(EventType.findAllTypesForUser, EventType.class).setParameter("user", user.getEmail()).getResultList();
         /* userCalendars=new HashMap<String,Calendar>();
@@ -171,7 +180,7 @@ public class ScheduleBean implements Serializable {
          for (Calendar c:Calendars){
          userCalendars.put(c.getTitle(), c);
          }*/
-   //     }
+        //     }
     }
 
     public MeteoCalScheduleEvent getEvent() {
@@ -228,20 +237,19 @@ public class ScheduleBean implements Serializable {
         colorForCalendar = new HashMap<>();
         Random r = new Random();
 
-        
         if (chosenCalendars != null) {
             for (String c : chosenCalendars) {
-                Integer colid=r.nextInt(colorclass.size());
+                Integer colid = r.nextInt(colorclass.size());
                 colorForCalendar.put(Integer.parseInt(c), colorclass.get(colid));
                 colorclass.remove(colorclass.get(colid));
-                
+
                 List<Event> evList = (List<Event>) em.createNamedQuery(EventCalendar.findEventsForCalendar, Event.class).setParameter("calendar", Integer.parseInt(c)).getResultList();
 
                 for (Event ev : evList) {
                     MeteoCalScheduleEvent scheduleEvent = new MeteoCalScheduleEvent(ev, calendarManager.findCalendarForId(c));
-                    scheduleEvent.setStyleClass(ev.getWeather() + " "+ colorForCalendar.get(Integer.parseInt(c)));
+                    scheduleEvent.setStyleClass(ev.getWeather() + " " + colorForCalendar.get(Integer.parseInt(c)));
                     scheduleEvent.setDescription(ev.getWeather());
-                    
+
                     model.addEvent(scheduleEvent);
                 }
             }
@@ -283,6 +291,15 @@ public class ScheduleBean implements Serializable {
 
     }
 
+    public void newCalendar() {
+        this.newCalendar = new Calendar();
+        newCalendar.setOwner(user);
+    }
 
+    public void saveNewCalendar() {
+        calendarManager.save(newCalendar);
+        userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
+        this.newCalendar=new Calendar();
+    }
 
 }

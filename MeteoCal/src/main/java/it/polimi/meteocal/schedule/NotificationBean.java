@@ -64,9 +64,9 @@ public class NotificationBean {
     public void postConstruct(){
         
         notif= notificationManager.getNotificationForUser(userManager.getLoggedUser());
-        
         for (Notification n:notif){
             DefaultMenuItem item = new DefaultMenuItem(n.getText());
+            item.setStyleClass("NotificationMenuItem");
             model.addElement(item);
         }
     }

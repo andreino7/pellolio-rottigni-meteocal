@@ -27,6 +27,10 @@ public class CalendarManager {
             return null;
         }
     }
+    
+    public void save(Calendar c){
+        em.persist(c);
+    }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 }
