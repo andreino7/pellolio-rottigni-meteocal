@@ -31,6 +31,7 @@ public class NotificationBean {
     UserManager userManager;        
     
     MenuModel model;
+    List<Notification> notif;
 
     public MenuModel getModel() {
         return model;
@@ -39,6 +40,14 @@ public class NotificationBean {
     public void setModel(MenuModel model) {
         this.model = model;
         
+    }
+    
+    public int getNotificationNumber() {
+        return notif.size();
+    }
+    
+    public boolean isThereNotification() {
+        return !notif.isEmpty();
     }
     
     
@@ -51,10 +60,10 @@ public class NotificationBean {
         
     }
     
-  //  @PostConstruct
+    @PostConstruct
     public void postConstruct(){
         
-        List<Notification> notif= notificationManager.getNotificationForUser(userManager.getLoggedUser());
+        notif= notificationManager.getNotificationForUser(userManager.getLoggedUser());
         
         for (Notification n:notif){
             DefaultMenuItem item = new DefaultMenuItem(n.getText());
