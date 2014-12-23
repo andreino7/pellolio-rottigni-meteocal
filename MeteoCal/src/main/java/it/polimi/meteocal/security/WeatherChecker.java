@@ -5,10 +5,13 @@
  */
 package it.polimi.meteocal.security;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -102,6 +105,11 @@ public class WeatherChecker {
         JsonObject model = getWeather(city);
         return translateWeather(model);
     }
+    
+    public List<Forecast> getWeatherForecast(String city) {
+        JsonObject model = getWeather(city);
+        return translateWeather2(model);
+    }
 
     private WeatherConditions toWeatherConditions(String s) {
         switch (s) {
@@ -116,5 +124,24 @@ public class WeatherChecker {
             default:
                 return WeatherConditions.UNAVAILABLE;
         }
+    }
+    
+    private List<Forecast> translateWeather2(JsonObject model) {
+        JsonArray list = model.getJsonArray(JsonWeatherParam.LIST.toString().toLowerCase());
+        Iterator i = list.iterator();
+        List<Forecast> forecast = new ArrayList<>();
+        while (i.hasNext()) {            
+            JsonObject inner = (JsonObject) i.next();
+            JsonNumber dt = inner.getJsonNumber(JsonWeatherParam.DT.toString().toLowerCase());
+            Date d = timestampConverter(dt.intValue());
+            JsonObject temp = inner.getJsonObject(JsonWeatherParam.TEMP.toString().toLowerCase());
+            JsonNumber min = temp.getJsonNumber(JsonWeatherParam.MIN.toString().toLowerCase());
+            JsonNumber max = temp.getJsonNumber(JsonWeatherParam.MAX.toString().toLowerCase());
+            int tmin=min.intValue();
+            int tmax=max.intValue();
+            String mainWeather = commonTranslationOperation(inner);
+            forecast.add(new Forecast(mainWeather, d, tmin, tmax));
+        } 
+        return forecast;
     }
 }
