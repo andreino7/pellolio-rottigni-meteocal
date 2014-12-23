@@ -92,10 +92,25 @@
                         </p:row>
                         <p:row>
                             <p:column>
-                                <h:outputText value="Forecast"/>                            
+                                <h:outputText value="Weather: "/>                            
                             </p:column>
                             <p:column>
-                                <div class="#{eventPageBean.event.weather}" style="height:100px;width:100px"></div>
+                                <p:dataGrid var="forecast" value="#{eventPageBean.forecasts}" columns="10" layout="grid"
+                                        rows="1"  id="forecasts"
+                                    
+                                        rowsPerPageTemplate="10" >
+                                    <p:panel header="#{forecast.formattedDate}" style="text-align:center">
+                                    <h:panelGrid columns="1" style="width:70px; height: 120px">
+                                        <p:graphicImage name="img/#{forecast.condition}.png" width="30px" /> 
+
+                                        <h:outputText value="#{forecast.tmax}" />
+                                        <h:outputText value="#{forecast.tmin}" />
+
+
+                                    </h:panelGrid>
+                                </p:panel>
+
+                            </p:dataGrid>
                             </p:column>
                         </p:row>
                         <p:row>
@@ -146,6 +161,7 @@
                                 disableDefaultUI="false" />
                     </p:dialog>
                 </h:form>
+                
                 <h:form>
                     <p:remoteCommand name="gc" process="@this @form" autoRun="false"  actionListener="#{eventPageBean.onGeolocation()}" />
 
