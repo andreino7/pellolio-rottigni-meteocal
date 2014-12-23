@@ -106,7 +106,7 @@ public class eventPageBean implements Serializable {
     }
 
     public Event getEvent() {
-        return event;
+        return event; 
     }
 
     public void setEvent(Event event) {

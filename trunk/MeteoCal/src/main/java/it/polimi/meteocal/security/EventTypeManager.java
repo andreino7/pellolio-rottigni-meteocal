@@ -39,6 +39,19 @@ public class EventTypeManager {
         User u=userManager.getLoggedUser();
         return (List<EventType>) em.createNamedQuery(EventType.findAllTypesForUser, EventType.class).setParameter("user", u.getEmail()).getResultList();
     }
+    
+    public boolean isMine(EventType e){
+        if (e.getPersonalized()){
+            return e.getOwner().equals(userManager.getLoggedUser());
+        }
+        return false;
+        
+    }
+    
+    public void update(EventType e){
+        em.merge(e);
+    }
+    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 }

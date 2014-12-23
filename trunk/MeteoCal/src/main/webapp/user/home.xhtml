@@ -18,13 +18,13 @@
 
             <ui:define name="leftBar">
 
-                <h:form> 
+                <h:form id="calendarsForm"> 
                     <p:selectManyCheckbox id="calendarLeftBoxGrid" value="#{scheduleBean.chosenCalendars}" layout="grid" columns="1" >
                         <f:selectItems value="#{scheduleBean.userCalendars}" var="cal" itemLabelEscaped="false" itemLabel="#{cal.title} #{scheduleBean.getColorBoxForCalendar(cal)}" itemValue="#{cal.id}" />
 
                     </p:selectManyCheckbox> 
                     <p:commandButton update=":schedule @form" value="Update" action="#{scheduleBean.updateScheduleModel()}"/>    
-                    <p:commandButton update=":schedule" value="change" onclick="changeStyleRule()"/>    
+                    <p:commandButton update="@form" value="Add Calendar" action="#{scheduleBean.newCalendar}" oncomplete="PF('addCalendarDialog').show();"/>    
 
                 </h:form>    
 
@@ -35,7 +35,7 @@
 
                 <p:schedule id="schedule" value="#{scheduleBean.model}" aspectRatio="2" styleClass="scheduleHome"  
                             ignoreTimezone="false" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
-                            tooltip="true">
+                            tooltip="true" >
                     <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}"
                             update="eventDetails" oncomplete="PF('eventDialog').show();" />
                     <p:ajax event="eventSelect" listener="#{scheduleBean.onEventSelect}"
@@ -57,18 +57,24 @@
                             <h:outputLabel for="CalendarForEvent" value="Calendar:" />
                             <p:selectOneMenu id="CalendarForEvent"  value="#{scheduleBean.event.calendar}" required="true" converter="CalendarConverter" >
                                 <f:selectItem itemLabel="Select Calendar"  noSelectionOption="true"  />
-                                <f:selectItems value="#{scheduleBean.userCalendars}" var="cal" itemValue="#{cal}" itemLabel="#{cal.title}" />
+                                <f:selectItems value="#{scheduleBean.userCalendars}" var="cal" itemValue="#{cal}"  itemLabel="#{cal.title}" />
                             </p:selectOneMenu>
 
+
                             <h:outputLabel for="TypeForEvent" value="EventType:" />
-                            <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" required="true" converter="EventTypeConverter" >
-                                <f:selectItem itemLabel="Select Type"  noSelectionOption="true" />
-                                <f:selectItems value="#{scheduleBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
-                            </p:selectOneMenu>
+                            <p:outputPanel>
+                                <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" required="true" converter="EventTypeConverter" >
+                                    <f:selectItem itemLabel="Select Type"  noSelectionOption="true" />
+                                    <f:selectItems value="#{scheduleBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
+                                    <p:ajax process="@this" update="eventTypeLink"/>
+                                </p:selectOneMenu>
+                                <h:link id='eventTypeLink' outcome="/user/eventType.xhtml" style="margin-left: 10px;" value="View Event Type">
+                                    <f:param name="id" value="#{scheduleBean.event.type==null?0:scheduleBean.event.type.id}"/>
+                                </h:link>                         
+                            </p:outputPanel>    
 
                             <h:outputLabel for="VisForEvent" value="EventType:" />
                             <p:selectOneMenu id="VisForEvent" required="true" value="#{scheduleBean.event.visibility}" >
-                                <f:selectItem itemLabel="Select Visibility"  noSelectionOption="true" />
                                 <f:selectItems value="#{scheduleBean.visibilities}" var="vis" itemValue="#{vis}" itemLabel="#{vis}" />
                             </p:selectOneMenu>
 
@@ -83,14 +89,43 @@
                             </h:link>
                             <p:commandButton type="reset" value="Reset" />
                             <p:commandButton value="Save" actionListener="#{scheduleBean.addEvent}" onstart="codeAddress()"
-                                             oncomplete="PF('myschedule').update();PF('eventDialog').hide();"/>
+                                             oncomplete="if (args &amp;&amp; !args.validationFailed){PF('myschedule').update();PF('eventDialog').hide();}"/>
 
 
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>
+                <p:dialog widgetVar="addCalendarDialog" header="New Calendar" resizable="false" style="height:50% !important; height:40% !important; top:25% !important; left: 30% !important;">
+                    <h:form id='newCalendarForm'>
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column>
+                                    <h:outputText value='Title:'/>
+                                </p:column>
+                                <p:column>
+                                    <p:inputText value="#{scheduleBean.newCalendar.title}" required="true"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputText value='Visibility:'/>
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu id="VisForCalendar" required="true" value="#{scheduleBean.newCalendar.visibility}" >
+                                        <f:selectItems value="#{scheduleBean.visibilities}" var="vis" itemValue="#{vis}" itemLabel="#{vis}" />
+                                    </p:selectOneMenu>                               
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:commandButton value='save' update=":calendarsForm" actionListener="#{scheduleBean.saveNewCalendar()}" oncomplete="if (args &amp;&amp; !args.validationFailed){PF('myschedule').update();PF('addCalendarDialog').hide();}" />
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </h:form>
+                </p:dialog>
                 <h:form>
-                    <p:remoteCommand name="gc" process="@this @form" autoRun="false"  actionListener="#{scheduleBean.onGeolocation()}" />
+                    <p:remoteCommand update="" name="gc" process="@this @form" autoRun="false"  actionListener="#{scheduleBean.onGeolocation()}" />
 
                 </h:form>
 

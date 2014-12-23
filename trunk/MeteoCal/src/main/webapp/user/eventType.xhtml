@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/template/common/commonLayout.xhtml">
+            <ui:define name="content">
+                <h:form id="eventTypeDetails">
+                    <p:panelGrid class="centered">
+                        <p:row>
+                            <p:column colspan="3">
+                                <h1 style="text-align: center;">#{eventTypePageBean.eventType.title}</h1>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Sun"/>
+                            </p:column>
+                            <p:column rendered="#{eventTypePageBean.mine}">
+                                <p:selectBooleanCheckbox value="#{eventTypePageBean.eventType.sun}"  />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value=" #{eventTypePageBean.converToText(eventTypePageBean.eventType.sun)}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Cloud"/>
+                            </p:column>
+                            <p:column rendered="#{eventTypePageBean.mine}">
+                                <p:selectBooleanCheckbox value="#{eventTypePageBean.eventType.cloud}"  />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{eventTypePageBean.converToText(eventTypePageBean.eventType.cloud)}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Rain"/>
+                            </p:column>
+                            <p:column rendered="#{eventTypePageBean.mine}">
+                                <p:selectBooleanCheckbox value="#{eventTypePageBean.eventType.rain}"  />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{eventTypePageBean.converToText(eventTypePageBean.eventType.rain)}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Snow"/>
+                            </p:column>
+                            <p:column rendered="#{eventTypePageBean.mine}">
+                                <p:selectBooleanCheckbox value="#{eventTypePageBean.eventType.snow}"  />
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{eventTypePageBean.converToText(eventTypePageBean.eventType.snow)}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row rendered="#{eventTypePageBean.mine}">
+                            <p:column>
+                                <p:commandButton value="Reset" action="#{eventTypePageBean.reset()}" update="@form"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Save" action="#{eventTypePageBean.save()}" update="@form"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

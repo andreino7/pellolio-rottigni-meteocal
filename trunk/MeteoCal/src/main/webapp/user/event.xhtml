@@ -51,13 +51,20 @@
                                 <h:outputText value="Event Type"/>                            
                             </p:column>
                             <p:column rendered="#{eventPageBean.ownedEvent?false:true}">
-                                <h:outputText value="#{eventPageBean.event.type.title}"/>                            
+                                <h:link outcome="/user/eventType.xhtml" value="#{eventPageBean.event.type.title}">
+                                    <f:param name="id" value="#{eventPageBean.event.type.id}"/>
+                                </h:link>
+                                
                             </p:column>
                             <p:column rendered="#{eventPageBean.ownedEvent?true:false}">
-                                <p:selectOneMenu id="TypeForEvent" value="#{eventPageBean.event.type}" required="true" converter="EventTypeConverter" >
+                                <p:selectOneMenu id="TypeForEvent" value="#{eventPageBean.event.type}" immediate="true" required="true"  converter="EventTypeConverter" >
                                     <f:selectItem itemLabel="Select Type"  noSelectionOption="true" /> 
                                     <f:selectItems value="#{eventPageBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
+                                    <p:ajax process="@this" update="eventTypeLink"/>
                                 </p:selectOneMenu>
+                                <h:link id='eventTypeLink' outcome="/user/eventType.xhtml" style="margin-left: 10px;" value="View Event Type">
+                                    <f:param name="id" value="#{eventPageBean.event.type.id}"/>
+                                </h:link>
                             </p:column>
                         </p:row>
                         <p:row>
