@@ -16,6 +16,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -30,6 +33,8 @@ public class WeatherTimer {
    private EventManager eventManager;
    @EJB
    private NotificationManager notificationManager;
+   @PersistenceContext
+   private EntityManager em;
    
    private Calendar calendarSetUp(Calendar cal) {
        cal.setTime(new Date());
@@ -41,7 +46,7 @@ public class WeatherTimer {
    }
    
    private List<Event> findEventToCheck(Date d1, Date d2) {
-       return eventManager.findByDay(d1,d2);
+      return eventManager.findByDay(d1,d2);
    }
    
   // @Schedule(second = "*/30", minute = "*", hour = "*", persistent = false)

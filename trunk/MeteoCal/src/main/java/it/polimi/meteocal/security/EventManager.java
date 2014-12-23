@@ -66,7 +66,6 @@ public class EventManager {
         Query q = em.createNamedQuery("Event.findByDay");
         q.setParameter("date1", d1);
         q.setParameter("date2", d2);
-        List<Event> prova = q.getResultList();
         List<Event> events = q.getResultList();
         return events;
     }

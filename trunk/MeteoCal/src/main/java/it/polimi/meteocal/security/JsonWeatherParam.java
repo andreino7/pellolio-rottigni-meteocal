@@ -11,6 +11,6 @@ package it.polimi.meteocal.security;
  */
 public enum JsonWeatherParam {
     
-    LIST, DT, MAIN, WEATHER;
+    LIST, DT, MAIN, WEATHER, TEMP, MIN, MAX;
  
 }

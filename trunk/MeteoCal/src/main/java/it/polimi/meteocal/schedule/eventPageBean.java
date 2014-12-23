@@ -10,10 +10,16 @@ import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.EventTypeManager;
+import it.polimi.meteocal.security.Forecast;
 import it.polimi.meteocal.security.UserManager;
+import it.polimi.meteocal.security.WeatherChecker;
+import it.polimi.meteocal.security.WeatherConditions;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -35,6 +41,9 @@ public class eventPageBean implements Serializable {
 
     @EJB
     private EventTypeManager eventTypeManager;
+    
+    @EJB
+    private WeatherChecker weather;
 
     private List<String> visibilities = new LinkedList<String>();
     private String param;
@@ -45,6 +54,8 @@ public class eventPageBean implements Serializable {
     private List<EventType> userTypes;
     private String geoLoc;
     private boolean InvitePermission;
+    private List<Forecast> forecasts;
+
 
     public boolean isInvitePermission() {
         return InvitePermission;
@@ -102,6 +113,16 @@ public class eventPageBean implements Serializable {
         this.event = event;
     }
 
+    public List<Forecast> getForecasts() {
+        return forecasts;
+    }
+
+    public void setForecasts(List<Forecast> forecasts) {
+        this.forecasts = forecasts;
+    }
+
+
+
     /**
      * Creates a new instance of eventPageBean
      */
@@ -119,7 +140,11 @@ public class eventPageBean implements Serializable {
         visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
         InvitePermission=eventManager.invitePermission(event);
+        forecasts = weather.getWeatherForecast(event.getLocation());
+        
     }
+
+
 
     public void initParam() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -160,5 +185,8 @@ public class eventPageBean implements Serializable {
      public void reset(){
          event=eventManager.findEventForId(event.getId());
      }
+     
+     
+     
 
 }
