@@ -63,12 +63,12 @@
 
                             <h:outputLabel for="TypeForEvent" value="EventType:" />
                             <p:outputPanel>
-                                <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" required="true" converter="EventTypeConverter" >
+                                <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" immediate="true" required="true" converter="EventTypeConverter" >
                                     <f:selectItem itemLabel="Select Type"  noSelectionOption="true" />
                                     <f:selectItems value="#{scheduleBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
                                     <p:ajax process="@this" update="eventTypeLink"/>
                                 </p:selectOneMenu>
-                                <h:link id='eventTypeLink' outcome="/user/eventType.xhtml" style="margin-left: 10px;" value="View Event Type">
+                                <h:link id='eventTypeLink' outcome="/user/eventType.xhtml" rendered="#{scheduleBean.event.type!=null}" style="margin-left: 10px;" value="View Event Type">
                                     <f:param name="id" value="#{scheduleBean.event.type==null?0:scheduleBean.event.type.id}"/>
                                 </h:link>                         
                             </p:outputPanel>    
@@ -84,7 +84,7 @@
 
 
                             <p:messages autoUpdate="true" globalOnly="false"/>
-                            <h:link outcome="/user/event.xhtml" value="Go to Event Page">
+                            <h:link outcome="/user/event.xhtml" rendered="#{scheduleBean.event.dbId!=0}" value="Go to Event Page">
                                 <f:param name="id" value="#{scheduleBean.event.dbId}"/>
                             </h:link>
                             <p:commandButton type="reset" value="Reset" />
