@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>MeteoCal Admin Page</title>
+    </h:head>
+    <h:body>
+        Welcome Admin, these are the default Types:
+        <p:dataList value="#{adminHomeBean.eventTypes}" var="et">
+            <p:commandLink value="#{et.title}" update=":eventType"  oncomplete="PF('eventTypeDialog').show(); ">
+                <f:setPropertyActionListener value="#{et}" target="#{adminHomeBean.selected}" />
+            </p:commandLink>
+        </p:dataList>
+        <p:commandLink value="New Default Type" update=":eventType" action="#{adminHomeBean.create()}" oncomplete="PF('eventTypeDialog').show(); "/>
+
+
+            <p:dialog widgetVar="eventTypeDialog" header="Type Details" resizable="false" style="height:50% !important; height:40% !important; top:25% !important; left: 30% !important;">
+                <h:form id="eventType">
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column colspan="2" style="text-align: center" rendered="#{adminHomeBean.selected.id!=0}">
+                                <h:inputText value="#{adminHomeBean.selected.title}"></h:inputText>
+                            </p:column> 
+                            <p:column colspan="2" style="text-align: center" rendered="#{adminHomeBean.selected.id==0}">
+                                <p:inputText value="#{adminHomeBean.selected.title}" placeholder="Name" ></p:inputText>
+                            </p:column> 
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Sun"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectBooleanCheckbox value="#{adminHomeBean.selected.sun}"/>
+
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Cloud"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectBooleanCheckbox value="#{adminHomeBean.selected.cloud}"  />
+
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Rain"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectBooleanCheckbox value="#{adminHomeBean.selected.rain}"  />
+
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Snow"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectBooleanCheckbox value="#{adminHomeBean.selected.snow}"  />
+
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:commandButton value="Reset" update="@form" action="#{adminHomeBean.reset()}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Save" update="@form" action="#{adminHomeBean.save()}"/>
+                            </p:column>
+                        </p:row>
+
+
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+    </h:body>
+</html>
+

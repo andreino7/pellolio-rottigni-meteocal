@@ -52,6 +52,15 @@ public class EventTypeManager {
         em.merge(e);
     }
     
+    public void save(EventType e){
+        em.persist(e);
+    }
+    
+    public List<EventType> findDefaultTypes(){
+        return (List<EventType>) em.createNamedQuery(EventType.findDefaultTypes, EventType.class).getResultList();
+
+    }
+    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 }

@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"   
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      >
+          
+      xmlns:p="http://primefaces.org/ui">
 
 	<h:head>
 		<h:outputStylesheet name="common-style.css" library="css" />
@@ -17,24 +18,23 @@
 
 	<div id="page">
 		
-		<div id="header">
-			<ui:insert name="header" >
-				<ui:include src="/WEB-INF/commonHeader.xhtml" />
-			</ui:insert>
-	    </div>
-	    
-	    <div id="content">
+	 <p:layout fullPage="true" >//style="min-width:400px;min-height:200px;position: fixed; top: 50px; left:0;"
+                <p:layoutUnit position="north" size="50">
+                    <div id="header">
+                        <ui:insert name="header" >
+                            <ui:include src="/WEB-INF/commonHeader.xhtml" />
+                        </ui:insert>
+                    </div>
+                </p:layoutUnit>
+                
 
-		   	<ui:insert name="content" >
-		   		<ui:include src="/WEB-INF/commonContent.xhtml" />
-		   	</ui:insert>
-	    </div>
-		    
-	    <div id="footer">
-	    	<ui:insert name="footer" >
-	    		<ui:include src="/WEB-INF/commonFooter.xhtml" />
-	    	</ui:insert>
-    	</div>
+                <p:layoutUnit position="center">
+                    <ui:insert name="content" >
+                        <ui:include src="/WEB-INF/commonContent.xhtml" />
+                    </ui:insert>
+                </p:layoutUnit>
+            </p:layout>
+
     	
     </div>
     

@@ -41,6 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "EventType.findAll", query = "SELECT e FROM EventType e"),
     @NamedQuery(name = "EventType.findById", query = "SELECT e FROM EventType e WHERE e.id = :id"),
     @NamedQuery(name = "EventType.findAllTypesForUser", query = "SELECT e FROM EventType e WHERE e.personalized=0 OR e.owner.email= :user"),
+    @NamedQuery(name = "EventType.findDefaultTypes", query = "SELECT e FROM EventType e WHERE e.personalized=0"),
     @NamedQuery(name = "EventType.findByTitle", query = "SELECT e FROM EventType e WHERE e.title = :title")})
     
 
@@ -66,6 +67,8 @@ public class EventType implements Serializable {
     @Column(name = "Personalized")
     private boolean personalized;
     public static final String findAllTypesForUser="EventType.findAllTypesForUser";
+    public static final String findDefaultTypes="EventType.findDefaultTypes";
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

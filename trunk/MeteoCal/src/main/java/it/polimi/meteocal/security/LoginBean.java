@@ -6,6 +6,7 @@
 package it.polimi.meteocal.security;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -20,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 @Named
 @RequestScoped
 public class LoginBean {
+    
+    @EJB
+    private UserManager userManager;
 
     
     private String email;
@@ -52,6 +56,9 @@ public class LoginBean {
         } catch (ServletException e) {
             context.addMessage(null, new FacesMessage("Invalid Email or password."));
             return "login";
+        }
+        if ("ADMIN".equals(userManager.getLoggedUser().getClearance())){
+            return "/admin/adminHome.xhtml?faces-redirect=true";
         }
         return "/user/home.xhtml?faces-redirect=true";
     }
