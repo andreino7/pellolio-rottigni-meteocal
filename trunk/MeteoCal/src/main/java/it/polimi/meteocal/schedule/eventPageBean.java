@@ -63,6 +63,7 @@ public class eventPageBean implements Serializable {
     
     @EJB
     private EventCalendarManager ecManager;
+    
 
     private List<String> visibilities = new LinkedList<String>();
     private String param;
@@ -229,9 +230,17 @@ public class eventPageBean implements Serializable {
     public void initParam() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         param = request.getParameter("id");
-        notificationType = NotificationType.valueOf(request.getParameter("notificationType"));
-        notification = notifManager.findNotificationByIdAndType(request.getParameter("notificationID"),notificationType);
-        checkNotifParam();
+        String notType = request.getParameter("notificationType");
+        if (notType != null) {
+            notificationType = NotificationType.valueOf(notType);
+            notification = notifManager.findNotificationByIdAndType(request.getParameter("notificationID"),notificationType);
+            if (notification!=null) {
+                checkNotifParam();
+                notification.setState("READ");
+                notifManager.updateNotification(notification, notificationType);
+            }
+        }
+        
     }
 
     public List<User> complete(String query) {

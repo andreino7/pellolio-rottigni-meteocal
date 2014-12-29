@@ -73,22 +73,24 @@ public class NotificationManager {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 
-    public void updateNotification(Notification notifParam) {
-       if (notifParam instanceof WeatherNotification) {
-           em.merge((WeatherNotification) notifParam);
-       }
-       if (notifParam instanceof InviteNotification) {
-           em.merge((InviteNotification) notifParam);
-       }
-       if (notifParam instanceof ResponseNotification) {
-           em.merge((ResponseNotification) notifParam);
-       }
-       if (notifParam instanceof ChangedEventNotification) {
-           em.merge((ChangedEventNotification) notifParam);
-       }
-       if (notifParam instanceof AdminNotification) {
-           em.merge((AdminNotification) notifParam);
-       }
+    public void updateNotification(Notification notification, NotificationType notificationType) {
+        switch (notificationType) {
+            case WEATHER:
+                em.merge((WeatherNotification) notification);
+                break;
+            case INVITE:
+                em.merge((InviteNotification) notification);
+                break;
+            case RESPONSE:
+                em.merge((ResponseNotification) notification);
+                break;
+            case CHANGED:
+                em.merge((ChangedEventNotification) notification);
+                break;
+            case ADMIN:
+                em.merge((AdminNotification) notification);
+                break;
+        }
     }
 
     public void createResponseNotification(ResponseNotification notification) {
