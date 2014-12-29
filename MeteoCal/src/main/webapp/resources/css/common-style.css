@@ -194,6 +194,7 @@ html, body { margin: 0;
 
 .count {
     position: absolute;
+    display: block;
     background:#ff0000;
     min-width:14px;
     color:#ffffff;
@@ -202,7 +203,6 @@ html, body { margin: 0;
     text-align: center;
     font-size: 12px;
     z-index: 10;
-    right: 210px;
 }
 #userBarNameButton{
     border: 0;
