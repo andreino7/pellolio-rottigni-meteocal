@@ -60,12 +60,23 @@ public class NotificationBean {
         
     }
     
+    public void onItemSelect() {
+        System.out.println("item select");
+    }
+    
     @PostConstruct
     public void postConstruct(){
         
         notif= notificationManager.getNotificationForUser(userManager.getLoggedUser());
         for (Notification n:notif){
             DefaultMenuItem item = new DefaultMenuItem(n.getText());
+            item.setOutcome(n.getAbout().getPageLink()+"?id="+n.getAbout().getId());
+            item.setParam("notificationID", n.getId());
+            if ("PENDING".equals(n.getState())) {
+                item.setStyle("background: #F6E3CE; margin-top: -5px; margin-bottom: 5px; margin-left: -5px; width: 180px;");
+            } else {
+                item.setStyle("margin-top: -5px; margin-bottom: 5px; margin-left: -5px; width: 180px;");
+            }
             item.setStyleClass("NotificationMenuItem");
             model.addElement(item);
         }

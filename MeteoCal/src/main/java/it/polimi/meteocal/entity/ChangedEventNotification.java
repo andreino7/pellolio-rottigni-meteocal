@@ -64,6 +64,7 @@ public class ChangedEventNotification implements Serializable,Notification {
         this.state = state;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -72,14 +73,17 @@ public class ChangedEventNotification implements Serializable,Notification {
         this.id = id;
     }
 
+    @Override
     public String getState() {
         return state;
     }
 
+    @Override
     public void setState(String state) {
         this.state = state;
     }
 
+    @Override
     public Event getAbout() {
         return about;
     }
