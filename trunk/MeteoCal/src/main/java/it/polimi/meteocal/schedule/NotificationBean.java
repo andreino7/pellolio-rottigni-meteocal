@@ -80,6 +80,7 @@ public class NotificationBean {
             item.setOutcome(n.getAbout().getPageLink()+"?id="+n.getAbout().getId());
             item.setParam("notificationID", n.getId());
             item.setParam("notificationType", n.getType());
+            item.seti
             if ("UNREAD".equals(n.getState())) {
                 item.setStyle("background: #F6E3CE; margin-top: -5px; margin-bottom: 5px; margin-left: -5px; width: 180px;");
             } else {

@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Named(value = "eventPageBean")
 @ViewScoped
-public class eventPageBean implements Serializable {
+public class EventPageBean implements Serializable {
 
     @EJB
     private EventManager eventManager;
@@ -204,7 +204,7 @@ public class eventPageBean implements Serializable {
     /**
      * Creates a new instance of eventPageBean
      */
-    public eventPageBean() {
+    public EventPageBean() {
     }
 
     @PostConstruct
@@ -338,6 +338,7 @@ public class eventPageBean implements Serializable {
     
     public void declineInvite() {
         notifManager.createResponseNotification(setResponseNotificationParameter(false));
+        notifManager.deleteInvite((InviteNotification) notification);
     }
     
     private ResponseNotification setResponseNotificationParameter(Boolean response) {
