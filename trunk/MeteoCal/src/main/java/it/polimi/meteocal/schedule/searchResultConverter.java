@@ -18,7 +18,7 @@ import javax.persistence.PersistenceContext;
  * @author Filippo
  */
 @FacesConverter("searchResultConverter")
-public class SearchResultConverter implements Converter{
+public class searchResultConverter implements Converter{
     @PersistenceContext
     EntityManager em;
 
