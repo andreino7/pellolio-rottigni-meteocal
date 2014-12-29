@@ -43,6 +43,31 @@ public class NotificationManager {
         em.persist(notification);
     }
     
+    public Notification findNotificationById(String id) {
+        if (id != null) {
+            WeatherNotification wn = em.find(WeatherNotification.class, Integer.parseInt(id));
+            if (wn != null) {
+                return wn;
+            }
+            InviteNotification in = em.find(InviteNotification.class, Integer.parseInt(id));
+            if (in != null) {
+                return in;
+            }
+            ResponseNotification rn = em.find(ResponseNotification.class, Integer.parseInt(id));
+            if (rn != null) {
+                return rn;
+            }
+            ChangedEventNotification cn = em.find(ChangedEventNotification.class, Integer.parseInt(id));
+            if (cn != null) {
+                return cn;
+            }
+            AdminNotification an = em.find(AdminNotification.class, Integer.parseInt(id));
+            if (an != null) {
+                return an;
+            }
+        }
+        return null;
+    }
     
 
     // Add business logic below. (Right-click in editor and choose

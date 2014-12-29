@@ -79,6 +79,7 @@ public class ResponseNotification implements Serializable,Notification {
         this.answer = answer;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -87,15 +88,18 @@ public class ResponseNotification implements Serializable,Notification {
         this.id = id;
     }
 
+    @Override
     public String getState() {
         return state;
     }
 
+    @Override
     public void setState(String state) {
         this.state = state;
     }
 
 
+    @Override
     public Event getAbout() {
         return about;
     }

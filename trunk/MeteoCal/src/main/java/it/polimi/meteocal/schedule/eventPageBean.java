@@ -5,25 +5,27 @@
  */
 package it.polimi.meteocal.schedule;
 
+import it.polimi.meteocal.entity.AdminNotification;
+import it.polimi.meteocal.entity.ChangedEventNotification;
 import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.EventType;
+import it.polimi.meteocal.entity.InviteNotification;
+import it.polimi.meteocal.entity.ResponseNotification;
 import it.polimi.meteocal.entity.User;
+import it.polimi.meteocal.entity.WeatherNotification;
 import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.EventTypeManager;
 import it.polimi.meteocal.security.Forecast;
-import it.polimi.meteocal.security.UserManager;
+import it.polimi.meteocal.security.Notification;
+import it.polimi.meteocal.security.NotificationManager;
 import it.polimi.meteocal.security.WeatherChecker;
-import it.polimi.meteocal.security.WeatherConditions;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
@@ -44,9 +46,13 @@ public class eventPageBean implements Serializable {
     
     @EJB
     private WeatherChecker weather;
+    
+    @EJB
+    private NotificationManager notifManager;
 
     private List<String> visibilities = new LinkedList<String>();
     private String param;
+    private String param2;
     private boolean ownedEvent;
     private Event event;
     private List<User> participant;
@@ -55,6 +61,14 @@ public class eventPageBean implements Serializable {
     private String geoLoc;
     private boolean InvitePermission;
     private List<Forecast> forecasts;
+    private Notification notifParam;
+    private boolean weatherNotification;
+    private boolean inviteNotification;
+    private boolean responseNotification;
+    private boolean changedEventNotification;
+    private boolean adminNotification;
+    private Date suggestedDate;
+    private String suggestedWeather;
 
 
     public boolean isInvitePermission() {
@@ -142,16 +156,16 @@ public class eventPageBean implements Serializable {
         InvitePermission=eventManager.invitePermission(event);
         forecasts = weather.getWeatherForecast(event.getLocation());
         updateWeather();
-        
+        updateSuggestedDate();
     }
 
 
 
     public void initParam() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
         param = request.getParameter("id");
-
+        notifParam = notifManager.findNotificationById(request.getParameter("notificationID"));
+        checkNotifParam();
     }
 
     public List<User> complete(String query) {
@@ -194,6 +208,54 @@ public class eventPageBean implements Serializable {
             }
         }
     }
+
+    private void checkNotifParam() {
+        if (notifParam != null) {
+            if (notifParam instanceof WeatherNotification) {
+                System.out.println("weather notification");
+                this.weatherNotification = true;
+            }
+            if (notifParam instanceof InviteNotification) {
+                this.inviteNotification = true;
+            }
+            if (notifParam instanceof ResponseNotification) {
+                this.responseNotification = true;
+            }
+            if (notifParam instanceof ChangedEventNotification) {
+                this.changedEventNotification = true;
+            }
+            if (notifParam instanceof AdminNotification) {
+                this.adminNotification = true;
+            }
+            notifParam.setState("READ");
+        } else {
+            System.out.println("null");
+        }
+    }
+
+    private void updateSuggestedDate() {
+        System.out.println("update suggested date");
+        if (weatherNotification && ownedEvent) {
+            this.suggestedDate = ((WeatherNotification) notifParam).getSuggestedDate();
+            if (suggestedDate != null) {
+                this.suggestedWeather = getWeather(this.suggestedDate);
+                System.out.println(suggestedDate);
+            }
+        }
+    }
+
+    private String getWeather(Date suggestedDate) {
+        Date d = DefaultDate.toDefaultDate(suggestedDate);
+        for (Forecast f: forecasts) {
+            if (d.equals(f.getDate())) {
+                String cond = f.getCondition();
+                System.out.println(cond);
+                return cond;
+            }
+        }
+        return null;
+    }
+     
      
      
      

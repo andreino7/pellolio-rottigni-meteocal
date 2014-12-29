@@ -43,7 +43,7 @@
             <div id="userBar">
                 <h:form styleClass="ButtonNotificationsForm">
                     <h:outputLabel class="count" value="#{notificationBean.notificationNumber}" rendered="#{notificationBean.thereNotification?true:false}" />
-                    <p:menuButton value="" styleClass="ButtonNotifications" model="#{notificationBean.model}">
+                    <p:menuButton id="notificationMenu" value="" styleClass="ButtonNotifications" model="#{notificationBean.model}" >
                     </p:menuButton>
                 </h:form>    
                 <h:graphicImage value="#{userBean.profilePhoto}" id="userPhotoBar"/>

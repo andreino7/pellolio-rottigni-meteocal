@@ -68,6 +68,7 @@ public class WeatherNotification implements Serializable, Notification {
         this.id = id;
     }
 
+    @Override
     public Integer getId() {
         return id;
     }
@@ -76,10 +77,12 @@ public class WeatherNotification implements Serializable, Notification {
         this.id = id;
     }
 
+    @Override
     public String getState() {
         return state;
     }
 
+    @Override
     public void setState(String state) {
         this.state = state;
     }
@@ -117,6 +120,7 @@ public class WeatherNotification implements Serializable, Notification {
         return "it.polimi.meteocal.entity.WeatherNotification[ id=" + id + " ]";
     }
 
+    @Override
     public Event getAbout() {
         return about;
     }
@@ -135,7 +139,7 @@ public class WeatherNotification implements Serializable, Notification {
 
     @Override
     public String getText() {
-        return "For your event " + this.about + "is forecasted " + this.about.getWeather() + ". Do you want to postpone on " + this.suggestedDate + "?";
+        return "For your event " + this.about.getTitle().toUpperCase() + " is forecasted " + this.about.getWeather() + ".Click to modify the event" ;
     }
     
 }

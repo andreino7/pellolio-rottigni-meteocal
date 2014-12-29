@@ -5,6 +5,8 @@
  */
 package it.polimi.meteocal.security;
 
+import it.polimi.meteocal.entity.Event;
+
 /**
  *
  * @author Filippo
@@ -12,4 +14,8 @@ package it.polimi.meteocal.security;
 public interface Notification {
     
     public String getText();
+    public Event getAbout();
+    public String getState();
+    public void setState(String state);
+    public Integer getId();
 }
