@@ -6,6 +6,7 @@
 package it.polimi.meteocal.entity;
 
 import it.polimi.meteocal.security.Notification;
+import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -161,9 +162,6 @@ public class ResponseNotification implements Serializable,Notification {
 
     @Override
     public String getText() {
-        
-       
-        
         return  sender.getTitle()+" has answered: "+(answer?"Yes":"NO") +" to your invite at the event: "+about.getTitle();
     }
 
@@ -173,6 +171,11 @@ public class ResponseNotification implements Serializable,Notification {
 
     public void setAnswer(boolean answer) {
         this.answer = answer;
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.RESPONSE;
     }
     
 }

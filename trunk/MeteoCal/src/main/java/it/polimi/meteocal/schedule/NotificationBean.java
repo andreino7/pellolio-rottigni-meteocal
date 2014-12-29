@@ -72,12 +72,12 @@ public class NotificationBean {
             DefaultMenuItem item = new DefaultMenuItem(n.getText());
             item.setOutcome(n.getAbout().getPageLink()+"?id="+n.getAbout().getId());
             item.setParam("notificationID", n.getId());
-            if ("PENDING".equals(n.getState())) {
+            item.setParam("notificationType", n.getType());
+            if ("UNREAD".equals(n.getState())) {
                 item.setStyle("background: #F6E3CE; margin-top: -5px; margin-bottom: 5px; margin-left: -5px; width: 180px;");
             } else {
                 item.setStyle("margin-top: -5px; margin-bottom: 5px; margin-left: -5px; width: 180px;");
             }
-            item.setStyleClass("NotificationMenuItem");
             model.addElement(item);
         }
     }

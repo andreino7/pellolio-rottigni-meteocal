@@ -91,7 +91,7 @@ public class WeatherTimer {
     private void createOwnerWeatherNotification(Event e, Date d) {
         WeatherNotification wn = new WeatherNotification();
         wn.setState("PENDING");
-        wn.setId(-1);
+        wn.setId(1);
         wn.setReceiver(e.getEventOwner());
         wn.setAbout(e);
         wn.setSuggestedDate(d);

@@ -6,6 +6,7 @@
 package it.polimi.meteocal.entity;
 
 import it.polimi.meteocal.security.Notification;
+import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -141,5 +142,11 @@ public class WeatherNotification implements Serializable, Notification {
     public String getText() {
         return "For your event " + this.about.getTitle().toUpperCase() + " is forecasted " + this.about.getWeather() + ".Click to modify the event" ;
     }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.WEATHER;
+    }
     
+
 }
