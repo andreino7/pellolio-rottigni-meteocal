@@ -6,6 +6,8 @@
 package it.polimi.meteocal.security;
 
 import it.polimi.meteocal.entity.Calendar;
+import it.polimi.meteocal.entity.User;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -26,6 +28,10 @@ public class CalendarManager {
         } else {
             return null;
         }
+    }
+    
+    public List<Calendar> findCalendarForUser(User user) {
+        return em.createNamedQuery("Calendar.findByOwner").setParameter("ownerEmail", user.getEmail()).getResultList();
     }
     
     public void save(Calendar c){

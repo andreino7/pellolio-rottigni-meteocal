@@ -6,6 +6,7 @@
 package it.polimi.meteocal.entity;
 
 import it.polimi.meteocal.security.Notification;
+import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -129,6 +130,11 @@ public class AdminNotification implements Serializable,Notification {
     @Override
     public String getText() {
         return "Your Event "+about.getTitle()+" has been changed by the admin";
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.ADMIN;
     }
     
 }

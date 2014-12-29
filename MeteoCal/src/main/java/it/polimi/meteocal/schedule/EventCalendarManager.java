@@ -5,7 +5,11 @@
  */
 package it.polimi.meteocal.schedule;
 
+import it.polimi.meteocal.entity.Calendar;
+import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.EventCalendar;
+import java.util.LinkedList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,5 +26,13 @@ public class EventCalendarManager {
     
     public void save(EventCalendar ec) {
         em.persist(ec);
+    }
+    
+    public List<Event> findAllEventForCalendars(List<Calendar> calendars) {
+        List<Event> events = new LinkedList<>();
+        for (Calendar c: calendars) {
+           events.addAll(em.createNamedQuery(EventCalendar.findEventsForCalendar).setParameter("calendar", c.getId()).getResultList());
+        }
+        return events;
     }
 }

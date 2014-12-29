@@ -6,6 +6,7 @@
 package it.polimi.meteocal.entity;
 
 import it.polimi.meteocal.security.Notification;
+import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -128,6 +129,11 @@ public class ChangedEventNotification implements Serializable,Notification {
     @Override
     public String getText() {
         return "The event: "+about.getTitle()+" has been changed";
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.CHANGED;
     }
     
 }

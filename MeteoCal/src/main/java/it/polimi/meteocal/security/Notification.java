@@ -18,4 +18,5 @@ public interface Notification {
     public String getState();
     public void setState(String state);
     public Integer getId();
+    public NotificationType getType();
 }

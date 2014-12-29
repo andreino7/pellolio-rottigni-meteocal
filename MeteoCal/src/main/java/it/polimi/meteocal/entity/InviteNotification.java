@@ -6,6 +6,7 @@
 package it.polimi.meteocal.entity;
 
 import it.polimi.meteocal.security.Notification;
+import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -158,6 +159,11 @@ public class InviteNotification implements Serializable,Notification {
     @Override
     public String getText() {
         return "You've been invited to: "+about.getTitle()+" by: "+sender.getTitle();
+    }
+
+    @Override
+    public NotificationType getType() {
+        return NotificationType.INVITE;
     }
     
 }

@@ -6,18 +6,23 @@
 package it.polimi.meteocal.schedule;
 
 import it.polimi.meteocal.entity.AdminNotification;
+import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.ChangedEventNotification;
 import it.polimi.meteocal.entity.Event;
+import it.polimi.meteocal.entity.EventCalendar;
 import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.entity.InviteNotification;
 import it.polimi.meteocal.entity.ResponseNotification;
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.entity.WeatherNotification;
+import it.polimi.meteocal.security.CalendarManager;
 import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.EventTypeManager;
 import it.polimi.meteocal.security.Forecast;
 import it.polimi.meteocal.security.Notification;
 import it.polimi.meteocal.security.NotificationManager;
+import it.polimi.meteocal.security.NotificationType;
+import it.polimi.meteocal.security.UserManager;
 import it.polimi.meteocal.security.WeatherChecker;
 import java.io.Serializable;
 import java.util.Date;
@@ -48,7 +53,16 @@ public class eventPageBean implements Serializable {
     private WeatherChecker weather;
     
     @EJB
+    private CalendarManager calendarManager;
+    
+    @EJB
     private NotificationManager notifManager;
+    
+    @EJB
+    private UserManager userManager;
+    
+    @EJB
+    private EventCalendarManager ecManager;
 
     private List<String> visibilities = new LinkedList<String>();
     private String param;
@@ -61,7 +75,7 @@ public class eventPageBean implements Serializable {
     private String geoLoc;
     private boolean InvitePermission;
     private List<Forecast> forecasts;
-    private Notification notifParam;
+    private Notification notification;
     private boolean weatherNotification;
     private boolean inviteNotification;
     private boolean responseNotification;
@@ -69,6 +83,10 @@ public class eventPageBean implements Serializable {
     private boolean adminNotification;
     private Date suggestedDate;
     private String suggestedWeather;
+    private Calendar calendar;
+    private NotificationType notificationType;
+    private boolean presentInMyCalendar;
+    private List<Calendar> calendars;
 
 
     public boolean isInvitePermission() {
@@ -83,6 +101,34 @@ public class eventPageBean implements Serializable {
     public void setGeoLoc(String geoLoc) {
         this.geoLoc = geoLoc;
        
+    }
+
+    public boolean isWeatherNotification() {
+        return weatherNotification;
+    }
+
+    public boolean isInviteNotification() {
+        return inviteNotification;
+    }
+
+    public boolean isResponseNotification() {
+        return responseNotification;
+    }
+
+    public boolean isChangedEventNotification() {
+        return changedEventNotification;
+    }
+
+    public boolean isAdminNotification() {
+        return adminNotification;
+    }
+
+    public Date getSuggestedDate() {
+        return suggestedDate;
+    }
+
+    public String getSuggestedWeather() {
+        return suggestedWeather;
     }
     
     
@@ -135,6 +181,23 @@ public class eventPageBean implements Serializable {
         this.forecasts = forecasts;
     }
 
+    public List<Calendar> getCalendars() {
+        return calendars;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
+
+    public boolean isPresentInMyCalendar() {
+        return presentInMyCalendar;
+    }
+    
+    
 
 
     /**
@@ -155,8 +218,10 @@ public class eventPageBean implements Serializable {
         visibilities.add(Visibility.Public);
         InvitePermission=eventManager.invitePermission(event);
         forecasts = weather.getWeatherForecast(event.getLocation());
+        calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
         updateWeather();
         updateSuggestedDate();
+        updatePresentInMyCalendar();
     }
 
 
@@ -164,7 +229,8 @@ public class eventPageBean implements Serializable {
     public void initParam() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         param = request.getParameter("id");
-        notifParam = notifManager.findNotificationById(request.getParameter("notificationID"));
+        notificationType = NotificationType.valueOf(request.getParameter("notificationType"));
+        notification = notifManager.findNotificationByIdAndType(request.getParameter("notificationID"),notificationType);
         checkNotifParam();
     }
 
@@ -210,33 +276,29 @@ public class eventPageBean implements Serializable {
     }
 
     private void checkNotifParam() {
-        if (notifParam != null) {
-            if (notifParam instanceof WeatherNotification) {
-                System.out.println("weather notification");
-                this.weatherNotification = true;
-            }
-            if (notifParam instanceof InviteNotification) {
-                this.inviteNotification = true;
-            }
-            if (notifParam instanceof ResponseNotification) {
-                this.responseNotification = true;
-            }
-            if (notifParam instanceof ChangedEventNotification) {
-                this.changedEventNotification = true;
-            }
-            if (notifParam instanceof AdminNotification) {
-                this.adminNotification = true;
-            }
-            notifParam.setState("READ");
-        } else {
-            System.out.println("null");
+        switch (notificationType) {
+            case WEATHER:
+                weatherNotification = true;
+                break;
+            case INVITE:
+                inviteNotification = true;
+                break;
+            case RESPONSE:
+                responseNotification = true;
+                break;
+            case CHANGED:
+                changedEventNotification = true;
+                break;
+            case ADMIN:
+                adminNotification = true;
+                break;
         }
     }
 
     private void updateSuggestedDate() {
-        System.out.println("update suggested date");
         if (weatherNotification && ownedEvent) {
-            this.suggestedDate = ((WeatherNotification) notifParam).getSuggestedDate();
+            System.out.println("update suggested date");
+            this.suggestedDate = ((WeatherNotification) notification).getSuggestedDate();
             if (suggestedDate != null) {
                 this.suggestedWeather = getWeather(this.suggestedDate);
                 System.out.println(suggestedDate);
@@ -256,8 +318,35 @@ public class eventPageBean implements Serializable {
         return null;
     }
      
-     
-     
-     
+    public void joinEvent() {
+        EventCalendar eventCal = new EventCalendar();
+        eventCal.setId(-1);
+        eventCal.setEvent(event);
+        eventCal.setCalendar(calendar);
+        ecManager.save(eventCal);
+        notifManager.createResponseNotification(setResponseNotificationParameter(true));
+    }
+    
+    public void declineInvite() {
+        notifManager.createResponseNotification(setResponseNotificationParameter(false));
+    }
+    
+    private ResponseNotification setResponseNotificationParameter(Boolean response) {
+        ResponseNotification respNotification = new ResponseNotification();
+        InviteNotification invite = (InviteNotification) notification;    
+        respNotification.setId(0);
+        respNotification.setAbout(event);
+        respNotification.setAnswer(response);
+        respNotification.setRefers(invite);
+        respNotification.setReceiver(invite.getSender());
+        respNotification.setState("UNREAD");
+        respNotification.setSender(userManager.getLoggedUser());
+        return respNotification;
+    }
+
+    private void updatePresentInMyCalendar() {
+        this.presentInMyCalendar = ecManager.findAllEventForCalendars(calendars).contains(event);
+    }
+    
 
 }
