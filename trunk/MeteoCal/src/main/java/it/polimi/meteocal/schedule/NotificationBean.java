@@ -8,6 +8,7 @@ package it.polimi.meteocal.schedule;
 import it.polimi.meteocal.security.Notification;
 import it.polimi.meteocal.security.NotificationManager;
 import it.polimi.meteocal.security.UserManager;
+import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -31,7 +32,8 @@ public class NotificationBean {
     UserManager userManager;        
     
     MenuModel model;
-    List<Notification> notif;
+    private List<Notification> notif;
+    private final List<Notification> unRead = new LinkedList<>();
 
     public MenuModel getModel() {
         return model;
@@ -42,12 +44,12 @@ public class NotificationBean {
         
     }
     
-    public int getNotificationNumber() {
-        return notif.size();
+    public int getUnReadNotificationNumber() {
+        return unRead.size();
     }
     
-    public boolean isThereNotification() {
-        return !notif.isEmpty();
+    public boolean isThereNotificationUnRead() {
+        return !unRead.isEmpty();
     }
     
     
@@ -68,6 +70,11 @@ public class NotificationBean {
     public void postConstruct(){
         
         notif= notificationManager.getNotificationForUser(userManager.getLoggedUser());
+        for (Notification n: notif) {
+            if (n.getState().equals("UNREAD")) {
+                unRead.add(n);
+            }
+        }
         for (Notification n:notif){
             DefaultMenuItem item = new DefaultMenuItem(n.getText());
             item.setOutcome(n.getAbout().getPageLink()+"?id="+n.getAbout().getId());
