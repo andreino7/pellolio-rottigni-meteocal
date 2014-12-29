@@ -114,4 +114,8 @@ public class NotificationManager {
         }
         return null;
     }
+
+    public void deleteInvite(InviteNotification inviteNotification) {
+        em.remove(inviteNotification);
+    }
 }

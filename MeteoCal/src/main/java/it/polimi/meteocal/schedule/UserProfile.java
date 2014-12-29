@@ -42,7 +42,7 @@ import org.primefaces.model.UploadedFile;
  */
 @Named(value = "userProfile")
 @RequestScoped
-public class userProfile implements Serializable {
+public class UserProfile implements Serializable {
 
     /**
      * Creates a new instance of userProfile
@@ -119,7 +119,7 @@ public class userProfile implements Serializable {
         this.user = user;
     }
 
-    public userProfile() {
+    public UserProfile() {
 
     }
 
@@ -169,8 +169,11 @@ public class userProfile implements Serializable {
             System.out.println(file2.getAbsolutePath());
         }catch (IOException ex) {
             System.err.println(ex.getMessage());
-            Logger.getLogger(userProfile.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserProfile.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
+       //application code
         
         
        //application code
