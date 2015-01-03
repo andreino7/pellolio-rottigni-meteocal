@@ -7,6 +7,7 @@ package it.polimi.meteocal.security;
 
 import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.WeatherNotification;
+import it.polimi.meteocal.schedule.DateManipulator;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -33,15 +34,10 @@ public class WeatherTimer {
    private EventManager eventManager;
    @EJB
    private NotificationManager notificationManager;
-   @PersistenceContext
-   private EntityManager em;
+
    
    private Calendar calendarSetUp(Calendar cal) {
-       cal.setTime(new Date());
-       cal.set(Calendar.HOUR_OF_DAY, 00);
-       cal.set(Calendar.MINUTE, 00);
-       cal.set(Calendar.SECOND, 00);
-       cal.set(Calendar.MILLISECOND, 00);
+       cal.setTime(DateManipulator.toDefaultDate(new Date())); 
        return cal;
    }
    
@@ -54,7 +50,7 @@ public class WeatherTimer {
        System.out.println("timeout");
        Calendar cal = Calendar.getInstance();
        calendarSetUp(cal);
-       cal.add(Calendar.DATE, 2);
+       cal.add(Calendar.DATE, 3);
        Date d1 = cal.getTime();
        cal.add(Calendar.DATE, 1);
        Date d2 = cal.getTime();
@@ -68,9 +64,11 @@ public class WeatherTimer {
                 createOwnerWeatherNotification(e, d);
             }
        }
+       
    }
 
     private Date lookForOkDay(List<String> allowed, Map<Date, WeatherConditions> forecast, Date date, Event e) {
+       //TODO change if conditions
         for (Date d: forecast.keySet()) {
             if (d.after(date) && allowed.contains(forecast.get(d).toString())) {
                 Calendar cal = Calendar.getInstance();
@@ -90,7 +88,7 @@ public class WeatherTimer {
 
     private void createOwnerWeatherNotification(Event e, Date d) {
         WeatherNotification wn = new WeatherNotification();
-        wn.setState("PENDING");
+        wn.setState("UNREAD");
         wn.setId(1);
         wn.setReceiver(e.getEventOwner());
         wn.setAbout(e);
