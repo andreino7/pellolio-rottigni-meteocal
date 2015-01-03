@@ -34,7 +34,7 @@
 
 
                 <p:schedule id="schedule" value="#{scheduleBean.model}" aspectRatio="2" styleClass="scheduleHome"  
-                            ignoreTimezone="false" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
+                            ignoreTimezone="true" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
                             tooltip="true" >
                     <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}"
                             update="eventDetails" oncomplete="PF('eventDialog').show();" />
@@ -83,7 +83,6 @@
                             <p:inputText id="addressForEvent" value="#{scheduleBean.geoLoc}" onblur="codeAddress()" onkeyup="codeAddress()" />
 
 
-                            <p:messages autoUpdate="true" globalOnly="false"/>
                             <h:link outcome="/user/event.xhtml" rendered="#{scheduleBean.event.dbId!=0}" value="Go to Event Page">
                                 <f:param name="id" value="#{scheduleBean.event.dbId}"/>
                             </h:link>

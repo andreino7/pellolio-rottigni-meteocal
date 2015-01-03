@@ -81,7 +81,7 @@ public class NotificationBean {
             item.setParam("notificationID", n.getId());
             item.setParam("notificationType", n.getType());
             item.setIcon("prova");
-            item.setIconPos("left");
+            item.setIconPos("right");
             if ("UNREAD".equals(n.getState())) {
                 item.setStyle("background: #F6E3CE; margin-top: -5px; margin-bottom: 5px; margin-left: -5px; width: 180px;");
             } else {

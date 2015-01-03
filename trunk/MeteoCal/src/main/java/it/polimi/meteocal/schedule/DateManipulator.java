@@ -13,8 +13,8 @@ import java.util.TimeZone;
  *
  * @author Andrea
  */
-public class DefaultDate {
-    
+public class DateManipulator {
+      
     public static Date toDefaultDate(Date date) {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         Calendar c = Calendar.getInstance();
@@ -25,4 +25,11 @@ public class DefaultDate {
         c.set(Calendar.MILLISECOND, 00);
         return c.getTime();
     }
+    
+    public static Date toNewEndDate(Date oldStartdate, Date startDate, Date oldEndDate) {
+        long startDifference = startDate.getTime() - oldStartdate.getTime();
+        Date endDate = new Date(oldEndDate.getTime() + startDifference);
+        return endDate;
+    }
+
 }

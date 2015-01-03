@@ -14,16 +14,31 @@
                 <h:form id="eventDetails">
                     <p:panelGrid styleClass="centered" style="width: 50%;">
                         <p:row>
-                            <p:column colspan="2">
-                                <h1 style="text-align: center;">#{eventPageBean.event.title}</h1>
-                                <h:form>
-                                        <p:selectOneMenu id="CalendarForEvent"  value="#{eventPageBean.calendar}" required="true" converter="CalendarConverter" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}">
-                                            <f:selectItem itemLabel="Select Calendar"  noSelectionOption="true"  />
-                                            <f:selectItems value="#{eventPageBean.calendars}" var="cal" itemValue="#{cal}"  itemLabel="#{cal.title}" />
-                                        </p:selectOneMenu>
-                                <p:commandButton value="Join" actionListener="#{eventPageBean.joinEvent()}" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}"/> 
-                                </h:form>
-                                <p:commandButton value="Decline" actionListener="#{eventPageBean.declineInvite()}" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}" />
+                            <p:column colspan="2" >
+                                <h1 style="text-align: center">#{eventPageBean.event.title}</h1>
+                                <p:commandButton value="Decline" action="#{eventPageBean.declineInvite()}" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}" immediate="true" style="float: right" />
+                                <p:commandButton value="Join" action="#{eventPageBean.joinEvent()}" oncomplete="if (args &amp;&amp; !args.validationFailed)" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}" style="float: right"/> 
+
+                                <p:selectOneMenu id="CalendarForEvent"  value="#{eventPageBean.calendar}" required="true" converter="CalendarConverter" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}" style="position: relative; bottom: -2px; float: right">
+                                    <f:selectItem itemValue="" itemLabel="Select Calendar"  />
+                                    <f:selectItems value="#{eventPageBean.calendars}" var="cal" itemValue="#{cal}"  itemLabel="#{cal.title}" />
+                                </p:selectOneMenu>
+                                <p:commandButton value="Postpone" style="float: right; bottom: -152px" action="#{eventPageBean.postpone()}" immediate="true" rendered="#{(eventPageBean.weatherNotification and eventPageBean.ownedEvent and eventPageBean.thereSuggestedDate)?true:false}"/>
+                                <h:outputText id="suggestedDate" value="#{eventPageBean.event.date}" style="position: relative; float: right; bottom: -160px" rendered="#{(eventPageBean.weatherNotification and eventPageBean.ownedEvent and eventPageBean.thereSuggestedDate)?true:false}" >
+                                    <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                                </h:outputText>
+                                <h:outputLabel for="suggestedDate" value='Suggested Date: ' style="font-weight: bold; position: relative; float: right; bottom: -160px" rendered="#{(eventPageBean.weatherNotification and eventPageBean.ownedEvent and eventPageBean.thereSuggestedDate)?true:false}"/>
+                                <p:panel header="Forecasted Weather:" style="text-align:center; vertical-align: middle; width: 85px; float: right; bottom: -152px" rendered="#{(eventPageBean.weatherNotification and eventPageBean.ownedEvent and eventPageBean.thereSuggestedDate)?true:false}" >
+                                    <h:panelGrid columns="1" style="text-align: center; width:50px; height: 120px; ">
+                                        <p:graphicImage name="img/#{eventPageBean.suggestedWeather.condition}.png" width="30px" /> 
+
+                                        <h:outputText value="#{eventPageBean.suggestedWeather.tmax}" />
+                                        <h:outputText value="#{eventPageBean.suggestedWeather.tmin}" />
+
+                                    </h:panelGrid>
+                                </p:panel>
+                                <h:outputLabel value="No suggested date available" style="font-weight: bold; float: right;" rendered="#{eventPageBean.weatherNotification and eventPageBean.ownedEvent and !eventPageBean.thereSuggestedDate}" />
+                                
                             </p:column>
                         </p:row>
                         <p:row>
@@ -62,7 +77,7 @@
                                 <h:link outcome="/user/eventType.xhtml" value="#{eventPageBean.event.type.title}">
                                     <f:param name="id" value="#{eventPageBean.event.type.id}"/>
                                 </h:link>
-                                
+
                             </p:column>
                             <p:column rendered="#{eventPageBean.ownedEvent?true:false}">
                                 <p:selectOneMenu id="TypeForEvent" value="#{eventPageBean.event.type}" immediate="true" required="true"  converter="EventTypeConverter" >
@@ -111,21 +126,21 @@
                             </p:column>
                             <p:column>
                                 <p:dataGrid var="forecast" value="#{eventPageBean.forecasts}" columns="10" layout="grid"
-                                        rows="1"  id="forecasts"
-                                    
-                                        rowsPerPageTemplate="10" >
+                                            rows="1"  id="forecasts"
+
+                                            rowsPerPageTemplate="10" >
                                     <p:panel header="#{forecast.formattedDate}" style="text-align:center">
-                                    <h:panelGrid columns="1" style="width:70px; height: 120px">
-                                        <p:graphicImage name="img/#{forecast.condition}.png" width="30px" /> 
+                                        <h:panelGrid columns="1" style="width:70px; height: 120px">
+                                            <p:graphicImage name="img/#{forecast.condition}.png" width="30px" /> 
 
-                                        <h:outputText value="#{forecast.tmax}" />
-                                        <h:outputText value="#{forecast.tmin}" />
+                                            <h:outputText value="#{forecast.tmax}" />
+                                            <h:outputText value="#{forecast.tmin}" />
 
 
-                                    </h:panelGrid>
-                                </p:panel>
+                                        </h:panelGrid>
+                                    </p:panel>
 
-                            </p:dataGrid>
+                                </p:dataGrid>
                             </p:column>
                         </p:row>
                         <p:row>
@@ -176,7 +191,7 @@
                                 disableDefaultUI="false" />
                     </p:dialog>
                 </h:form>
-                
+
                 <h:form>
                     <p:remoteCommand name="gc" process="@this @form" autoRun="false"  actionListener="#{eventPageBean.onGeolocation()}" />
 

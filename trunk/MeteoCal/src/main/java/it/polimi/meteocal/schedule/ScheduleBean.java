@@ -12,6 +12,8 @@ import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.security.CalendarManager;
 import it.polimi.meteocal.security.EventManager;
+import it.polimi.meteocal.security.NotificationCleaner;
+import it.polimi.meteocal.security.NotificationManager;
 import it.polimi.meteocal.security.UserManager;
 import it.polimi.meteocal.security.WeatherChecker;
 import java.io.Serializable;
@@ -24,7 +26,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerConfig;
+import javax.ejb.TimerService;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -56,10 +63,16 @@ public class ScheduleBean implements Serializable {
 
     @EJB
     private EventManager eventManager;
+    
+
 
     @EJB
     private WeatherChecker weather;
+    
+    @EJB
+    private NotificationCleaner cleaner;
 
+    
     @PersistenceContext
     private EntityManager em;
 
@@ -259,9 +272,9 @@ public class ScheduleBean implements Serializable {
     }
 
     public void save() {
-
+        Event ev;
         if (eventManager.findEventForId(event.getDbId()) != null) {
-            Event ev = eventManager.findEventForId(event.getDbId());
+            ev = eventManager.findEventForId(event.getDbId());
             ev.setId(event.getDbId());
             ev.setTitle(event.getTitle());
             ev.setDate(event.getStartDate());
@@ -278,7 +291,7 @@ public class ScheduleBean implements Serializable {
 
         } else {
             //TODO location and visibility
-            Event ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
+            ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
@@ -286,9 +299,8 @@ public class ScheduleBean implements Serializable {
             ev.setEventOwner(user);
             eventManager.save(ev);
             eventManager.linkToCalendar(ev, event.getCalendar());
-
+            cleaner.setTimer(ev.getId(), ev.getEndDate());
         }
-
     }
 
     public void newCalendar() {
@@ -301,5 +313,9 @@ public class ScheduleBean implements Serializable {
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
         this.newCalendar=new Calendar();
     }
+    
+
+    
+    
 
 }
