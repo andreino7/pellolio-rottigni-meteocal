@@ -9,6 +9,7 @@ import it.polimi.meteocal.security.Notification;
 import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -22,6 +23,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -39,9 +42,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "InviteNotification.findById", query = "SELECT i FROM InviteNotification i WHERE i.id = :id"),
     @NamedQuery(name = "InviteNotification.findByReceiverAndEvent", query = "SELECT i FROM InviteNotification i WHERE i.about.id = :event AND i.receiver.email = :user"),
     @NamedQuery(name = "InviteNotification.findByReceiver", query = "SELECT w FROM InviteNotification w WHERE w.receiver.email = :user"),    
+    @NamedQuery(name = "InviteNotification.findByAbout", query = "SELECT i FROM InviteNotification i WHERE i.about.id = :event"),    
     @NamedQuery(name = "InviteNotification.findByState", query = "SELECT i FROM InviteNotification i WHERE i.state = :state")})
 public class InviteNotification implements Serializable,Notification {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CreationDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private final Date creationDate;
     public static final String findByReceiver= "InviteNotification.findByReceiver";
+    public static final String findByAbout= "InviteNotification.findByAbout";
     public static final String findByReceiverAndEvent= "InviteNotification.findByReceiverAndEvent";
     private static final long serialVersionUID = 1L;
     @Id
@@ -67,13 +77,16 @@ public class InviteNotification implements Serializable,Notification {
     private User sender;
 
     public InviteNotification() {
+        this.creationDate = new Date();
     }
 
     public InviteNotification(Integer id) {
+        this.creationDate = new Date();
         this.id = id;
     }
 
     public InviteNotification(Integer id, String state) {
+        this.creationDate = new Date();        
         this.id = id;
         this.state = state;
     }
@@ -158,12 +171,16 @@ public class InviteNotification implements Serializable,Notification {
 
     @Override
     public String getText() {
-        return "You've been invited to: "+about.getTitle()+" by: "+sender.getTitle();
+        return "You've been invited to: "+about.getTitle().toUpperCase()+" by: "+sender.getTitle().toUpperCase();
     }
 
     @Override
     public NotificationType getType() {
         return NotificationType.INVITE;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
     }
     
 }

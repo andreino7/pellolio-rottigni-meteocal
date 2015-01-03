@@ -22,6 +22,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -37,10 +38,18 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "WeatherNotification.findById", query = "SELECT w FROM WeatherNotification w WHERE w.id = :id"),
     @NamedQuery(name = "WeatherNotification.findByState", query = "SELECT w FROM WeatherNotification w WHERE w.state = :state"),
     @NamedQuery(name = "WeatherNotification.findByReceiver", query = "SELECT w FROM WeatherNotification w WHERE w.receiver.email = :user"),
+    @NamedQuery(name = "WeatherNotification.findByAbout", query = "SELECT w FROM WeatherNotification w WHERE w.about.id = :event"),
     @NamedQuery(name = "WeatherNotification.findBySuggestedDate", query = "SELECT w FROM WeatherNotification w WHERE w.suggestedDate = :suggestedDate")})
 public class WeatherNotification implements Serializable, Notification {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CreationDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private final Date creationDate;
     
     public static final String findByReceiver= "WeatherNotification.findByReceiver";
+    public static final String findByAbout= "WeatherNotification.findByAbout";
+
 
     
     @JoinColumn(name = "About", referencedColumnName = "ID")
@@ -63,9 +72,11 @@ public class WeatherNotification implements Serializable, Notification {
     private Date suggestedDate;
 
     public WeatherNotification() {
+        this.creationDate = new Date();
     }
 
     public WeatherNotification(Integer id) {
+        this.creationDate = new Date();
         this.id = id;
     }
 
@@ -147,6 +158,11 @@ public class WeatherNotification implements Serializable, Notification {
     public NotificationType getType() {
         return NotificationType.WEATHER;
     }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
     
 
 }

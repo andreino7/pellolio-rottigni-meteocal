@@ -8,6 +8,7 @@ package it.polimi.meteocal.entity;
 import it.polimi.meteocal.security.Notification;
 import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,9 +35,16 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ChangedEventNotification.findAll", query = "SELECT c FROM ChangedEventNotification c"),
     @NamedQuery(name = "ChangedEventNotification.findById", query = "SELECT c FROM ChangedEventNotification c WHERE c.id = :id"),
     @NamedQuery(name = "ChangedEventNotification.findByReceiver", query = "SELECT w FROM ChangedEventNotification w WHERE w.receiver.email = :user"),        
+    @NamedQuery(name = "ChangedEventNotification.findByAbout", query = "SELECT c FROM ChangedEventNotification c WHERE c.about.id = :event"),            
     @NamedQuery(name = "ChangedEventNotification.findByState", query = "SELECT c FROM ChangedEventNotification c WHERE c.state = :state")})
 public class ChangedEventNotification implements Serializable,Notification {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CreationDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private final Date creationDate;
     public static final String findByReceiver= "ChangedEventNotification.findByReceiver";
+    public static final String findByAbout= "ChangedEventNotification.findByAbout";    
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -54,13 +64,16 @@ public class ChangedEventNotification implements Serializable,Notification {
     private User receiver;
 
     public ChangedEventNotification() {
+        this.creationDate = new Date();
     }
 
     public ChangedEventNotification(Integer id) {
+        this.creationDate = new Date();
         this.id = id;
     }
 
     public ChangedEventNotification(Integer id, String state) {
+        this.creationDate = new Date();
         this.id = id;
         this.state = state;
     }
@@ -135,5 +148,10 @@ public class ChangedEventNotification implements Serializable,Notification {
     public NotificationType getType() {
         return NotificationType.CHANGED;
     }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
     
 }
