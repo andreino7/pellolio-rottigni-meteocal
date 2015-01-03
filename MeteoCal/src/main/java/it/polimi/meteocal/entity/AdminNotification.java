@@ -8,6 +8,7 @@ package it.polimi.meteocal.entity;
 import it.polimi.meteocal.security.Notification;
 import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -32,10 +35,16 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "AdminNotification.findAll", query = "SELECT a FROM AdminNotification a"),
     @NamedQuery(name = "AdminNotification.findById", query = "SELECT a FROM AdminNotification a WHERE a.id = :id"),
     @NamedQuery(name = "AdminNotification.findByReceiver", query = "SELECT w FROM AdminNotification w WHERE w.receiver.email = :user"),    
+    @NamedQuery(name = "AdminNotification.findByAbout", query = "SELECT a FROM AdminNotification a WHERE a.about.id = :event"),    
     @NamedQuery(name = "AdminNotification.findByState", query = "SELECT a FROM AdminNotification a WHERE a.state = :state")})
 public class AdminNotification implements Serializable,Notification {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CreationDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private final Date creationDate;
     public static final String findByReceiver= "AdminNotification.findByReceiver";
-   
+    public static final String findByAbout= "AdminNotification.findByAbout";   
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -55,13 +64,16 @@ public class AdminNotification implements Serializable,Notification {
     private User receiver;
 
     public AdminNotification() {
+        this.creationDate = new Date();        
     }
 
     public AdminNotification(Integer id) {
+        this.creationDate = new Date();
         this.id = id;
     }
 
     public AdminNotification(Integer id, String state) {
+        this.creationDate = new Date();
         this.id = id;
         this.state = state;
     }
@@ -136,5 +148,10 @@ public class AdminNotification implements Serializable,Notification {
     public NotificationType getType() {
         return NotificationType.ADMIN;
     }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
     
 }

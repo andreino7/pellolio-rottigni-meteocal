@@ -8,6 +8,7 @@ package it.polimi.meteocal.entity;
 import it.polimi.meteocal.security.Notification;
 import it.polimi.meteocal.security.NotificationType;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -35,14 +38,20 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ResponseNotification.findAll", query = "SELECT r FROM ResponseNotification r"),
     @NamedQuery(name = "ResponseNotification.findById", query = "SELECT r FROM ResponseNotification r WHERE r.id = :id"),
     @NamedQuery(name = "ResponseNotification.findByReceiver", query = "SELECT w FROM ResponseNotification w WHERE w.receiver.email = :user"),
-
+    @NamedQuery(name = "ResponseNotification.findByAbout", query = "SELECT r FROM ResponseNotification r WHERE r.about.id = :event"),
     @NamedQuery(name = "ResponseNotification.findByState", query = "SELECT r FROM ResponseNotification r WHERE r.state = :state")})
 public class ResponseNotification implements Serializable,Notification {
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "CreationDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private final Date creationDate;
     @Basic(optional = false)
     @NotNull
     @Column(name = "Answer")
     private boolean answer;
     public static final String findByReceiver= "ResponseNotification.findByReceiver";
+    public static final String findByAbout= "ResponseNotification.findByAbout";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,13 +77,16 @@ public class ResponseNotification implements Serializable,Notification {
     private User sender;
 
     public ResponseNotification() {
+        this.creationDate = new Date();
     }
 
     public ResponseNotification(Integer id) {
+        this.creationDate = new Date();
         this.id = id;
     }
 
     public ResponseNotification(Integer id, String state, boolean answer) {
+        this.creationDate = new Date();
         this.id = id;
         this.state = state;
         this.answer = answer;
@@ -177,5 +189,10 @@ public class ResponseNotification implements Serializable,Notification {
     public NotificationType getType() {
         return NotificationType.RESPONSE;
     }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
     
 }
