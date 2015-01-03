@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.security;
 
+import it.polimi.meteocal.schedule.DateManipulator;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,19 +72,10 @@ public class WeatherChecker {
     
     private Date timestampConverter(int timestamp) {
         Date date = new Date((long) timestamp*1000);
-        return toDefaultDate(date);
+        return DateManipulator.toDefaultDate(date);
     }
     
-    private Date toDefaultDate(Date date) {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        c.set(Calendar.HOUR_OF_DAY, 00);
-        c.set(Calendar.MINUTE, 00);
-        c.set(Calendar.SECOND, 00);
-        c.set(Calendar.MILLISECOND, 00);
-        return c.getTime();
-    }
+
     
     private JsonObject getWeather(String city) {
         Client client = ClientBuilder.newClient();
@@ -97,7 +89,7 @@ public class WeatherChecker {
     
     public WeatherConditions addWeather(String city, Date date) {
         JsonObject model = getWeather(city);
-        String s = translateWeather(model, date);
+        String s = translateWeather(model, DateManipulator.toDefaultDate(date));
         return toWeatherConditions(s);
     }
     
