@@ -167,8 +167,9 @@ html, body { margin: 0;
     background-color: #eab936;
     height: 50px;
     display: block;
-    float:left;
+    float: left;
 }
+
 .ButtonNotifications .ui-button {
         background-color: #eab936;
        
@@ -192,6 +193,10 @@ html, body { margin: 0;
         display: block;
 }
 
+ul.ui-menu {
+    width: 400px !important;
+}
+
 .count {
     position: absolute;
     display: block;
@@ -204,6 +209,14 @@ html, body { margin: 0;
     font-size: 12px;
     z-index: 10;
 }
+
+.prova {
+    background-size: 50px,50px;
+    background-image: url(img/sunny.png) !important;
+    height: 50px;
+    width: 50px;
+}
+
 #userBarNameButton{
     border: 0;
     background-color: #eab936;

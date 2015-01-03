@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Named(value = "eventPageBean")
 @ViewScoped
-public class EventPageBean implements Serializable {
+public class eventPageBean implements Serializable {
 
     @EJB
     private EventManager eventManager;
@@ -83,7 +83,7 @@ public class EventPageBean implements Serializable {
     private boolean changedEventNotification;
     private boolean adminNotification;
     private Date suggestedDate;
-    private String suggestedWeather;
+    private Forecast suggestedWeather;
     private Calendar calendar;
     private NotificationType notificationType;
     private boolean presentInMyCalendar;
@@ -128,7 +128,7 @@ public class EventPageBean implements Serializable {
         return suggestedDate;
     }
 
-    public String getSuggestedWeather() {
+    public Forecast getSuggestedWeather() {
         return suggestedWeather;
     }
     
@@ -198,13 +198,16 @@ public class EventPageBean implements Serializable {
         return presentInMyCalendar;
     }
     
+    public boolean isThereSuggestedDate() {
+        return suggestedDate!=null;
+    }
     
 
 
     /**
      * Creates a new instance of eventPageBean
      */
-    public EventPageBean() {
+    public eventPageBean() {
     }
 
     @PostConstruct
@@ -218,8 +221,8 @@ public class EventPageBean implements Serializable {
         visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
         InvitePermission=eventManager.invitePermission(event);
-        forecasts = weather.getWeatherForecast(event.getLocation());
         calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
+        forecasts = weather.getWeatherForecast(event.getLocation());
         updateWeather();
         updateSuggestedDate();
         updatePresentInMyCalendar();
@@ -309,36 +312,37 @@ public class EventPageBean implements Serializable {
             System.out.println("update suggested date");
             this.suggestedDate = ((WeatherNotification) notification).getSuggestedDate();
             if (suggestedDate != null) {
+                System.out.println(suggestedDate);
                 this.suggestedWeather = getWeather(this.suggestedDate);
                 System.out.println(suggestedDate);
             }
         }
     }
 
-    private String getWeather(Date suggestedDate) {
-        Date d = DefaultDate.toDefaultDate(suggestedDate);
+    private Forecast getWeather(Date suggestedDate) {
+        Date d = DateManipulator.toDefaultDate(suggestedDate);
         for (Forecast f: forecasts) {
             if (d.equals(f.getDate())) {
-                String cond = f.getCondition();
-                System.out.println(cond);
-                return cond;
+                return f;
             }
         }
         return null;
     }
      
-    public void joinEvent() {
+    public String joinEvent() {
         EventCalendar eventCal = new EventCalendar();
         eventCal.setId(-1);
         eventCal.setEvent(event);
         eventCal.setCalendar(calendar);
         ecManager.save(eventCal);
         notifManager.createResponseNotification(setResponseNotificationParameter(true));
+        return "home?faces-redirect=true";           
     }
     
-    public void declineInvite() {
+    public String declineInvite() {
         notifManager.createResponseNotification(setResponseNotificationParameter(false));
         notifManager.deleteInvite((InviteNotification) notification);
+        return "home?faces-redirect=true";           
     }
     
     private ResponseNotification setResponseNotificationParameter(Boolean response) {
@@ -357,6 +361,30 @@ public class EventPageBean implements Serializable {
     private void updatePresentInMyCalendar() {
         this.presentInMyCalendar = ecManager.findAllEventForCalendars(calendars).contains(event);
     }
+    
+    public String postpone() {
+        System.out.println("postpone: " + suggestedDate);
+        if (suggestedDate != null) {
+            Date endDate = DateManipulator.toNewEndDate(event.getDate(), suggestedDate, event.getEndDate());
+            event.setDate(suggestedDate);
+            event.setEndDate(endDate);
+            eventManager.update(event);
+            User owner = event.getEventOwner();
+            for (User u: participant) {
+                if (!u.equals(owner)) {
+                    ChangedEventNotification change = new ChangedEventNotification();
+                    change.setId(-1);
+                    change.setAbout(event);
+                    change.setState("UNREAD");
+                    change.setReceiver(u);
+                    notifManager.createChangedEventNotification(change);
+                }
+            }
+            notifManager.removeWeatherNotification((WeatherNotification) notification);
+        }
+        return "home?faces-redirect=true";
+    }
+
     
 
 }
