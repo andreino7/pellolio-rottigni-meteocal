@@ -24,6 +24,7 @@ public class CalendarManager {
 
     public Calendar findCalendarForId(String id) {
         if (id != null) {
+            System.out.println(id);
             return em.find(Calendar.class, Integer.parseInt(id));
         } else {
             return null;
