@@ -7,6 +7,7 @@ package it.polimi.meteocal.security;
 
 import it.polimi.meteocal.entity.AdminNotification;
 import it.polimi.meteocal.entity.ChangedEventNotification;
+import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.InviteNotification;
 import it.polimi.meteocal.entity.ResponseNotification;
 import it.polimi.meteocal.entity.User;
@@ -17,32 +18,31 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-
 /**
  *
  * @author Filippo
  */
 @Stateless
 public class NotificationManager {
-    
+
     @PersistenceContext
     private EntityManager em;
-    
-    public List<Notification> getNotificationForUser(User u){
-         List<Notification> res= new LinkedList<>();
-         res.addAll(em.createNamedQuery(WeatherNotification.findByReceiver, WeatherNotification.class).setParameter("user", u.getEmail()).getResultList());
-         res.addAll(em.createNamedQuery(ResponseNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-         res.addAll(em.createNamedQuery(InviteNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-         res.addAll(em.createNamedQuery(AdminNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-         res.addAll(em.createNamedQuery(ChangedEventNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-         System.out.println(res);
-         return res;
+
+    public List<Notification> getNotificationForUser(User u) {
+        List<Notification> res = new LinkedList<>();
+        res.addAll(em.createNamedQuery(WeatherNotification.findByReceiver, WeatherNotification.class).setParameter("user", u.getEmail()).getResultList());
+        res.addAll(em.createNamedQuery(ResponseNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+        res.addAll(em.createNamedQuery(InviteNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+        res.addAll(em.createNamedQuery(AdminNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+        res.addAll(em.createNamedQuery(ChangedEventNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+        System.out.println(res);
+        return res;
     }
-    
+
     public void createWeatherNotification(WeatherNotification notification) {
         em.persist(notification);
     }
-    
+
     public Notification findNotificationById(String id) {
         if (id != null) {
             WeatherNotification wn = em.find(WeatherNotification.class, Integer.parseInt(id));
@@ -68,11 +68,9 @@ public class NotificationManager {
         }
         return null;
     }
-    
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-
     public void updateNotification(Notification notification, NotificationType notificationType) {
         switch (notificationType) {
             case WEATHER:
@@ -100,22 +98,94 @@ public class NotificationManager {
     public Notification findNotificationByIdAndType(String id, NotificationType notificationType) {
         if (id != null) {
             switch (notificationType) {
-            case WEATHER: 
-                return em.find(WeatherNotification.class, Integer.parseInt(id));
-            case INVITE:
-                return em.find(InviteNotification.class, Integer.parseInt(id));
-            case RESPONSE:
-                return em.find(ResponseNotification.class, Integer.parseInt(id));
-            case CHANGED:
-                return em.find(ChangedEventNotification.class, Integer.parseInt(id));
-            case ADMIN:
-                return em.find(AdminNotification.class, Integer.parseInt(id));
+                case WEATHER:
+                    return em.find(WeatherNotification.class, Integer.parseInt(id));
+                case INVITE:
+                    return em.find(InviteNotification.class, Integer.parseInt(id));
+                case RESPONSE:
+                    return em.find(ResponseNotification.class, Integer.parseInt(id));
+                case CHANGED:
+                    return em.find(ChangedEventNotification.class, Integer.parseInt(id));
+                case ADMIN:
+                    return em.find(AdminNotification.class, Integer.parseInt(id));
             }
         }
         return null;
     }
 
     public void deleteInvite(InviteNotification inviteNotification) {
-        em.remove(inviteNotification);
+        InviteNotification toBeDelete = em.merge(inviteNotification);
+        em.remove(toBeDelete);
+    }
+
+    public void createChangedEventNotification(ChangedEventNotification change) {
+        em.persist(change);
+    }
+
+    public void removeWeatherNotification(WeatherNotification weatherNotification) {
+        WeatherNotification toBeDelete = em.merge(weatherNotification);
+        em.remove(toBeDelete);
+    }
+
+    public void removeAllForEvent(Event e) {
+        List<WeatherNotification> weathers = getWeatherNotificationForEvent(e);
+        for (WeatherNotification w: weathers) {
+            removeWeatherNotification(w);
+        }
+        List<InviteNotification> invites = getInviteNotificationForEvent(e);
+        for (InviteNotification i: invites) {
+            removeInviteNotification(i);
+        }
+        List<ResponseNotification> responses = getResponseNotificationForEvent(e);
+        for (ResponseNotification r : responses) {
+            removeResponseNotification(r);
+        }
+        List<ChangedEventNotification> changes = getChangedEventNotificationForEvent(e);
+        for (ChangedEventNotification c : changes) {
+            removeChangeEventNotification(c);
+        }
+        List<AdminNotification> admins = getAdminNotificationForEvent(e);
+        for (AdminNotification a : admins) {
+            removeAdminNotification(a);
+        }
+    }
+
+    private List<WeatherNotification> getWeatherNotificationForEvent(Event e) {
+        return em.createNamedQuery(WeatherNotification.findByAbout, WeatherNotification.class).setParameter("event", e.getId()).getResultList();
+    }
+
+    private List<InviteNotification> getInviteNotificationForEvent(Event e) {
+        return em.createNamedQuery(InviteNotification.findByAbout, InviteNotification.class).setParameter("event", e.getId()).getResultList();
+    }
+
+    private List<ResponseNotification> getResponseNotificationForEvent(Event e) {
+        return em.createNamedQuery(ResponseNotification.findByAbout, ResponseNotification.class).setParameter("event", e.getId()).getResultList();
+    }
+
+    private List<ChangedEventNotification> getChangedEventNotificationForEvent(Event e) {
+        return em.createNamedQuery(ChangedEventNotification.findByAbout, ChangedEventNotification.class).setParameter("event", e.getId()).getResultList();
+    }
+
+    private List<AdminNotification> getAdminNotificationForEvent(Event e) {
+        return em.createNamedQuery(AdminNotification.findByAbout, AdminNotification.class).setParameter("event", e.getId()).getResultList();
+    }
+
+    public void removeInviteNotification(InviteNotification i) {
+        InviteNotification toBeDelete = em.merge(i);
+        em.remove(toBeDelete);
+    }
+
+    public void removeResponseNotification(ResponseNotification r) {
+        ResponseNotification toBeDelete = em.merge(r);
+        em.remove(toBeDelete);    }
+
+    public void removeChangeEventNotification(ChangedEventNotification c) {
+        ChangedEventNotification toBeDelete = em.merge(c);
+        em.remove(toBeDelete);   
+    }
+
+    public void removeAdminNotification(AdminNotification a) {
+        AdminNotification toBeDelete = em.merge(a);
+        em.remove(toBeDelete);
     }
 }
