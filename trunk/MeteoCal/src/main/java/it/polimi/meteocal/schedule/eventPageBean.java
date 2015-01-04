@@ -280,8 +280,10 @@ public class eventPageBean implements Serializable {
      }
 
     private void updateWeather() {
+        Date eventDate = DateManipulator.toDefaultDate(event.getDate());
         for (Forecast f: forecasts) {
-            if (f.getDate().equals(event.getDate())) {
+            Date forecastDate = DateManipulator.toDefaultDate(f.getDate());
+            if (forecastDate.equals(eventDate)) {
                 event.setWeather(f.getCondition());
             }
         }
