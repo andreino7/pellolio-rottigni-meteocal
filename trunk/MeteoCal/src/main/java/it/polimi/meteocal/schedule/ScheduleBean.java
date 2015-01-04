@@ -6,6 +6,7 @@
 package it.polimi.meteocal.schedule;
 
 import it.polimi.meteocal.entity.Calendar;
+import it.polimi.meteocal.entity.ChangedEventNotification;
 import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.EventCalendar;
 import it.polimi.meteocal.entity.EventType;
@@ -64,7 +65,8 @@ public class ScheduleBean implements Serializable {
     @EJB
     private EventManager eventManager;
     
-
+    @EJB
+    private NotificationManager notificationManager;
 
     @EJB
     private WeatherChecker weather;
@@ -288,7 +290,7 @@ public class ScheduleBean implements Serializable {
                 eventManager.linkToCalendar(ev, event.getCalendar());
                 eventManager.toggleLink(ev, event.getOld());
             }
-
+            sendChangeEventNotification(ev);
         } else {
             //TODO location and visibility
             ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
@@ -312,6 +314,12 @@ public class ScheduleBean implements Serializable {
         calendarManager.save(newCalendar);
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
         this.newCalendar=new Calendar();
+    }
+
+
+    private void sendChangeEventNotification(Event ev) {
+        List<User> partecipant = eventManager.getParticipant(ev);
+        notificationManager.createChangedEventNotification(ev, partecipant);
     }
     
 

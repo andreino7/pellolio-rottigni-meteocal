@@ -369,17 +369,7 @@ public class eventPageBean implements Serializable {
             event.setDate(suggestedDate);
             event.setEndDate(endDate);
             eventManager.update(event);
-            User owner = event.getEventOwner();
-            for (User u: participant) {
-                if (!u.equals(owner)) {
-                    ChangedEventNotification change = new ChangedEventNotification();
-                    change.setId(-1);
-                    change.setAbout(event);
-                    change.setState("UNREAD");
-                    change.setReceiver(u);
-                    notifManager.createChangedEventNotification(change);
-                }
-            }
+            notifManager.createChangedEventNotification(event, participant);
             notifManager.removeWeatherNotification((WeatherNotification) notification);
         }
         return "home?faces-redirect=true";
