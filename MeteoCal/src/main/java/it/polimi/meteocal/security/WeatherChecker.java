@@ -9,12 +9,9 @@ import it.polimi.meteocal.schedule.DateManipulator;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.TreeMap;
 import javax.ejb.Stateless;
 import javax.json.JsonArray;
@@ -54,7 +51,7 @@ public class WeatherChecker {
                 return commonTranslationOperation(inner);
             } 
         } 
-        return "no weather information";
+        return "";
     }
     
     private Map<Date, WeatherConditions> translateWeather(JsonObject model) {
@@ -79,28 +76,45 @@ public class WeatherChecker {
     
     private JsonObject getWeather(String city) {
         Client client = ClientBuilder.newClient();
-        String url = String.format("%s%s&cnt=10&mode=json&%s", BASEURL, city, APPID );
+        String cityNoSpace = city.replaceAll("\\s+", "_");
+        System.out.println(cityNoSpace);
+        String url = String.format("%s%s&cnt=10&mode=json&%s", BASEURL, cityNoSpace, APPID );
         System.out.println(url);
-        JsonObject model =  client.target(url)
-                            .request(MediaType.TEXT_PLAIN)
-                            .get(JsonObject.class);
-        return model;
+        try {
+            JsonObject model = client.target(url)
+                    .request(MediaType.TEXT_PLAIN)
+                    .get(JsonObject.class);
+            return model;
+        } catch (Exception e) {
+            return null;
+        }
     }
     
     public WeatherConditions addWeather(String city, Date date) {
         JsonObject model = getWeather(city);
-        String s = translateWeather(model, DateManipulator.toDefaultDate(date));
+        String s = new String();
+        if (model != null) {
+            s = translateWeather(model, DateManipulator.toDefaultDate(date));
+        }
         return toWeatherConditions(s);
     }
     
     public Map<Date, WeatherConditions> getForecast(String city) {
         JsonObject model = getWeather(city);
-        return translateWeather(model);
+        if (model != null) {
+            return translateWeather(model); 
+        } else {
+            return null;
+        }
     }
     
     public List<Forecast> getWeatherForecast(String city) {
         JsonObject model = getWeather(city);
-        return translateWeather2(model);
+        if (model != null) {
+            return translateWeather2(model);
+        } else {
+            return null;
+        }
     }
 
     private WeatherConditions toWeatherConditions(String s) {
@@ -136,4 +150,5 @@ public class WeatherChecker {
         } 
         return forecast;
     }
+
 }

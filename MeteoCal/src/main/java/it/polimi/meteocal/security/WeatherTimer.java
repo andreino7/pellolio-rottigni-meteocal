@@ -57,11 +57,13 @@ public class WeatherTimer {
        List<Event> events = findEventToCheck(d1, d2);
        for (Event e: events) {
             Map<Date, WeatherConditions> forecast = weather.getForecast(e.getLocation());
-      //      e.setWeather(forecast.get(d1).toString());
-            List<String> allowed = e.getType().getAllowedCondition();
-            if (!allowed.contains(e.getWeather())) {
-                Date d = lookForOkDay(allowed, forecast, d2, e);
-                createOwnerWeatherNotification(e, d);
+            if (forecast != null) {
+                e.setWeather(forecast.get(d1).toString());
+                List<String> allowed = e.getType().getAllowedCondition();
+                if (!allowed.contains(e.getWeather())) {
+                    Date d = lookForOkDay(allowed, forecast, d2, e);
+                    createOwnerWeatherNotification(e, d);
+                }
             }
        }
        
