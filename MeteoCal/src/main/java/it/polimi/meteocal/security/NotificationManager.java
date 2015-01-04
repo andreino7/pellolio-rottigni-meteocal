@@ -118,8 +118,18 @@ public class NotificationManager {
         em.remove(toBeDelete);
     }
 
-    public void createChangedEventNotification(ChangedEventNotification change) {
-        em.persist(change);
+    public void createChangedEventNotification(Event e, List<User> partecipant) {
+        User owner = e.getEventOwner();
+        for (User u : partecipant) {
+            if (!u.equals(owner)) {
+                ChangedEventNotification change = new ChangedEventNotification();
+                change.setId(-1);
+                change.setAbout(e);
+                change.setState("UNREAD");
+                change.setReceiver(u);
+                em.persist(change);
+            }
+        }
     }
 
     public void removeWeatherNotification(WeatherNotification weatherNotification) {
@@ -188,4 +198,5 @@ public class NotificationManager {
         AdminNotification toBeDelete = em.merge(a);
         em.remove(toBeDelete);
     }
+
 }
