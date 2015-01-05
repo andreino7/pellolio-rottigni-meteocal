@@ -29,7 +29,7 @@
                             <h:outputText value="Profile photo URL:"></h:outputText>
                         </p:column>
                         <p:column>
-                            <h:inputText value="#{userProfile.photoUrl}"></h:inputText>
+                            <h:inputText value="#{userProfile.user.profilePhoto}"></h:inputText>
                         </p:column>
                     </p:row>
                     
@@ -83,7 +83,7 @@
                         </p:column>
                             
                         <p:column>
-                            <p:commandButton update="@form" value="Save" action="#{userProfile.save()}">
+                            <p:commandButton update="@form" value="Save" action="#{userProfile.save}">
                                 <f:param name="id" value="#{userProfile.user.email}"/>
                             </p:commandButton>
                            

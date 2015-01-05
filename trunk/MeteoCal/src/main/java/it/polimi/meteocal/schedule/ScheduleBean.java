@@ -12,6 +12,7 @@ import it.polimi.meteocal.entity.EventCalendar;
 import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.security.CalendarManager;
+import it.polimi.meteocal.security.EmailSessionBean;
 import it.polimi.meteocal.security.EventManager;
 import it.polimi.meteocal.security.NotificationCleaner;
 import it.polimi.meteocal.security.NotificationManager;
@@ -54,6 +55,7 @@ import org.primefaces.model.ScheduleModel;
 public class ScheduleBean implements Serializable {
 
     private static final Integer eventNotInDB = 0;
+    private static final int maxCalendars=8;
     private MeteoCalScheduleModel model;
     private User user;
     @EJB
@@ -70,6 +72,10 @@ public class ScheduleBean implements Serializable {
 
     @EJB
     private WeatherChecker weather;
+
+    @EJB
+    private EmailSessionBean emailBean;
+
     
     @EJB
     private NotificationCleaner cleaner;
@@ -91,6 +97,7 @@ public class ScheduleBean implements Serializable {
 
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
+    
 
     public Calendar getNewCalendar() {
         return newCalendar;
@@ -125,7 +132,6 @@ public class ScheduleBean implements Serializable {
     }
 
     public String getColorBoxForCalendar(Calendar c) {
-        System.out.println("<div class=\" colorBox " + getClassForCalendar(c) + "\" ></div>");
         return "<div class=\" colorbox " + getClassForCalendar(c) + "\" ></div>";
     }
 
@@ -183,19 +189,25 @@ public class ScheduleBean implements Serializable {
     private void postConstruct() {
         user = userManager.getLoggedUser();
 
-        updateScheduleModel();
+        
         visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
         event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
         
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
         userTypes = (List<EventType>) em.createNamedQuery(EventType.findAllTypesForUser, EventType.class).setParameter("user", user.getEmail()).getResultList();
-        /* userCalendars=new HashMap<String,Calendar>();
         
-         for (Calendar c:Calendars){
-         userCalendars.put(c.getTitle(), c);
-         }*/
-        //     }
+        chosenCalendars=new LinkedList<>();
+        
+        int i=0;
+        for (Calendar c: userCalendars){
+            if (i<maxCalendars){
+            chosenCalendars.add(c.getId().toString());
+            i++;
+            }
+        }
+        
+        updateScheduleModel();
     }
 
     public MeteoCalScheduleEvent getEvent() {
@@ -314,6 +326,10 @@ public class ScheduleBean implements Serializable {
         calendarManager.save(newCalendar);
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
         this.newCalendar=new Calendar();
+    }
+    
+    public void sendTryMail(){
+        emailBean.sendEmail("filippo.pellolio@mail.polimi.it", "prova", "Forse va");
     }
 
 
