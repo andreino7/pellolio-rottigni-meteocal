@@ -14,6 +14,7 @@ import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.entity.WeatherNotification;
 import java.util.LinkedList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,19 +29,24 @@ public class NotificationManager {
     @PersistenceContext
     private EntityManager em;
 
-    public List<Notification> getNotificationForUser(User u) {
-        List<Notification> res = new LinkedList<>();
-        res.addAll(em.createNamedQuery(WeatherNotification.findByReceiver, WeatherNotification.class).setParameter("user", u.getEmail()).getResultList());
-        res.addAll(em.createNamedQuery(ResponseNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-        res.addAll(em.createNamedQuery(InviteNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-        res.addAll(em.createNamedQuery(AdminNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-        res.addAll(em.createNamedQuery(ChangedEventNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-        System.out.println(res);
-        return res;
+        
+    @EJB
+    private EmailSessionBean emailBean;
+    
+    public List<Notification> getNotificationForUser(User u){
+         List<Notification> res= new LinkedList<>();
+         res.addAll(em.createNamedQuery(WeatherNotification.findByReceiver, WeatherNotification.class).setParameter("user", u.getEmail()).getResultList());
+         res.addAll(em.createNamedQuery(ResponseNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+         res.addAll(em.createNamedQuery(InviteNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+         res.addAll(em.createNamedQuery(AdminNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+         res.addAll(em.createNamedQuery(ChangedEventNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
+         System.out.println(res);
+         return res;
     }
 
     public void createWeatherNotification(WeatherNotification notification) {
         em.persist(notification);
+        emailBean.sendWeatherEmail(notification.getReceiver().getEmail(), notification.getAbout().getTitle(), notification.getState());
     }
 
     public Notification findNotificationById(String id) {
@@ -93,6 +99,7 @@ public class NotificationManager {
 
     public void createResponseNotification(ResponseNotification notification) {
         em.persist(notification);
+        emailBean.sendResponseEmail(notification.getReceiver().getEmail(), notification.getAbout().getTitle(), notification.getSender().getTitle(),notification.getAnswer());
     }
 
     public Notification findNotificationByIdAndType(String id, NotificationType notificationType) {

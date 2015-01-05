@@ -93,7 +93,7 @@ public class User implements Serializable,SearchResult {
     @Size(min = 1, max = 30, message="Insert a valid surname")
     @Column(name = "Surname")
     private String surname;
-    @Size(max = 70)
+    @Size(max = 255)
     @Column(name = "ProfilePhoto")
     private String profilePhoto;
     @Basic(optional = false)

@@ -34,6 +34,9 @@ public class EventManager {
     @EJB
     private UserManager userManager;
     
+    @EJB
+    private EmailSessionBean emailBean;
+    
     public Event findEventForId(String id) {
         if (id != null) {
             return em.find(Event.class, Integer.parseInt(id));
@@ -78,7 +81,7 @@ public class EventManager {
     }
     
     public boolean invitePermission(Event e){
-        return e.getVisibility()==Visibility.Public || e.getEventOwner().equals(userManager.getLoggedUser());
+        return e.getVisibility().equals(Visibility.Public) || e.getEventOwner().equals(userManager.getLoggedUser());
     }
     
     public void toggleLink(Event e, Calendar c) {
@@ -126,6 +129,7 @@ public class EventManager {
                 invite.setSender(userManager.getLoggedUser());
                 invite.setAbout(e);
                 em.persist(invite);
+                emailBean.sendInviteEmail(u.getEmail(), e.getTitle(), userManager.getLoggedUser().getTitle());
             }
         }
     }
