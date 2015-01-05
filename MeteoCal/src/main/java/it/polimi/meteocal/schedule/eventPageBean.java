@@ -222,10 +222,12 @@ public class eventPageBean implements Serializable {
         visibilities.add(Visibility.Public);
         InvitePermission=eventManager.invitePermission(event);
         calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
-        forecasts = weather.getWeatherForecast(event.getLocation());
-        updateWeather();
         updateSuggestedDate();
         updatePresentInMyCalendar();
+        if (isNotFaraway()) {
+            forecasts = weather.getWeatherForecast(event.getLocation());
+            updateWeather();
+        }
     }
 
 
@@ -280,11 +282,15 @@ public class eventPageBean implements Serializable {
      }
 
     private void updateWeather() {
+        System.out.println("update weather");
         Date eventDate = DateManipulator.toDefaultDate(event.getDate());
+        System.out.println(eventDate);
         for (Forecast f: forecasts) {
             Date forecastDate = DateManipulator.toDefaultDate(f.getDate());
             if (forecastDate.equals(eventDate)) {
-                event.setWeather(f.getCondition());
+                System.out.println("if");
+                event.setWeather(f.getCondition().toUpperCase());
+                eventManager.update(event);
             }
         }
     }
@@ -343,7 +349,6 @@ public class eventPageBean implements Serializable {
     
     public String declineInvite() {
         notifManager.createResponseNotification(setResponseNotificationParameter(false));
-        notifManager.deleteInvite((InviteNotification) notification);
         return "home?faces-redirect=true";           
     }
     
@@ -375,6 +380,14 @@ public class eventPageBean implements Serializable {
             notifManager.removeWeatherNotification((WeatherNotification) notification);
         }
         return "home?faces-redirect=true";
+    }
+
+    private boolean isNotFaraway() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(java.util.Calendar.DATE, 11);
+        Date d = cal.getTime();
+        return event.getDate().after(new Date()) && event.getDate().before(d);
     }
 
     
