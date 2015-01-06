@@ -7,17 +7,35 @@ package it.polimi.meteocal.schedule;
 
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.security.UserManager;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.rmi.server.UID;
 import java.security.Principal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
