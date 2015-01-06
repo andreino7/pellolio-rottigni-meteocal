@@ -38,7 +38,7 @@ public class EmailSessionBean {
     private String username = "infometeocal@gmail.com";
     private String password = "Meteocal1";
     private Protocol protocol = Protocol.TLS;
-    private boolean debug = true;
+    private boolean debug = false;
 
     public void sendEmail(String to, String subject,String body) {
         Properties props = new Properties();
@@ -99,6 +99,18 @@ public class EmailSessionBean {
     public void sendWeatherEmail(String to,String eventTitle,String weatherConditions){
         String body="The weather condition for your event "+eventTitle+" are forecasted to be "+weatherConditions+" visit www.meteocal.net:8080 for more information";
         String subject="Weather Forecast for "+eventTitle;
+        sendEmail(to, subject, body);
+    }
+    
+    public void sendChangedEvent(String to,String eventTitle){
+        String body="Some changes have been made to the event: "+eventTitle+", visit www.meteocal.net:8080 for more information";
+        String subject="Changes in "+eventTitle;
+        sendEmail(to, subject, body);
+    }
+    
+    public void sendAdminEmail(String to, String eventTitle){
+        String body="Some changes have been made to the type of the event: "+eventTitle+" by the admin, visit www.meteocal.net:8080 for more information";
+        String subject="Changes in "+eventTitle;
         sendEmail(to, subject, body);
     }
     // Add business logic below. (Right-click in editor and choose

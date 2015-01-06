@@ -327,10 +327,6 @@ public class ScheduleBean implements Serializable {
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
         this.newCalendar=new Calendar();
     }
-    
-    public void sendTryMail(){
-        emailBean.sendEmail("filippo.pellolio@mail.polimi.it", "prova", "Forse va");
-    }
 
 
     private void sendChangeEventNotification(Event ev) {

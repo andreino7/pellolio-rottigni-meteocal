@@ -8,6 +8,7 @@ package it.polimi.meteocal.security;
 import it.polimi.meteocal.entity.AdminNotification;
 import it.polimi.meteocal.entity.ChangedEventNotification;
 import it.polimi.meteocal.entity.Event;
+import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.entity.InviteNotification;
 import it.polimi.meteocal.entity.ResponseNotification;
 import it.polimi.meteocal.entity.User;
@@ -135,6 +136,7 @@ public class NotificationManager {
                 change.setState("UNREAD");
                 change.setReceiver(u);
                 em.persist(change);
+                emailBean.sendChangedEvent(u.getEmail(), e.getTitle());
             }
         }
     }
@@ -204,6 +206,19 @@ public class NotificationManager {
     public void removeAdminNotification(AdminNotification a) {
         AdminNotification toBeDelete = em.merge(a);
         em.remove(toBeDelete);
+    }
+    
+    public void createAdminNotification(EventType et){
+        List<Event> tonotif=em.createNamedQuery(Event.findByType, Event.class).setParameter("typeid", et.getId()).getResultList();
+        for (Event e:tonotif){
+            AdminNotification notif=new AdminNotification();
+            notif.setAbout(e);
+            notif.setReceiver(e.getEventOwner());
+            notif.setState("UNREAD");
+            notif.setId(-1);
+            em.persist(notif);
+            emailBean.sendAdminEmail(e.getEventOwner().getEmail(), e.getTitle());
+        }
     }
 
 }
