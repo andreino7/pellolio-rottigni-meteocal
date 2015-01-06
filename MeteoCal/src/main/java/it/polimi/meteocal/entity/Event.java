@@ -40,22 +40,25 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e"),
     @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id"),
+    @NamedQuery(name = "Event.findByType", query = "SELECT e FROM Event e WHERE e.type.id = :typeid"),
+
     @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title"),
-    @NamedQuery(name = "Event.findByPartOfTitle", query = "SELECT e FROM Event e WHERE e.title LIKE :part AND e.visibility='"+Visibility.Public+"'" ),
+    @NamedQuery(name = "Event.findByPartOfTitle", query = "SELECT e FROM Event e WHERE e.title LIKE :part AND e.visibility='" + Visibility.Public + "'"),
     @NamedQuery(name = "Event.findByVisibility", query = "SELECT e FROM Event e WHERE e.visibility = :visibility"),
     @NamedQuery(name = "Event.findByDate", query = "SELECT e FROM Event e WHERE e.date = :date"),
     @NamedQuery(name = "Event.findByEndDate", query = "SELECT e FROM Event e WHERE e.endDate = :endDate"),
     @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location"),
-    @NamedQuery(name = "Event.findByDay", query = "SELECT e FROM Event e WHERE e.date >= :date1 AND e.date < :date2"), 
-})
-public class Event implements Serializable,SearchResult {
+    @NamedQuery(name = "Event.findByDay", query = "SELECT e FROM Event e WHERE e.date >= :date1 AND e.date < :date2"),})
+public class Event implements Serializable, SearchResult {
+
     @JoinColumn(name = "EventOwner", referencedColumnName = "Email")
     @ManyToOne(optional = false)
     private User eventOwner;
     @Size(max = 45)
     @Column(name = "Weather")
     private String weather;
-    public static final String findByPartOfTitle="Event.findByPartOfTitle";
+    public static final String findByPartOfTitle = "Event.findByPartOfTitle";
+    public static final String findByType = "Event.findByType";
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "about")
     private Collection<WeatherNotification> weatherNotificationCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "about")
@@ -127,9 +130,9 @@ public class Event implements Serializable,SearchResult {
         this.id = id;
     }
 
-    @Override 
+    @Override
     public String getTitle() {
-        return title; 
+        return title;
     }
 
     public void setTitle(String title) {
@@ -207,7 +210,7 @@ public class Event implements Serializable,SearchResult {
 
     @Override
     public String toString() {
-        return "Event: id :"+id+"  title: "+title+"  " + getDate();
+        return "Event: id :" + id + "  title: " + title + "  " + getDate();
     }
 
     @XmlTransient
@@ -255,8 +258,6 @@ public class Event implements Serializable,SearchResult {
         this.inviteNotificationCollection = inviteNotificationCollection;
     }
 
-
-
     @Override
     public String getGroup() {
         return "Event";
@@ -288,5 +289,4 @@ public class Event implements Serializable,SearchResult {
         return "/user/event.xhtml";
     }
 
-   
 }

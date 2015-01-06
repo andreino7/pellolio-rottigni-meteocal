@@ -7,6 +7,7 @@ package it.polimi.meteocal.schedule;
 
 import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.security.EventTypeManager;
+import it.polimi.meteocal.security.NotificationManager;
 import it.polimi.meteocal.security.UserManager;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -26,6 +27,9 @@ public class AdminHomeBean implements Serializable {
 
     @EJB
     private UserManager userManager;
+    
+    @EJB
+    private NotificationManager notificationManager;
     
     @EJB
     private EventTypeManager etManager;
@@ -66,6 +70,7 @@ public class AdminHomeBean implements Serializable {
     public void save(){
         if (selected.getId()!=newInDB){
             etManager.update(selected);
+            notificationManager.createAdminNotification(selected);
         }else{
             etManager.save(selected);
         }
@@ -85,5 +90,7 @@ public class AdminHomeBean implements Serializable {
         selected.setTitle("Name");
 
     }
+    
+    
     
 }
