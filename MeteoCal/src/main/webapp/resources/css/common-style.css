@@ -160,6 +160,7 @@ html, body { margin: 0;
     text-decoration: none;
     line-height: 50px;
     margin-left: 5px;
+    margin-right: 5px;
 }     
 
 .ButtonNotificationsForm{
@@ -168,6 +169,8 @@ html, body { margin: 0;
     height: 50px;
     display: block;
     float: left;
+        margin-right: 5px;
+
 }
 
 .ButtonNotifications .ui-button {
@@ -177,6 +180,8 @@ html, body { margin: 0;
         height: 50px;
         display: block;
         position: auto;
+            margin-right: 5px;
+
 }
 .ButtonNotifications .ui-icon { 
     background: url(http://localhost:8080/MeteoCal/faces/javax.faces.resource/img/notifications.png) 50% 50% / 80% no-repeat no-repeat;
@@ -224,6 +229,7 @@ ul.ui-menu {
     display: block;
     float: left;
     color: black;
+    margin-left: 5px;
     
     vertical-align: middle;
     text-decoration: none;
@@ -319,3 +325,8 @@ ul.ui-menu {
     overflow: scroll;
 }
 
+.agendaButton{
+    margin-bottom: 3px;
+    margin-right:0px;
+    margin-left: auto;
+}

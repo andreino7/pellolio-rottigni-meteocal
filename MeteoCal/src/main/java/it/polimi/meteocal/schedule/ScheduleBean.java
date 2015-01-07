@@ -58,6 +58,8 @@ public class ScheduleBean implements Serializable {
     private static final int maxCalendars=8;
     private MeteoCalScheduleModel model;
     private User user;
+    private boolean scheduleDisplay=true;
+    
     @EJB
     private UserManager userManager;
 
@@ -84,6 +86,7 @@ public class ScheduleBean implements Serializable {
     @PersistenceContext
     private EntityManager em;
 
+
     private Integer calendarId;
     private String geoLoc;
 
@@ -91,12 +94,30 @@ public class ScheduleBean implements Serializable {
     private List<EventType> userTypes;
     private List<Calendar> userCalendars;
     private List<String> chosenCalendars;
+    private List<Event> nextEvents;
     private MeteoCalScheduleEvent event = new MeteoCalScheduleEvent();
     private String title;
     private Calendar newCalendar;
 
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
+
+    
+    public List<Event> getNextEvents() {
+        nextEvents=eventManager.findFutureEvents();
+        return nextEvents;
+    }
+    
+    
+    
+    
+    public boolean isScheduleDisplay() {
+        return scheduleDisplay;
+    }
+
+    public void setScheduleDisplay(boolean scheduleDisplay) {
+        this.scheduleDisplay = scheduleDisplay;
+    }
     
 
     public Calendar getNewCalendar() {
@@ -196,7 +217,6 @@ public class ScheduleBean implements Serializable {
         
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
         userTypes = (List<EventType>) em.createNamedQuery(EventType.findAllTypesForUser, EventType.class).setParameter("user", user.getEmail()).getResultList();
-        
         chosenCalendars=new LinkedList<>();
         
         int i=0;
@@ -334,6 +354,10 @@ public class ScheduleBean implements Serializable {
         notificationManager.createChangedEventNotification(ev, partecipant);
     }
     
+    
+    public void switchView(){
+        scheduleDisplay=!scheduleDisplay;
+    }
 
     
     

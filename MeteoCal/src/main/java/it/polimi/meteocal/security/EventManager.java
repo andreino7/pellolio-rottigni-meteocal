@@ -133,6 +133,11 @@ public class EventManager {
             }
         }
     }
+    
+    public List<Event> findFutureEvents(){
+        System.out.println(em.createNamedQuery(EventCalendar.findFutureEventsForUser, Event.class).setParameter("now", java.util.Calendar.getInstance().getTime() ).setParameter("userSelected", userManager.getLoggedUser().getEmail()).getResultList());
+        return em.createNamedQuery(EventCalendar.findFutureEventsForUser, Event.class).setParameter("now", java.util.Calendar.getInstance().getTime() ).setParameter("userSelected", userManager.getLoggedUser().getEmail()).getResultList();
+    }
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

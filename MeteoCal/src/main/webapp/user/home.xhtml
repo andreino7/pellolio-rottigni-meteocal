@@ -31,17 +31,24 @@
 
             </ui:define>
             <ui:define name="content">
+                
+                <h:form id='schedule'>
+                    <p:commandButton value="#{scheduleBean.scheduleDisplay?'Agenda':'Schedule'}" styleClass="agendaButton" update="@this @form" action="#{scheduleBean.switchView()}" />
 
-
-                <p:schedule id="schedule" value="#{scheduleBean.model}" aspectRatio="2" styleClass="scheduleHome"  
+                <p:schedule id="scheduleView" value="#{scheduleBean.model}" aspectRatio="2" styleClass="scheduleHome"  
                             ignoreTimezone="true" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
-                            tooltip="true" >
+                            tooltip="true" rendered='#{scheduleBean.scheduleDisplay}'>
                     <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}"
-                            update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                            update=":eventDetails" oncomplete="PF('eventDialog').show();" />
                     <p:ajax event="eventSelect" listener="#{scheduleBean.onEventSelect}"
-                            update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                            update=":eventDetails" oncomplete="PF('eventDialog').show();" />
                 </p:schedule>
-
+                
+                    <p:dataList value="#{scheduleBean.nextEvents}" rendered="#{!scheduleBean.scheduleDisplay}" var="e">
+                          #{e.date} - #{e.endDate}  <h:link value="#{e.title}" outcome="/user/event.xhtml" ><f:param name="id" value="#{e.id}"/> </h:link>
+                    </p:dataList>    
+                    
+                </h:form>
 
                 <p:dialog widgetVar="eventDialog" header="Event Details" resizable="false" style="height:50% !important; height:40% !important; top:25% !important; left: 30% !important;">
                     <h:form id="eventDetails" >
