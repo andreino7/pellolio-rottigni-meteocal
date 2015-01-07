@@ -104,7 +104,7 @@ public class ScheduleBean implements Serializable {
 
     
     public List<Event> getNextEvents() {
-        nextEvents=eventManager.findFutureEvents();
+        nextEvents=eventManager.findFutureEventsForCalendars(chosenCalendars);
         return nextEvents;
     }
     
