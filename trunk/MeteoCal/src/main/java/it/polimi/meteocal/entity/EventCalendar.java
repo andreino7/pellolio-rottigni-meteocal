@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "EventCalendar.findEventsForUser", query = "SELECT e FROM Event e WHERE e.id IN(SELECT ec.event.id FROM EventCalendar ec WHERE ec.calendar.id IN(SELECT c.id FROM Calendar c WHERE c.owner.email = :userSelected))"),
+    @NamedQuery(name = "EventCalendar.findFutureEventsForUser", query = "SELECT e FROM Event e WHERE e.date > :now AND e.id IN(SELECT ec.event.id FROM EventCalendar ec WHERE ec.calendar.id IN(SELECT c.id FROM Calendar c WHERE c.owner.email = :userSelected))"),
     @NamedQuery(name = "EventCalendar.findAll", query = "SELECT e FROM EventCalendar e"),
     @NamedQuery(name = "EventCalendar.findParticipant", query = "SELECT u FROM User u WHERE u.email IN( SELECT c.owner.email FROM Calendar c WHERE c.id IN(SELECT ec.calendar.id FROM EventCalendar ec WHERE ec.event.id = :event))"),
     @NamedQuery(name = "EventCalendar.findNonParticipant", query = "SELECT u FROM User u WHERE u.email NOT IN( SELECT c.owner.email FROM Calendar c WHERE c.id IN(SELECT ec.calendar.id FROM EventCalendar ec WHERE ec.event.id = :event))"),
@@ -36,16 +37,19 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "EventCalendar.findEventsForCalendar", query = "SELECT ev FROM Event ev WHERE ev.id IN( SELECT e.event.id FROM EventCalendar e WHERE e.calendar.id = :calendar)"),
     @NamedQuery(name = "EventCalendar.findEventCalendarForEventAndCalendar", query = "SELECT e FROM EventCalendar e WHERE e.event.id = :event AND e.calendar.id = :calendar"),
     @NamedQuery(name = "EventCalendar.findById", query = "SELECT e FROM EventCalendar e WHERE e.id = :id")})
-public class EventCalendar implements Serializable {
-    public static final String findParticipant="EventCalendar.findParticipant";
-    public static final String findNonParticipant="EventCalendar.findNonParticipant";
-    public static final String findNonParticipantByPart="EventCalendar.findNonParticipantByPart";
-    public static final String findEventsForUser="EventCalendar.findEventsForUser";
-    public static final String findEventsForCalendars="EventCalendar.findEventsForCalendars";
-    public static final String findEventsForCalendar="EventCalendar.findEventsForCalendar";
-    public static final String findEventCalendarForEventAndCalendar="EventCalendar.findEventCalendarForEventAndCalendar";
 
-    
+public class EventCalendar implements Serializable {
+
+    public static final String findParticipant = "EventCalendar.findParticipant";
+    public static final String findNonParticipant = "EventCalendar.findNonParticipant";
+    public static final String findNonParticipantByPart = "EventCalendar.findNonParticipantByPart";
+    public static final String findEventsForUser = "EventCalendar.findEventsForUser";
+    public static final String findFutureEventsForUser = "EventCalendar.findFutureEventsForUser";
+
+    public static final String findEventsForCalendars = "EventCalendar.findEventsForCalendars";
+    public static final String findEventsForCalendar = "EventCalendar.findEventsForCalendar";
+    public static final String findEventCalendarForEventAndCalendar = "EventCalendar.findEventCalendarForEventAndCalendar";
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -114,5 +118,5 @@ public class EventCalendar implements Serializable {
     public String toString() {
         return "it.polimi.meteocal.entity.EventCalendar[ id=" + id + " ]";
     }
-    
+
 }

@@ -41,7 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Event.findAll", query = "SELECT e FROM Event e"),
     @NamedQuery(name = "Event.findById", query = "SELECT e FROM Event e WHERE e.id = :id"),
     @NamedQuery(name = "Event.findByType", query = "SELECT e FROM Event e WHERE e.type.id = :typeid"),
-
+    
     @NamedQuery(name = "Event.findByTitle", query = "SELECT e FROM Event e WHERE e.title = :title"),
     @NamedQuery(name = "Event.findByPartOfTitle", query = "SELECT e FROM Event e WHERE e.title LIKE :part AND e.visibility='" + Visibility.Public + "'"),
     @NamedQuery(name = "Event.findByVisibility", query = "SELECT e FROM Event e WHERE e.visibility = :visibility"),
