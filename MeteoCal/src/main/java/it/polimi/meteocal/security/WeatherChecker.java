@@ -7,7 +7,6 @@ package it.polimi.meteocal.security;
 
 import it.polimi.meteocal.schedule.DateManipulator;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -82,13 +81,15 @@ public class WeatherChecker {
         System.out.println(url);
         try {
             JsonObject model = client.target(url)
-                    .request(MediaType.TEXT_PLAIN)
+                    .request(MediaType.APPLICATION_JSON)
                     .get(JsonObject.class);
             return model;
         } catch (Exception e) {
+            System.out.println("qui");
             return null;
         }
     }
+    
     
     public WeatherConditions addWeather(String city, Date date) {
         JsonObject model = getWeather(city);

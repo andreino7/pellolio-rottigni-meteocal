@@ -6,20 +6,16 @@
 package it.polimi.meteocal.security;
 
 import it.polimi.meteocal.entity.Event;
+import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.entity.WeatherNotification;
 import it.polimi.meteocal.schedule.DateManipulator;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Schedule;
 import javax.ejb.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+
 
 /**
  *
@@ -28,50 +24,26 @@ import javax.persistence.Query;
 @Singleton
 public class WeatherTimer {
 
-   @EJB
-   private WeatherChecker weather;
-   @EJB
-   private EventManager eventManager;
-   @EJB
-   private NotificationManager notificationManager;
+    @EJB
+    private WeatherChecker weather;
+    @EJB
+    private EventManager eventManager;
+    @EJB
+    private NotificationManager notificationManager;
 
-   
-   private Calendar calendarSetUp(Calendar cal) {
-       cal.setTime(DateManipulator.toDefaultDate(new Date())); 
-       return cal;
-   }
-   
-   private List<Event> findEventToCheck(Date d1, Date d2) {
-      return eventManager.findByDay(d1,d2);
-   }
-   
-  // @Schedule(second = "*/30", minute = "*", hour = "*", persistent = false)
-   public void checkWeather() {
-       System.out.println("timeout");
-       Calendar cal = Calendar.getInstance();
-       calendarSetUp(cal);
-       cal.add(Calendar.DATE, 3);
-       Date d1 = cal.getTime();
-       cal.add(Calendar.DATE, 1);
-       Date d2 = cal.getTime();
-       List<Event> events = findEventToCheck(d1, d2);
-       for (Event e: events) {
-            Map<Date, WeatherConditions> forecast = weather.getForecast(e.getLocation());
-            if (forecast != null) {
-                e.setWeather(forecast.get(d1).toString());
-                List<String> allowed = e.getType().getAllowedCondition();
-                if (!allowed.contains(e.getWeather())) {
-                    Date d = lookForOkDay(allowed, forecast, d2, e);
-                    createOwnerWeatherNotification(e, d);
-                }
-            }
-       }
-       
-   }
+    
+    private Calendar calendarSetUp(Calendar cal) {
+        cal.setTime(DateManipulator.toDefaultDate(new Date()));
+        return cal;
+    }
+
+    private List<Event> findEventToCheck(Date d1, Date d2) {
+        return eventManager.findByDay(d1, d2);
+    }
 
     private Date lookForOkDay(List<String> allowed, Map<Date, WeatherConditions> forecast, Date date, Event e) {
-       //TODO change if conditions
-        for (Date d: forecast.keySet()) {
+        //TODO change if conditions
+        for (Date d : forecast.keySet()) {
             if (d.after(date) && allowed.contains(forecast.get(d).toString())) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(e.getDate());
@@ -88,20 +60,56 @@ public class WeatherTimer {
         return null;
     }
 
-    private void createOwnerWeatherNotification(Event e, Date d) {
-        WeatherNotification wn = new WeatherNotification();
-        wn.setState("UNREAD");
-        wn.setId(1);
-        wn.setReceiver(e.getEventOwner());
-        wn.setAbout(e);
-        wn.setSuggestedDate(d);
-        notificationManager.createWeatherNotification(wn);
-    }
-    
-    @PostConstruct
-    public void setTimeZone() {
-        TimeZone tz = TimeZone.getTimeZone("GMT");
-        TimeZone.setDefault(tz);
+    public void checkThreeDayWeather() {
+        checkWeather(3, 1, false);
     }
 
+    public void checkLastDayWeather() {
+        checkWeather(0, 1, true);
+    }
+
+    //schedule
+    private void checkWeather(int firstDay, int secondDay, boolean forAll) {
+        Calendar cal = Calendar.getInstance();
+        calendarSetUp(cal);
+        cal.add(Calendar.DATE, firstDay);
+        Date d1 = cal.getTime();
+        cal.add(Calendar.DATE, secondDay);
+        Date d2 = cal.getTime();
+        List<Event> events = findEventToCheck(d1, d2);
+        for (Event e : events) {
+            Map<Date, WeatherConditions> forecast = weather.getForecast(e.getLocation());
+            if (forecast != null) {
+                e.setWeather(forecast.get(d1).toString());
+                List<String> allowed = e.getType().getAllowedCondition();
+                if (!allowed.contains(e.getWeather())) {
+                    Date d = lookForOkDay(allowed, forecast, d2, e);
+                    createNotifications(e, d, forAll);
+                }
+            }
+        }
+    }
+
+    private void createNotifications(Event e, Date d, boolean forAll) {
+        List<User> participants = eventManager.getNonParticipant(e);
+        if (forAll) {
+            for (User u : participants) {
+                setNotificationParam(u, e, d);
+            }
+        } else {
+            setNotificationParam(e.getEventOwner(), e, d);
+        }
+    }
+
+    private void setNotificationParam(User u, Event e, Date d) {
+        WeatherNotification wn = new WeatherNotification();
+        wn.setState(NotificationStatus.UNREADSEEN.toString());
+        wn.setId(1);
+        wn.setReceiver(u);
+        wn.setAbout(e);
+        if (u.equals(e.getEventOwner())) {
+            wn.setSuggestedDate(d);
+        }
+        notificationManager.createWeatherNotification(wn);
+    }
 }

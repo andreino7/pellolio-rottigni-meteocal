@@ -16,10 +16,10 @@
                         <p:row>
                             <p:column colspan="2" >
                                 <h1 style="text-align: center">#{eventPageBean.event.title}</h1>
-                                <p:commandButton value="Decline" action="#{eventPageBean.declineInvite()}" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}" immediate="true" style="float: right" />
-                                <p:commandButton value="Join" action="#{eventPageBean.joinEvent()}" oncomplete="if (args &amp;&amp; !args.validationFailed)" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}" style="float: right"/> 
+                                <p:commandButton value="Decline" action="#{eventPageBean.declineInvite()}" rendered="#{(eventPageBean.inviteNotification and eventPageBean.notAnsweredYet and !eventPageBean.presentInMyCalendar)?true:false}" immediate="true" style="float: right" />
+                                <p:commandButton value="Join" action="#{eventPageBean.joinEvent()}" oncomplete="if (args &amp;&amp; !args.validationFailed)" rendered="#{(eventPageBean.inviteNotification and eventPageBean.notAnsweredYet and !eventPageBean.presentInMyCalendar)?true:false}" style="float: right"/> 
 
-                                <p:selectOneMenu id="CalendarForEvent"  value="#{eventPageBean.calendar}" required="true" converter="CalendarConverter" rendered="#{(eventPageBean.inviteNotification and !eventPageBean.presentInMyCalendar)?true:false}" style="position: relative; bottom: -2px; float: right">
+                                <p:selectOneMenu id="CalendarForEvent"  value="#{eventPageBean.calendar}" required="true" converter="CalendarConverter" rendered="#{(eventPageBean.inviteNotification and eventPageBean.notAnsweredYet and !eventPageBean.presentInMyCalendar)?true:false}" style="position: relative; bottom: -2px; float: right">
                                     <f:selectItem itemValue="" itemLabel="Select Calendar"  />
                                     <f:selectItems value="#{eventPageBean.calendars}" var="cal" itemValue="#{cal}"  itemLabel="#{cal.title}" />
                                 </p:selectOneMenu>
