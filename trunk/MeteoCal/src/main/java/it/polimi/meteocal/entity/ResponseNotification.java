@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ResponseNotification.findById", query = "SELECT r FROM ResponseNotification r WHERE r.id = :id"),
     @NamedQuery(name = "ResponseNotification.findByReceiver", query = "SELECT w FROM ResponseNotification w WHERE w.receiver.email = :user"),
     @NamedQuery(name = "ResponseNotification.findByAbout", query = "SELECT r FROM ResponseNotification r WHERE r.about.id = :event"),
+    @NamedQuery(name = "ResponseNotification.findByAboutAndSender", query = "SELECT r FROM ResponseNotification r WHERE r.about.id = :event AND r.sender.email = :user"),
     @NamedQuery(name = "ResponseNotification.findByState", query = "SELECT r FROM ResponseNotification r WHERE r.state = :state")})
 public class ResponseNotification implements Serializable,Notification {
     @Basic(optional = false)
@@ -52,6 +53,7 @@ public class ResponseNotification implements Serializable,Notification {
     private boolean answer;
     public static final String findByReceiver= "ResponseNotification.findByReceiver";
     public static final String findByAbout= "ResponseNotification.findByAbout";
+    public static final String findByAboutAndSender= "ResponseNotification.findByAboutAndSender";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

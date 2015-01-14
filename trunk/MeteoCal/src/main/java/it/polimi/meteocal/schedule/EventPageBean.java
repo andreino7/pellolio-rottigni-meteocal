@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Named(value = "eventPageBean")
 @ViewScoped
-public class eventPageBean implements Serializable {
+public class EventPageBean implements Serializable {
 
     @EJB
     private EventManager eventManager;
@@ -88,6 +88,7 @@ public class eventPageBean implements Serializable {
     private NotificationType notificationType;
     private boolean presentInMyCalendar;
     private List<Calendar> calendars;
+    private boolean notAnsweredYet;
 
 
     public boolean isInvitePermission() {
@@ -201,13 +202,17 @@ public class eventPageBean implements Serializable {
     public boolean isThereSuggestedDate() {
         return suggestedDate!=null;
     }
+
+    public boolean isNotAnsweredYet() {
+        return notAnsweredYet;
+    }
     
 
 
     /**
      * Creates a new instance of eventPageBean
      */
-    public eventPageBean() {
+    public EventPageBean() {
     }
 
     @PostConstruct
@@ -222,11 +227,14 @@ public class eventPageBean implements Serializable {
         visibilities.add(Visibility.Public);
         InvitePermission=eventManager.invitePermission(event);
         calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
-        updateSuggestedDate();
         updatePresentInMyCalendar();
+        updateSuggestedDate();
+        checkIfAlreadyAnsewerd();
         if (isNotFaraway()) {
             forecasts = weather.getWeatherForecast(event.getLocation());
-            updateWeather();
+            if(forecasts!=null) {
+                updateWeather();
+            }
         }
     }
 
@@ -388,6 +396,12 @@ public class eventPageBean implements Serializable {
         cal.add(java.util.Calendar.DATE, 11);
         Date d = cal.getTime();
         return event.getDate().after(new Date()) && event.getDate().before(d);
+    }
+
+    private void checkIfAlreadyAnsewerd() {
+        if (inviteNotification) {
+            notAnsweredYet = notifManager.notAnswered(event, userManager.getLoggedUser());
+        }
     }
 
     

@@ -19,6 +19,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -133,7 +134,7 @@ public class NotificationManager {
                 ChangedEventNotification change = new ChangedEventNotification();
                 change.setId(-1);
                 change.setAbout(e);
-                change.setState("UNREAD");
+                change.setState(NotificationStatus.UNREADSEEN.toString());
                 change.setReceiver(u);
                 em.persist(change);
                 emailBean.sendChangedEvent(u.getEmail(), e.getTitle());
@@ -214,11 +215,18 @@ public class NotificationManager {
             AdminNotification notif=new AdminNotification();
             notif.setAbout(e);
             notif.setReceiver(e.getEventOwner());
-            notif.setState("UNREAD");
+            notif.setState(NotificationStatus.UNREADSEEN.toString());
             notif.setId(-1);
             em.persist(notif);
             emailBean.sendAdminEmail(e.getEventOwner().getEmail(), e.getTitle());
         }
+    }
+
+    public boolean notAnswered(Event event, User user) {
+       Query q = em.createNamedQuery(ResponseNotification.findByAboutAndSender, ResponseNotification.class);
+       q.setParameter("event", event.getId());
+       q.setParameter("user", user.getEmail());
+       return q.getResultList().isEmpty();
     }
 
 }
