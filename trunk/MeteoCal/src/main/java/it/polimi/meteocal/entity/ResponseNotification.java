@@ -192,8 +192,22 @@ public class ResponseNotification implements Serializable,Notification {
         return NotificationType.RESPONSE;
     }
 
+    @Override
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    @Override
+    public int compareTo(Notification o) {
+        if (o.getCreationDate().after(creationDate)) {
+            return -1;
+        } else {
+            if (o.getCreationDate().before(creationDate)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 
     

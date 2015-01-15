@@ -125,7 +125,7 @@ public class EventManager {
     public void inviteUsersToEvent(List<User> toInvite, Event e) {
         for (User u : toInvite) {
             if (!UserAlreadyInvited(e, u)) {
-                InviteNotification invite = new InviteNotification(0, "UNREAD");
+                InviteNotification invite = new InviteNotification(0, NotificationStatus.UNREADSEEN.toString());
                 invite.setReceiver(u);
                 invite.setSender(userManager.getLoggedUser());
                 invite.setAbout(e);

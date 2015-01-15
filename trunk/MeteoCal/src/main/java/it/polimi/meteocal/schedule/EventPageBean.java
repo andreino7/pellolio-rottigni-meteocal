@@ -21,6 +21,7 @@ import it.polimi.meteocal.security.EventTypeManager;
 import it.polimi.meteocal.security.Forecast;
 import it.polimi.meteocal.security.Notification;
 import it.polimi.meteocal.security.NotificationManager;
+import it.polimi.meteocal.security.NotificationStatus;
 import it.polimi.meteocal.security.NotificationType;
 import it.polimi.meteocal.security.UserManager;
 import it.polimi.meteocal.security.WeatherChecker;
@@ -368,7 +369,7 @@ public class EventPageBean implements Serializable {
         respNotification.setAnswer(response);
         respNotification.setRefers(invite);
         respNotification.setReceiver(invite.getSender());
-        respNotification.setState("UNREAD");
+        respNotification.setState(NotificationStatus.UNREADSEEN.toString());
         respNotification.setSender(userManager.getLoggedUser());
         return respNotification;
     }

@@ -151,7 +151,11 @@ public class WeatherNotification implements Serializable, Notification {
 
     @Override
     public String getText() {
-        return "For your event " + this.about.getTitle().toUpperCase() + " is forecasted " + this.about.getWeather() + ".Click to modify the event" ;
+        if (about.getEventOwner().equals(receiver)) {
+            return "For your event " + about.getTitle().toUpperCase() + " is forecasted " + about.getWeather() + ".Click to modify the event" ;
+        } else {
+            return "For the event " + about.getTitle().toUpperCase() + " is forecasted " + about.getWeather();
+        }
     }
 
     @Override
@@ -159,8 +163,22 @@ public class WeatherNotification implements Serializable, Notification {
         return NotificationType.WEATHER;
     }
 
+    @Override
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    @Override
+    public int compareTo(Notification o) {
+        if (o.getCreationDate().after(creationDate)) {
+            return -1;
+        } else {
+            if (o.getCreationDate().before(creationDate)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 
     
