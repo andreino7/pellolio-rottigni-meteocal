@@ -215,12 +215,70 @@ ul.ui-menu {
     z-index: 10;
 }
 
-.prova {
-    background-size: 50px,50px;
-    background-image: url(img/sunny.png) !important;
+.invite {
+    background-size: 40px,40px;
+    background-image: url(img/inviteNot.png) !important;
     height: 50px;
     width: 50px;
 }
+
+.admin {
+    background-size: 40px,40px;
+    background-image: url(img/adminNot.png) !important;
+    height: 50px;
+    width: 50px; 
+}
+
+.changed {
+    background-size: 40px,40px;
+    background-image: url(img/changedNot.png) !important;
+    height: 50px;
+    width: 50px; 
+}
+
+.responseYes {
+    background-size: 40px,40px;
+    background-image: url(img/yesNot.png) !important;
+    height: 50px;
+    width: 50px;     
+}
+
+.responseNO {
+    background-size: 40px,40px;
+    background-image: url(img/noNot.png) !important;
+    height: 50px;
+    width: 50px;     
+}
+
+.notificationRAIN {
+    background-size: 40px,40px;
+    background-image: url(img/rainNot.png) !important;
+    height: 50px;
+    width: 50px; 
+}
+
+.notificationCLEAR {
+    background-size: 40px,40px;
+    background-image: url(img/clearNot.png) !important;
+    height: 50px;
+    width: 50px;     
+}
+
+.notificationSNOW {
+    background-size: 40px,40px;
+    background-image: url(img/snowNot.png) !important;
+    height: 50px;
+    width: 50px;     
+}
+
+.notificationCLOUDS {
+    background-size: 40px,40px;
+    background-image: url(img/cloudNot.png) !important;
+    height: 50px;
+    width: 50px; 
+}
+
+
 
 #userBarNameButton{
     border: 0;

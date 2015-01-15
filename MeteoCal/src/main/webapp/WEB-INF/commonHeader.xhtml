@@ -42,8 +42,8 @@
 
             <div id="userBar">
                 <h:form styleClass="ButtonNotificationsForm">
-                    <h:outputLabel class="count" value="#{notificationBean.unReadNotificationNumber}" rendered="#{notificationBean.thereNotificationUnRead?true:false}" />
-                    <p:menuButton id="notificationMenu"  value="" styleClass="ButtonNotifications" model="#{notificationBean.model}" >
+                    <h:outputLabel id="countLabel" class="count" value="#{notificationBean.unReadSeenNotificationNumber}" rendered="#{notificationBean.thereNotificationUnReadSeen?true:false}" />
+                    <p:menuButton id="notificationMenu"  value="#{notificationBean.updateUnReadSeen()}"  styleClass="ButtonNotifications" model="#{notificationBean.model}"  >
                     </p:menuButton>
                 </h:form>    
                 <h:graphicImage value="#{userBean.profilePhoto}" id="userPhotoBar"/>

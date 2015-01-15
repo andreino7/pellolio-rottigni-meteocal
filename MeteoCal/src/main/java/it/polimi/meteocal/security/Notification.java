@@ -6,12 +6,13 @@
 package it.polimi.meteocal.security;
 
 import it.polimi.meteocal.entity.Event;
+import java.util.Date;
 
 /**
  *
  * @author Filippo
  */
-public interface Notification {
+public interface Notification extends Comparable<Notification> {
     
     public String getText();
     public Event getAbout();
@@ -19,4 +20,5 @@ public interface Notification {
     public void setState(String state);
     public Integer getId();
     public NotificationType getType();
+    public Date getCreationDate();
 }
