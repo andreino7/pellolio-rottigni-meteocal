@@ -20,6 +20,7 @@ import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.DefaultSeparator;
 import org.primefaces.model.menu.MenuModel;
 
 /**
@@ -82,7 +83,9 @@ public class NotificationBean {
         updateUnReadSeenList();
         for (Notification n : notif) {
             DefaultMenuItem item = getItemInstanceSetted(n);
+            DefaultSeparator separator = new DefaultSeparator();
             model.addElement(item);
+            model.addElement(separator);
         }
     }
 
@@ -115,7 +118,7 @@ public class NotificationBean {
         setIcon(n, item);
         item.setIconPos("right");
         if (!NotificationStatus.READ.toString().equals(n.getState())) {
-            item.setStyle("background: #F6E3CE; margin-top: -5px; margin-bottom: 5px; margin-left: -5px; width: 180px;");
+            item.setStyle("background: #F6E3CE; margin-top: 0px; margin-bottom: 0px; margin-left: -5px; width: 180px; height: 400");
         } else {
             item.setStyle("margin-top: -5px; margin-bottom: 5px; margin-left: -5px; width: 180px;");
         }
