@@ -46,25 +46,25 @@ import javax.servlet.http.HttpServletRequest;
 public class EventPageBean implements Serializable {
 
     @EJB
-    private EventManager eventManager;
+    EventManager eventManager;
 
     @EJB
-    private EventTypeManager eventTypeManager;
+    EventTypeManager eventTypeManager;
 
     @EJB
-    private WeatherChecker weather;
+    WeatherChecker weather;
 
     @EJB
-    private CalendarManager calendarManager;
+    CalendarManager calendarManager;
 
     @EJB
-    private NotificationManager notifManager;
+    NotificationManager notifManager;
 
     @EJB
-    private UserManager userManager;
+    UserManager userManager;
 
     @EJB
-    private EventCalendarManager ecManager;
+    EventCalendarManager ecManager;
 
     private final List<String> visibilities = new LinkedList<>();
     private String param;
