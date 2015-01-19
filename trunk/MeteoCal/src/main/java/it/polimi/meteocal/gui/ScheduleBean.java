@@ -3,21 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.polimi.meteocal.schedule;
+package it.polimi.meteocal.gui;
 
+import it.polimi.meteocal.schedule.Visibility;
 import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.ChangedEventNotification;
 import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.EventCalendar;
 import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.entity.User;
-import it.polimi.meteocal.security.CalendarManager;
-import it.polimi.meteocal.security.EmailSessionBean;
-import it.polimi.meteocal.security.EventManager;
-import it.polimi.meteocal.security.NotificationCleaner;
-import it.polimi.meteocal.security.NotificationManager;
-import it.polimi.meteocal.security.UserManager;
-import it.polimi.meteocal.security.WeatherChecker;
+import it.polimi.meteocal.boundary.CalendarManager;
+import it.polimi.meteocal.boundary.EventManager;
+import it.polimi.meteocal.notification.NotificationCleaner;
+import it.polimi.meteocal.boundary.NotificationManager;
+import it.polimi.meteocal.boundary.UserManager;
+import it.polimi.meteocal.schedule.MeteoCalScheduleEvent;
+import it.polimi.meteocal.schedule.MeteoCalScheduleModel;
+import it.polimi.meteocal.weather.WeatherChecker;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;

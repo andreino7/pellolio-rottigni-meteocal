@@ -5,7 +5,7 @@
  */
 package it.polimi.meteocal.entity;
 
-import it.polimi.meteocal.security.WeatherConditions;
+import it.polimi.meteocal.weather.WeatherConditions;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;

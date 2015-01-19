@@ -8,7 +8,7 @@ package it.polimi.meteocal.schedule;
 import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.Event;
 import it.polimi.meteocal.entity.EventType;
-import it.polimi.meteocal.security.EventManager;
+import it.polimi.meteocal.boundary.EventManager;
 import java.util.Date;
 import javax.ejb.EJB;
 import org.primefaces.model.DefaultScheduleEvent;

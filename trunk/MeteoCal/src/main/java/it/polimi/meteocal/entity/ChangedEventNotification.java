@@ -5,8 +5,8 @@
  */
 package it.polimi.meteocal.entity;
 
-import it.polimi.meteocal.security.Notification;
-import it.polimi.meteocal.security.NotificationType;
+import it.polimi.meteocal.interfaces.Notification;
+import it.polimi.meteocal.notification.NotificationType;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
