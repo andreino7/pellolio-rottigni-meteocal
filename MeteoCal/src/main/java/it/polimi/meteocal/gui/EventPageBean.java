@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.polimi.meteocal.schedule;
+package it.polimi.meteocal.gui;
 
+import it.polimi.meteocal.weather.DateManipulator;
+import it.polimi.meteocal.boundary.EventCalendarManager;
 import it.polimi.meteocal.entity.AdminNotification;
 import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.ChangedEventNotification;
@@ -15,16 +17,17 @@ import it.polimi.meteocal.entity.InviteNotification;
 import it.polimi.meteocal.entity.ResponseNotification;
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.entity.WeatherNotification;
-import it.polimi.meteocal.security.CalendarManager;
-import it.polimi.meteocal.security.EventManager;
-import it.polimi.meteocal.security.EventTypeManager;
-import it.polimi.meteocal.security.Forecast;
-import it.polimi.meteocal.security.Notification;
-import it.polimi.meteocal.security.NotificationManager;
-import it.polimi.meteocal.security.NotificationStatus;
-import it.polimi.meteocal.security.NotificationType;
-import it.polimi.meteocal.security.UserManager;
-import it.polimi.meteocal.security.WeatherChecker;
+import it.polimi.meteocal.boundary.CalendarManager;
+import it.polimi.meteocal.boundary.EventManager;
+import it.polimi.meteocal.boundary.EventTypeManager;
+import it.polimi.meteocal.weather.Forecast;
+import it.polimi.meteocal.interfaces.Notification;
+import it.polimi.meteocal.boundary.NotificationManager;
+import it.polimi.meteocal.notification.NotificationStatus;
+import it.polimi.meteocal.notification.NotificationType;
+import it.polimi.meteocal.boundary.UserManager;
+import it.polimi.meteocal.schedule.Visibility;
+import it.polimi.meteocal.weather.WeatherChecker;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;

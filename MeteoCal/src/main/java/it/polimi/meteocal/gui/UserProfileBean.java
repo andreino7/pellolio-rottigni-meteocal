@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.polimi.meteocal.schedule;
+package it.polimi.meteocal.gui;
 
 import it.polimi.meteocal.entity.User;
-import it.polimi.meteocal.security.UserManager;
+import it.polimi.meteocal.boundary.UserManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +43,7 @@ import org.primefaces.model.UploadedFile;
  */
 @Named(value = "userProfile")
 @ViewScoped
-public class UserProfile implements Serializable {
+public class UserProfileBean implements Serializable {
 
     /**
      * Creates a new instance of userProfile
@@ -120,7 +120,7 @@ public class UserProfile implements Serializable {
         this.user = user;
     }
 
-    public UserProfile() {
+    public UserProfileBean() {
 
     }
 

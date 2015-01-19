@@ -5,7 +5,7 @@
  */
 package it.polimi.meteocal.entity;
 
-import it.polimi.meteocal.security.SearchResult;
+import it.polimi.meteocal.interfaces.SearchResult;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;

@@ -6,7 +6,7 @@
 package it.polimi.meteocal.entity;
 
 import it.polimi.meteocal.schedule.Visibility;
-import it.polimi.meteocal.security.SearchResult;
+import it.polimi.meteocal.interfaces.SearchResult;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;

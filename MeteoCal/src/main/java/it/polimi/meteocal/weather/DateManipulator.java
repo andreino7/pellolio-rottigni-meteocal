@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.polimi.meteocal.schedule;
+package it.polimi.meteocal.weather;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.polimi.meteocal.schedule;
+package it.polimi.meteocal.gui;
 
 import it.polimi.meteocal.entity.EventType;
-import it.polimi.meteocal.security.EventTypeManager;
+import it.polimi.meteocal.boundary.EventTypeManager;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

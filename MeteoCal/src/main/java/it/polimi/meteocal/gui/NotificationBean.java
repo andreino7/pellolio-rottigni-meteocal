@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.polimi.meteocal.schedule;
+package it.polimi.meteocal.gui;
 
 import it.polimi.meteocal.entity.ResponseNotification;
-import it.polimi.meteocal.security.Notification;
-import it.polimi.meteocal.security.NotificationManager;
-import it.polimi.meteocal.security.NotificationStatus;
-import it.polimi.meteocal.security.NotificationType;
-import it.polimi.meteocal.security.UserManager;
+import it.polimi.meteocal.interfaces.Notification;
+import it.polimi.meteocal.boundary.NotificationManager;
+import it.polimi.meteocal.notification.NotificationStatus;
+import it.polimi.meteocal.notification.NotificationType;
+import it.polimi.meteocal.boundary.UserManager;
+import it.polimi.meteocal.notification.NotificationStatus;
+import it.polimi.meteocal.notification.NotificationType;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
