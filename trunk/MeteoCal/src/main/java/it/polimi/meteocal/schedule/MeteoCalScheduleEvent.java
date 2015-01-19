@@ -81,7 +81,6 @@ public class MeteoCalScheduleEvent extends DefaultScheduleEvent {
 
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
-        System.out.println(calendar);
     }
   
     

@@ -165,7 +165,6 @@ public class PublicCalendarBean implements Serializable {
             System.out.println("vuota");
         } else {
             for (ScheduleEvent a: lista) {
-                System.out.println(a.getId());
             }
         }
 
