@@ -87,17 +87,19 @@
 
                             <h:outputLabel for="addressForEvent" value="Location:" />
 
-                            <p:inputText id="addressForEvent" value="#{scheduleBean.geoLoc}" onblur="codeAddress()" onkeyup="codeAddress()" />
+                            <p:inputText id="addressForEvent" value="#{scheduleBean.geoLoc}" onblur="codeAddress()" onkeyup="codeAddress()" >
+                                <f:validateLength minimum="1"/>
+                            </p:inputText>
 
 
                             <h:link outcome="/user/event.xhtml" rendered="#{scheduleBean.event.dbId!=0}" value="Go to Event Page">
                                 <f:param name="id" value="#{scheduleBean.event.dbId}"/>
                             </h:link>
+                            <h:outputLabel value="  " rendered="#{scheduleBean.event.dbId!=0}"/>
                             <p:commandButton type="reset" value="Reset" />
-                            <p:commandButton value="Save" actionListener="#{scheduleBean.addEvent}" onstart="codeAddress()"
+                            <p:commandButton value="Save" actionListener="#{scheduleBean.addEvent}" onstart="codeAddress()" update="@form"
                                              oncomplete="if (args &amp;&amp; !args.validationFailed){PF('myschedule').update();PF('eventDialog').hide();}"/>
-
-
+                            
                         </h:panelGrid>
                     </h:form>
                 </p:dialog>

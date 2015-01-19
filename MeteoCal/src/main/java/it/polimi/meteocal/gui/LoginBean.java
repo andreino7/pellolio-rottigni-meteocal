@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Filippo
  */
-@Named
+@Named(value = "loginBean")
 @RequestScoped
 public class LoginBean {
     

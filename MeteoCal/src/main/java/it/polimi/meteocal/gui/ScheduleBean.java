@@ -14,6 +14,7 @@ import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.entity.User;
 import it.polimi.meteocal.boundary.CalendarManager;
 import it.polimi.meteocal.boundary.EventManager;
+import it.polimi.meteocal.boundary.EventTypeManager;
 import it.polimi.meteocal.notification.NotificationCleaner;
 import it.polimi.meteocal.boundary.NotificationManager;
 import it.polimi.meteocal.boundary.UserManager;
@@ -42,6 +43,7 @@ import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
@@ -63,30 +65,33 @@ public class ScheduleBean implements Serializable {
     private boolean scheduleDisplay=true;
     
     @EJB
-    private UserManager userManager;
+    UserManager userManager;
 
     @EJB
-    private CalendarManager calendarManager;
+    CalendarManager calendarManager;
 
     @EJB
-    private EventManager eventManager;
+    EventManager eventManager;
+    
+    @EJB
+    EventTypeManager etManager;
     
     @EJB
     private NotificationManager notificationManager;
 
     @EJB
-    private WeatherChecker weather;
+    WeatherChecker weather;
 
     @EJB
     private EmailSessionBean emailBean;
 
     
     @EJB
-    private NotificationCleaner cleaner;
+    NotificationCleaner cleaner;
 
     
     @PersistenceContext
-    private EntityManager em;
+    EntityManager em;
 
 
     private Integer calendarId;
@@ -165,7 +170,6 @@ public class ScheduleBean implements Serializable {
     public void setChosenCalendars(List<String> chosenCalendars) {
         this.chosenCalendars = chosenCalendars;
         updateScheduleModel();
-        System.out.println("xxx");
     }
 
     public Integer getCalendarId() {
@@ -192,7 +196,6 @@ public class ScheduleBean implements Serializable {
 
     public void setTitle(String title) {
         event.setTitle(title);
-        System.out.println(title);
 
         this.title = title;
     }
@@ -200,7 +203,6 @@ public class ScheduleBean implements Serializable {
     public ScheduleBean() {
         model = new MeteoCalScheduleModel();
 
-        System.out.println("aaaaaaa");
     }
 
     public ScheduleModel getModel() {
@@ -209,7 +211,7 @@ public class ScheduleBean implements Serializable {
     }
 
     @PostConstruct
-    private void postConstruct() {
+    void postConstruct() {
         user = userManager.getLoggedUser();
 
         
@@ -217,8 +219,8 @@ public class ScheduleBean implements Serializable {
         visibilities.add(Visibility.Public);
         event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
         
-        userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
-        userTypes = (List<EventType>) em.createNamedQuery(EventType.findAllTypesForUser, EventType.class).setParameter("user", user.getEmail()).getResultList();
+        userCalendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
+        userTypes = etManager.findTypesForUser();
         chosenCalendars=new LinkedList<>();
         
         int i=0;
@@ -241,7 +243,7 @@ public class ScheduleBean implements Serializable {
     }
 
     public void addEvent() {
-        if (event.getLocation() != null) {
+        try{
             this.save();
             if (event.getId() == null) {
                 model.addEvent(event);
@@ -249,14 +251,14 @@ public class ScheduleBean implements Serializable {
             } else {
                 model.updateEvent(event);
             }
-        } else {
-            System.out.println("No Location");
+              event = new MeteoCalScheduleEvent(); //reset dialog form
+
+        }catch (BadEventException ex){
+           
         }
-        event = new MeteoCalScheduleEvent(); //reset dialog form
     }
 
     public void onEventSelect(SelectEvent e) {
-        System.out.println("Event Selected");
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
 
         event = model.getMeteoEvent(ev.getId());
@@ -307,8 +309,15 @@ public class ScheduleBean implements Serializable {
 
     }
 
-    public void save() {
+    
+
+    public class BadEventException extends Exception{
+        
+    }
+    
+    public void save() throws BadEventException{
         Event ev;
+        System.err.println("Save Called");
         if (eventManager.findEventForId(event.getDbId()) != null) {
             ev = eventManager.findEventForId(event.getDbId());
             ev.setId(event.getDbId());
@@ -333,9 +342,16 @@ public class ScheduleBean implements Serializable {
             ev.setVisibility(event.getVisibility());
             ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
             ev.setEventOwner(user);
+            try{
             eventManager.save(ev);
             eventManager.linkToCalendar(ev, event.getCalendar());
             cleaner.setTimer(ev.getId(), ev.getEndDate());
+                System.err.println("NoViolation");
+            }catch (Exception ex){
+                System.err.println("ConstraintViolation");
+                throw new BadEventException();
+                
+            }
         }
     }
 
