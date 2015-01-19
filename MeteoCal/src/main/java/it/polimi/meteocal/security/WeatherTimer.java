@@ -14,7 +14,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
+import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.persistence.EntityManager;
 
 
 /**
@@ -60,16 +62,15 @@ public class WeatherTimer {
         return null;
     }
 
-    public void checkThreeDayWeather() {
-        checkWeather(3, 1, false);
-    }
 
-    public void checkLastDayWeather() {
+    @Schedule (dayOfWeek="*", minute="0", second="0", hour="1", timezone="GMT")
+    public void checkWeather() {
+        checkWeather(3, 1, false);
         checkWeather(0, 1, true);
     }
 
-    //schedule
     private void checkWeather(int firstDay, int secondDay, boolean forAll) {
+        System.out.println("checking weather");
         Calendar cal = Calendar.getInstance();
         calendarSetUp(cal);
         cal.add(Calendar.DATE, firstDay);
