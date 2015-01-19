@@ -11,14 +11,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonString;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -27,16 +25,53 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 public class WeatherChecker {
 
-    private static final String APPID ="9d8f6daef04fa46457a706f694d929b7";
-    private static final String BASEURL = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
+    @EJB
+    WeatherConnection connection;
 
-   
-    private String commonTranslationOperation(JsonObject inner) {
-        JsonArray weather = inner.getJsonArray(JsonWeatherParam.WEATHER.toString().toLowerCase());
-        JsonObject mainWeather = weather.getJsonObject(0);
-        JsonString s = mainWeather.getJsonString(JsonWeatherParam.MAIN.toString().toLowerCase());
-        return s.getString();
+    
+        
+    
+    public WeatherConditions addWeather(String city, Date date) {
+        if(city!=null && isValidCityFormat(city) && date!=null) {
+            JsonObject model = connection.askWeather(city);
+            String s = new String();
+            if (model != null) {
+                s = translateWeather(model, DateManipulator.toDefaultDate(date));
+            }
+            return toWeatherConditions(s);
+        } else {
+            throw new IllegalArgumentException("Invalid city or date");
+        }
     }
+    
+    public Map<Date, WeatherConditions> getForecast(String city) {
+        if (city != null && isValidCityFormat(city)) {
+            JsonObject model = connection.askWeather(city);
+            if (model != null) {
+                return translateWeather(model);
+            } else {
+                return null;
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid city");
+        }
+        
+    }
+    
+    public List<Forecast> getWeatherForecast(String city) {
+        JsonObject model = connection.askWeather(city);
+        if (city!=null && isValidCityFormat(city)) {
+            if (model != null) {
+                return translateWeatherInList(model);
+            } else {
+                return null;
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid city");
+        }
+    }
+   
+
     
     private String translateWeather(JsonObject model, Date date) {
         JsonArray list = model.getJsonArray(JsonWeatherParam.LIST.toString().toLowerCase());
@@ -50,6 +85,13 @@ public class WeatherChecker {
             } 
         } 
         return "";
+    }
+    
+    private String commonTranslationOperation(JsonObject inner) {
+        JsonArray weather = inner.getJsonArray(JsonWeatherParam.WEATHER.toString().toLowerCase());
+        JsonObject mainWeather = weather.getJsonObject(0);
+        JsonString s = mainWeather.getJsonString(JsonWeatherParam.MAIN.toString().toLowerCase());
+        return s.getString();
     }
     
     private Map<Date, WeatherConditions> translateWeather(JsonObject model) {
@@ -69,55 +111,10 @@ public class WeatherChecker {
         Date date = new Date((long) timestamp*1000);
         return DateManipulator.toDefaultDate(date);
     }
-    
 
-    
-    private JsonObject getWeather(String city) {
-        Client client = ClientBuilder.newClient();
-        String cityNoSpace = city.replaceAll("\\s+", "_");
-        System.out.println(cityNoSpace);
-        String url = String.format("%s%s&cnt=10&mode=json&%s", BASEURL, cityNoSpace, APPID );
-        System.out.println(url);
-        try {
-            JsonObject model = client.target(url)
-                    .request(MediaType.APPLICATION_JSON)
-                    .get(JsonObject.class);
-            return model;
-        } catch (Exception e) {
-            System.out.println("qui");
-            return null;
-        }
-    }
-    
-    
-    public WeatherConditions addWeather(String city, Date date) {
-        JsonObject model = getWeather(city);
-        String s = new String();
-        if (model != null) {
-            s = translateWeather(model, DateManipulator.toDefaultDate(date));
-        }
-        return toWeatherConditions(s);
-    }
-    
-    public Map<Date, WeatherConditions> getForecast(String city) {
-        JsonObject model = getWeather(city);
-        if (model != null) {
-            return translateWeather(model); 
-        } else {
-            return null;
-        }
-    }
-    
-    public List<Forecast> getWeatherForecast(String city) {
-        JsonObject model = getWeather(city);
-        if (model != null) {
-            return translateWeather2(model);
-        } else {
-            return null;
-        }
-    }
 
     private WeatherConditions toWeatherConditions(String s) {
+        System.out.println(s);
         switch (s) {
             case ("Clear"):
                 return WeatherConditions.CLEAR;
@@ -132,7 +129,7 @@ public class WeatherChecker {
         }
     }
     
-    private List<Forecast> translateWeather2(JsonObject model) {
+    private List<Forecast> translateWeatherInList(JsonObject model) {
         JsonArray list = model.getJsonArray(JsonWeatherParam.LIST.toString().toLowerCase());
         Iterator i = list.iterator();
         List<Forecast> forecast = new ArrayList<>();
@@ -146,9 +143,14 @@ public class WeatherChecker {
             int tmin=min.intValue();
             int tmax=max.intValue();
             String mainWeather = commonTranslationOperation(inner);
-            forecast.add(new Forecast(mainWeather, d, tmin, tmax));
+            forecast.add(new Forecast(toWeatherConditions(mainWeather), d, tmin, tmax));
         } 
         return forecast;
+    }
+    
+    public boolean isValidCityFormat(String city) {
+        String regex = "[A-Z]?[a-z]+[,]{1}[A-Za-z]{2}([,]{1}[A-Za-z]{2})?";
+        return city.matches(regex);
     }
 
 }

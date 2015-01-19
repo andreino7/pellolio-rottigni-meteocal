@@ -15,7 +15,7 @@ import java.util.Locale;
  */
 public class Forecast implements Comparable<Forecast>{
    
-    private String condition;
+    private WeatherConditions condition;
     private Date date;
     private int tmin;
     private int tmax;
@@ -23,8 +23,8 @@ public class Forecast implements Comparable<Forecast>{
 
  
 
-    public Forecast(String condition, Date date, int tmin, int tmax) {
-        this.condition = condition.toLowerCase();
+    public Forecast(WeatherConditions condition, Date date, int tmin, int tmax) {
+        this.condition = condition;
         this.date = date;
         this.tmin = tmin - KELVINCONSTANT;
         this.tmax = tmax - KELVINCONSTANT;
@@ -34,12 +34,9 @@ public class Forecast implements Comparable<Forecast>{
     
     
     public String getCondition() {
-        return condition;
+        return condition.toString().toLowerCase();
     }
 
-    public void setCondition(String condition) {
-        this.condition = condition;
-    }
 
     public Date getDate() {
         return date;
