@@ -32,4 +32,19 @@ public class DateManipulator {
         return endDate;
     }
 
+    public static Date subtractDays(Date date, int i) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -i);
+        System.out.println(cal.getTime());
+        return cal.getTime();
+    }
+    
+    public static Date addDays(Date date, int i) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, i);
+        return cal.getTime();
+    }
+
 }
