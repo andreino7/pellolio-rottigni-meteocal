@@ -225,7 +225,7 @@ public class EventPageBean implements Serializable {
         initParam();
         this.event = eventManager.findEventForId(param);
         System.out.println(event);
-        ownedEvent = eventManager.isMyEvent(param);
+        ownedEvent = (eventManager.isMyEvent(param)&& !(event.getDate().before(new Date())));
         participant = eventManager.getParticipant(event);
         userTypes = eventTypeManager.findTypesForUser();
         visibilities.add(Visibility.Private);
