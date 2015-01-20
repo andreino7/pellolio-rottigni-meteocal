@@ -5,6 +5,7 @@
  */
 package it.polimi.meteocal.gui;
 
+import it.polimi.meteocal.boundary.CalendarManager;
 import it.polimi.meteocal.boundary.EventCalendarManager;
 import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.Event;
@@ -47,11 +48,13 @@ public class PublicCalendarBean implements Serializable {
     private List<Calendar> loggedUserCalendars;
     private EventManager eventManager;
     @EJB
-    private UserManager userManager;
+    UserManager userManager;
     @PersistenceContext
-    private EntityManager em;
+    EntityManager em;
     @EJB
-    private EventCalendarManager ecManager;
+    EventCalendarManager ecManager;
+    @EJB
+    CalendarManager cm;
 
     public MeteoCalScheduleEvent getEvent() {
         return event;
@@ -99,11 +102,11 @@ public class PublicCalendarBean implements Serializable {
 
     public void updateScheduleModel() {
         this.model = new MeteoCalScheduleModel();
-        this.user = em.find(User.class, user.getEmail());
-        List<Calendar> calendars = em.createNamedQuery(Calendar.findPublicByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
+        
+        List<Calendar> calendars = cm.findPublicCalendarForUser(this.user);
         List<Event> allEvents = new LinkedList<>();
         List<Event> allLoggedEvents = new LinkedList<>();
-        loggedUserCalendars = em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", userManager.getLoggedUser().getEmail()).getResultList();
+        loggedUserCalendars = cm.findCalendarForUser(userManager.getLoggedUser());
         for (Calendar calendar: loggedUserCalendars) {
             allLoggedEvents.addAll(em.createNamedQuery(EventCalendar.findEventsForCalendar, Event.class).setParameter("calendar", calendar.getId()).getResultList());
         }

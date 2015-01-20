@@ -38,6 +38,14 @@ public class CalendarManager {
         }
     }
     
+    public List<Calendar> findPublicCalendarForUser(User user) {
+       if (user!=null){
+           return em.createNamedQuery("Calendar.findPublicByOwner").setParameter("ownerEmail", user.getEmail()).getResultList();
+        }else{
+            throw new IllegalArgumentException();
+        } 
+    }
+    
     public void save(Calendar c){
         em.persist(c);
     }
