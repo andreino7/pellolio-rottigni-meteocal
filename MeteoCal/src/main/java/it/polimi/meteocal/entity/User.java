@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Filippo
  */
 @Entity
-@Table(name = "User")
+@Table(name = "UserTable")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByPartOfEmail", query = "SELECT u FROM User u WHERE u.name LIKE :part OR u.surname LIKE :part OR u.email LIKE :part"),
     @NamedQuery(name = "User.findByName", query = "SELECT u FROM User u WHERE u.name = :name"),
     @NamedQuery(name = "User.findBySurname", query = "SELECT u FROM User u WHERE u.surname = :surname"),
-    @NamedQuery(name = "User.findByProfilePhoto", query = "SELECT u FROM User u WHERE u.profilePhoto = :profilePhoto"),
+   // @NamedQuery(name = "User.findByProfilePhoto", query = "SELECT u FROM User u WHERE u.profilePhoto = :profilePhoto"),
     @NamedQuery(name = "User.findByPhoneNumber", query = "SELECT u FROM User u WHERE u.phoneNumber = :phoneNumber"),
     @NamedQuery(name = "User.findByClearance", query = "SELECT u FROM User u WHERE u.clearance = :clearance"),
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password")})
@@ -65,6 +65,7 @@ public class User implements Serializable,SearchResult {
     private Collection<InviteNotification> inviteNotificationCollection1;
     public static final String findByPartOfEmail="User.findByPartOfEmail";
     public static final String findAll="User.findAll";
+    public static final String findByEmail="User.findByEmail";
 
     @Basic(optional = false)
     @NotNull

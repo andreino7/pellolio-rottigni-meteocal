@@ -44,6 +44,7 @@ public class UserManager {
 
     public User getLoggedUser() {
         return em.find(User.class, principal.getName());
+
     }
     
     public boolean isLoggedIn(){
