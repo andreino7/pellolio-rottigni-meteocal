@@ -7,7 +7,6 @@ package it.polimi.meteocal.gui;
 
 import it.polimi.meteocal.boundary.UserManager;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
