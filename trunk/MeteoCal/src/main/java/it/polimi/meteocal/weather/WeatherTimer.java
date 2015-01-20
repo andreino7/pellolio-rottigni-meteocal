@@ -15,9 +15,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
+import javax.ejb.TimerConfig;
+import javax.ejb.TimerService;
 
 
 /**
@@ -33,19 +38,20 @@ public class WeatherTimer {
     private EventManager eventManager;
     @EJB
     private NotificationManager notificationManager;
+    @Resource
+    private TimerService timerService;
 
     
-    private Calendar calendarSetUp(Calendar cal) {
+ /*   private Calendar calendarSetUp(Calendar cal) {
         cal.setTime(DateManipulator.toDefaultDate(new Date()));
         return cal;
     }
 
     private List<Event> findEventToCheck(Date d1, Date d2) {
         return eventManager.findByDay(d1, d2);
-    }
+    } */
 
     private Date lookForOkDay(List<String> allowed, Map<Date, WeatherConditions> forecast, Date date, Event e) {
-        //TODO change if conditions
         for (Date d : forecast.keySet()) {
             if (d.after(date) && allowed.contains(forecast.get(d).toString())) {
                 Calendar cal = Calendar.getInstance();
@@ -62,7 +68,7 @@ public class WeatherTimer {
         }
         return null;
     }
-
+/*
 
     @Schedule (dayOfWeek="*", minute="0", second="0", hour="1", timezone="GMT")
     public void checkWeather() {
@@ -90,6 +96,18 @@ public class WeatherTimer {
                 }
             }
         }
+    } */
+    
+    private void checkWeather(Event e, boolean forAll) {
+            Map<Date, WeatherConditions> forecast = weather.getForecast(e.getLocation());
+            if (forecast != null) {
+                e.setWeather(forecast.get(DateManipulator.toDefaultDate(e.getDate())).toString());
+                List<String> allowed = e.getType().getAllowedCondition();
+                if (!allowed.contains(e.getWeather())) {
+                    Date d = lookForOkDay(allowed, forecast, DateManipulator.toDefaultDate(e.getDate()), e);
+                    createNotifications(e, d, forAll);
+                }
+        }
     }
 
     private void createNotifications(Event e, Date d, boolean forAll) {
@@ -115,5 +133,31 @@ public class WeatherTimer {
         notificationManager.createWeatherNotification(wn);
     }
     
+    public void setTimer(Integer id, Date date) {
+        System.out.println("setting timer for weather");
+        timerService.createSingleActionTimer(date, new TimerConfig(id,false));
+    }
+    
+    @Timeout
+    public void programmaticTimeout(Timer timer) {
+        System.out.println("timeout");
+        if (timer.getInfo() instanceof Integer) {
+            System.out.println("integer");
+            Integer id = (Integer) timer.getInfo();
+            System.out.println(id);
+            Event ev = eventManager.findEventForId(id);
+            if (ev != null) {
+                if(DateManipulator.toDefaultDate(ev.getDate()).equals(DateManipulator.toDefaultDate(DateManipulator.addDays(new Date(), 3)))) {
+                    checkWeather(ev, false);
+                } else {
+                    if(DateManipulator.toDefaultDate(ev.getDate()).equals(DateManipulator.toDefaultDate(DateManipulator.addDays(new Date(), 1)))) {
+                        checkWeather(ev, true);
+                    }
+                }
+            }
+        }
+    }
+
+
 
 }
