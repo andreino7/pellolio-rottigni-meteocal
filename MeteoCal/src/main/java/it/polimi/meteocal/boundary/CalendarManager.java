@@ -20,18 +20,22 @@ import javax.persistence.PersistenceContext;
 public class CalendarManager {
 
     @PersistenceContext
-    private EntityManager em;
+    EntityManager em;
 
     public Calendar findCalendarForId(String id) {
         if (id != null) {
             return em.find(Calendar.class, Integer.parseInt(id));
         } else {
-            return null;
+            throw new IllegalArgumentException();
         }
     }
     
     public List<Calendar> findCalendarForUser(User user) {
-        return em.createNamedQuery("Calendar.findByOwner").setParameter("ownerEmail", user.getEmail()).getResultList();
+        if (user!=null){
+           return em.createNamedQuery("Calendar.findByOwner").setParameter("ownerEmail", user.getEmail()).getResultList();
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
     
     public void save(Calendar c){
