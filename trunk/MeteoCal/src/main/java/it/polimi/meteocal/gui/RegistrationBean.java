@@ -25,7 +25,7 @@ import javax.persistence.Query;
 public class RegistrationBean {
 
     @EJB
-    private UserManager um;
+    UserManager um;
 
     private User user;
     

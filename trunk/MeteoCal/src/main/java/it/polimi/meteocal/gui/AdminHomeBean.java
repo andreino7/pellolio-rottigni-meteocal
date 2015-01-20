@@ -23,16 +23,15 @@ import javax.ejb.EJB;
 @Named(value = "adminHomeBean")
 @SessionScoped
 public class AdminHomeBean implements Serializable {
+    
     private final static Integer newInDB=0;
 
-    @EJB
-    private UserManager userManager;
     
     @EJB
-    private NotificationManager notificationManager;
+    NotificationManager notificationManager;
     
     @EJB
-    private EventTypeManager etManager;
+    EventTypeManager etManager;
     
     private List<EventType> eventTypes;
     private EventType selected;
@@ -59,8 +58,10 @@ public class AdminHomeBean implements Serializable {
     
     public AdminHomeBean() {
     }
+    
+    
     @PostConstruct
-    private void postConstruct(){
+    public void postConstruct(){
         eventTypes= etManager.findDefaultTypes();
         selected=new EventType(newInDB);
         selected.setTitle("Name");

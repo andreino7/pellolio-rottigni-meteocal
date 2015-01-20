@@ -6,7 +6,6 @@
 package it.polimi.meteocal.gui;
 
 import it.polimi.meteocal.boundary.UserManager;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -24,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginBean {
     
     @EJB
-    private UserManager userManager;
+    UserManager userManager;
 
     
     private String email;
@@ -80,11 +79,7 @@ public class LoginBean {
             
         }
     }
-    
-    @PostConstruct
-    public void ciao() {
-        System.out.println("ciao");
-    }
+
     
 }
 
