@@ -242,13 +242,8 @@ public class ScheduleBean implements Serializable {
     public void addEvent() {
         try {
             this.save();
-            if (event.getId() == null) {
-                model.addEvent(event);
-
-            } else {
-                model.updateEvent(event);
-            }
-            event = new MeteoCalScheduleEvent(); //reset dialog form
+            updateScheduleModel();
+            event = new MeteoCalScheduleEvent(eventNotInDB, "", new Date(), new Date(), null, null);//reset dialog form
 
         } catch (BadEventException ex) {
 
