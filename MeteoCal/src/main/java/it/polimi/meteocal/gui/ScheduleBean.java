@@ -20,8 +20,10 @@ import it.polimi.meteocal.boundary.NotificationManager;
 import it.polimi.meteocal.boundary.UserManager;
 import it.polimi.meteocal.schedule.MeteoCalScheduleEvent;
 import it.polimi.meteocal.schedule.MeteoCalScheduleModel;
+import it.polimi.meteocal.weather.DateManipulator;
 import it.polimi.meteocal.weather.WeatherChecker;
 import it.polimi.meteocal.weather.WeatherConditions;
+import it.polimi.meteocal.weather.WeatherTimer;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -82,6 +84,9 @@ public class ScheduleBean implements Serializable {
 
     @EJB
     WeatherChecker weather;
+    
+    @EJB
+    WeatherTimer weatherTimer;
 
     @EJB
     EmailSessionBean emailBean;
@@ -307,7 +312,6 @@ public class ScheduleBean implements Serializable {
 
     public void save() throws BadEventException {
         Event ev;
-        System.err.println("Save Called");
         if (eventManager.findEventForId(event.getDbId()) != null) {
             ev = eventManager.findEventForId(event.getDbId());
             ev.setId(event.getDbId());
@@ -330,6 +334,8 @@ public class ScheduleBean implements Serializable {
                     eventManager.linkToCalendar(ev, event.getCalendar());
                     eventManager.toggleLink(ev, event.getOld());
                 }
+                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
+                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
                 sendChangeEventNotification(ev);
             } catch (Exception ex) {
                 throw new BadEventException();
@@ -354,7 +360,8 @@ public class ScheduleBean implements Serializable {
                 eventManager.save(ev);
                 eventManager.linkToCalendar(ev, event.getCalendar());
                 cleaner.setTimer(ev.getId(), ev.getEndDate());
-                System.err.println("NoViolation");
+                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
+                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
             } catch (Exception ex) {
                 System.err.println("ConstraintViolation");
                 throw new BadEventException();
