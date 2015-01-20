@@ -60,11 +60,11 @@ import org.primefaces.model.ScheduleModel;
 public class ScheduleBean implements Serializable {
 
     private static final Integer eventNotInDB = 0;
-    private static final int maxCalendars=8;
+    private static final int maxCalendars = 8;
     private MeteoCalScheduleModel model;
     private User user;
-    private boolean scheduleDisplay=true;
-    
+    private boolean scheduleDisplay = true;
+
     @EJB
     UserManager userManager;
 
@@ -73,27 +73,24 @@ public class ScheduleBean implements Serializable {
 
     @EJB
     EventManager eventManager;
-    
+
     @EJB
     EventTypeManager etManager;
-    
+
     @EJB
-    private NotificationManager notificationManager;
+    NotificationManager notificationManager;
 
     @EJB
     WeatherChecker weather;
 
     @EJB
-    private EmailSessionBean emailBean;
+    EmailSessionBean emailBean;
 
-    
     @EJB
     NotificationCleaner cleaner;
 
-    
     @PersistenceContext
     EntityManager em;
-
 
     private Integer calendarId;
     private String geoLoc;
@@ -110,15 +107,11 @@ public class ScheduleBean implements Serializable {
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
 
-    
     public List<Event> getNextEvents() {
-        nextEvents=eventManager.findFutureEventsForCalendars(chosenCalendars);
+        nextEvents = eventManager.findFutureEventsForCalendars(chosenCalendars);
         return nextEvents;
     }
-    
-    
-    
-    
+
     public boolean isScheduleDisplay() {
         return scheduleDisplay;
     }
@@ -126,7 +119,6 @@ public class ScheduleBean implements Serializable {
     public void setScheduleDisplay(boolean scheduleDisplay) {
         this.scheduleDisplay = scheduleDisplay;
     }
-    
 
     public Calendar getNewCalendar() {
         return newCalendar;
@@ -215,23 +207,22 @@ public class ScheduleBean implements Serializable {
     void postConstruct() {
         user = userManager.getLoggedUser();
 
-        
         visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
         event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
-        
+
         userCalendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
         userTypes = etManager.findTypesForUser();
-        chosenCalendars=new LinkedList<>();
-        
-        int i=0;
-        for (Calendar c: userCalendars){
-            if (i<maxCalendars){
-            chosenCalendars.add(c.getId().toString());
-            i++;
+        chosenCalendars = new LinkedList<>();
+
+        int i = 0;
+        for (Calendar c : userCalendars) {
+            if (i < maxCalendars) {
+                chosenCalendars.add(c.getId().toString());
+                i++;
             }
         }
-        
+
         updateScheduleModel();
     }
 
@@ -244,7 +235,7 @@ public class ScheduleBean implements Serializable {
     }
 
     public void addEvent() {
-        try{
+        try {
             this.save();
             if (event.getId() == null) {
                 model.addEvent(event);
@@ -252,10 +243,10 @@ public class ScheduleBean implements Serializable {
             } else {
                 model.updateEvent(event);
             }
-              event = new MeteoCalScheduleEvent(); //reset dialog form
+            event = new MeteoCalScheduleEvent(); //reset dialog form
 
-        }catch (BadEventException ex){
-           
+        } catch (BadEventException ex) {
+
         }
     }
 
@@ -310,13 +301,11 @@ public class ScheduleBean implements Serializable {
 
     }
 
-    
+    public class BadEventException extends Exception {
 
-    public class BadEventException extends Exception{
-        
     }
-    
-    public void save() throws BadEventException{
+
+    public void save() throws BadEventException {
         Event ev;
         System.err.println("Save Called");
         if (eventManager.findEventForId(event.getDbId()) != null) {
@@ -328,37 +317,48 @@ public class ScheduleBean implements Serializable {
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
-            if (weather.isValidCityFormat(event.getLocation())) {
-                ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
-            } else {
-                ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+            try {
+               // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                
+                if (weather.isValidCityFormat(event.getLocation())) {
+                    ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                } else {
+                    ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+                }
+                eventManager.update(ev);
+                if (event.getCalendar() != event.getOld()) {
+                    eventManager.linkToCalendar(ev, event.getCalendar());
+                    eventManager.toggleLink(ev, event.getOld());
+                }
+                sendChangeEventNotification(ev);
+            } catch (Exception ex) {
+                throw new BadEventException();
             }
-            eventManager.update(ev);
-            if (event.getCalendar() != event.getOld()) {
-                eventManager.linkToCalendar(ev, event.getCalendar());
-                eventManager.toggleLink(ev, event.getOld());
-            }
-            sendChangeEventNotification(ev);
         } else {
             //TODO location and visibility
             ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
-            if (weather.isValidCityFormat(event.getLocation())) {
-                ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
-            } else {
-                ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
-            }            ev.setEventOwner(user);
-            try{
-            eventManager.save(ev);
-            eventManager.linkToCalendar(ev, event.getCalendar());
-            cleaner.setTimer(ev.getId(), ev.getEndDate());
+            ev.setEventOwner(user);
+
+            try {
+                if (weather.isValidCityFormat(event.getLocation())) {
+                    ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                } else {
+                    ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+                }
+                ev.setEventOwner(user);
+
+// ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                eventManager.save(ev);
+                eventManager.linkToCalendar(ev, event.getCalendar());
+                cleaner.setTimer(ev.getId(), ev.getEndDate());
                 System.err.println("NoViolation");
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 System.err.println("ConstraintViolation");
                 throw new BadEventException();
-                
+
             }
         }
     }
@@ -371,21 +371,16 @@ public class ScheduleBean implements Serializable {
     public void saveNewCalendar() {
         calendarManager.save(newCalendar);
         userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
-        this.newCalendar=new Calendar();
+        this.newCalendar = new Calendar();
     }
-
 
     private void sendChangeEventNotification(Event ev) {
         List<User> partecipant = eventManager.getParticipant(ev);
         notificationManager.createChangedEventNotification(ev, partecipant);
     }
-    
-    
-    public void switchView(){
-        scheduleDisplay=!scheduleDisplay;
-    }
 
-    
-    
+    public void switchView() {
+        scheduleDisplay = !scheduleDisplay;
+    }
 
 }

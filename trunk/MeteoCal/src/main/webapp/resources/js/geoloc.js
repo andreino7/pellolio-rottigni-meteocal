@@ -58,6 +58,7 @@ function codeAddressInput() {
 
         } else {
             document.getElementById("eventDetails:addressForEventInput").style.color = "red";
+            gc([{name: 'City', value: "Milan"}, {name: 'Country', value: "IT"}]);
             //alert("Geocode was not successful for the following reason: " + status);
         }
     });
@@ -105,3 +106,5 @@ function centerMapOnLocationWithInput() {
 
     });
 }
+
+
