@@ -21,6 +21,7 @@ import it.polimi.meteocal.boundary.UserManager;
 import it.polimi.meteocal.schedule.MeteoCalScheduleEvent;
 import it.polimi.meteocal.schedule.MeteoCalScheduleModel;
 import it.polimi.meteocal.weather.WeatherChecker;
+import it.polimi.meteocal.weather.WeatherConditions;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -327,7 +328,11 @@ public class ScheduleBean implements Serializable {
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
-            ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+            if (weather.isValidCityFormat(event.getLocation())) {
+                ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+            } else {
+                ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+            }
             eventManager.update(ev);
             if (event.getCalendar() != event.getOld()) {
                 eventManager.linkToCalendar(ev, event.getCalendar());
@@ -340,8 +345,11 @@ public class ScheduleBean implements Serializable {
             ev.setType(event.getType());
             ev.setLocation(event.getLocation());
             ev.setVisibility(event.getVisibility());
-            ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
-            ev.setEventOwner(user);
+            if (weather.isValidCityFormat(event.getLocation())) {
+                ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+            } else {
+                ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+            }            ev.setEventOwner(user);
             try{
             eventManager.save(ev);
             eventManager.linkToCalendar(ev, event.getCalendar());
