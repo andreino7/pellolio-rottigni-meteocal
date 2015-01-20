@@ -98,6 +98,11 @@ public class EventPageBean implements Serializable {
     public EventPageBean() {
     }
 
+    public String getParam() {
+        return param;
+    }
+
+    
     public boolean isInvitePermission() {
         return InvitePermission;
     }
@@ -219,6 +224,7 @@ public class EventPageBean implements Serializable {
         System.out.println("EventBEan Created");
         initParam();
         this.event = eventManager.findEventForId(param);
+        System.out.println(event);
         ownedEvent = eventManager.isMyEvent(param);
         participant = eventManager.getParticipant(event);
         userTypes = eventTypeManager.findTypesForUser();
@@ -227,30 +233,14 @@ public class EventPageBean implements Serializable {
         InvitePermission = eventManager.invitePermission(event);
         calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
         updatePresentInMyCalendar();
-        updateSuggestedDate();
         checkIfAlreadyAnsewerd();
         if (isNotFaraway()) {
             forecasts = weather.getWeatherForecast(event.getLocation());
             if (forecasts != null) {
+                updateSuggestedDate();
                 updateWeather();
             }
         }
-    }
-
-    public void initParam() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        param = request.getParameter("id");
-        String notType = request.getParameter("notificationType");
-        if (notType != null) {
-            notificationType = NotificationType.valueOf(notType);
-            notification = notifManager.findNotificationByIdAndType(request.getParameter("notificationID"), notificationType);
-            if (notification != null) {
-                checkNotifParam();
-                notification.setState("READ");
-                notifManager.updateNotification(notification, notificationType);
-            }
-        }
-
     }
 
     public List<User> complete(String query) {
@@ -273,9 +263,7 @@ public class EventPageBean implements Serializable {
         City = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("City");
         String Country;
         Country = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("Country");
-
         event.setLocation(City + "," + Country);
-
     }
 
     public void save() {
@@ -328,6 +316,31 @@ public class EventPageBean implements Serializable {
         }
     }
 
+    private void initParam() {
+        HttpServletRequest request = getServletRequest();
+        param = request.getParameter("id");
+        String notType = request.getParameter("notificationType");
+        if (notType != null) {
+            notificationType = NotificationType.valueOf(notType);
+            notification = notifManager.findNotificationByIdAndType(request.getParameter("notificationID"), notificationType);
+            if (notification != null) {
+                checkNotifParam();
+                notification.setState("READ");
+                notifManager.updateNotification(notification, notificationType);
+            }
+        }
+    }
+    
+    private HttpServletRequest getServletRequest() {
+        if (FacesContext.getCurrentInstance() != null) {
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            System.out.println("not null");
+            return request;
+        } else {
+            throw new NullPointerException("Invalid faces context");
+        }
+    }
+    
     private void checkNotifParam() {
         switch (notificationType) {
             case WEATHER:
@@ -353,20 +366,24 @@ public class EventPageBean implements Serializable {
             System.out.println("update suggested date");
             this.suggestedDate = ((WeatherNotification) notification).getSuggestedDate();
             if (suggestedDate != null) {
-                System.out.println(suggestedDate);
+                System.out.println("suggested date!=null");
                 this.suggestedWeather = getWeather(this.suggestedDate);
-                System.out.println(suggestedDate);
+            } else {
+                System.out.println("suggested date=null");
             }
         }
     }
 
     private Forecast getWeather(Date suggestedDate) {
         Date d = DateManipulator.toDefaultDate(suggestedDate);
+        System.out.println(d);
         for (Forecast f : forecasts) {
             if (d.equals(f.getDate())) {
+                System.out.println("data trovata");
                 return f;
             }
         }
+        System.out.println("forecast=null");
         return null;
     }
 

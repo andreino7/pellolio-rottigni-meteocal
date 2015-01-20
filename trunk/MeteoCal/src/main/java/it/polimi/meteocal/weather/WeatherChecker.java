@@ -149,8 +149,12 @@ public class WeatherChecker {
     }
     
     public boolean isValidCityFormat(String city) {
-        String regex = "[A-Z]?[a-z]+[,]{1}[A-Za-z]{2}([,]{1}[A-Za-z]{2})?";
-        return city.matches(regex);
+        if (city != null) {
+            String regex = "[A-Z]?[a-z]+[,]{1}[A-Za-z]{2}([,]{1}[A-Za-z]{2})?";
+            return city.matches(regex);
+        } else {
+            return false;
+        }
     }
 
 }
