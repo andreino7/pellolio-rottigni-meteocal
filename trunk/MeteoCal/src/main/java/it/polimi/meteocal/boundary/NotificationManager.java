@@ -233,4 +233,11 @@ public class NotificationManager {
        return q.getResultList().isEmpty();
     }
 
+    public List<WeatherNotification> findWeatherNotificationByReceiverAndEvent(Event event, User user) {
+        Query q = em.createNamedQuery(WeatherNotification.findByReceiverAndEvent, WeatherNotification.class);
+        q.setParameter("event", event.getId());
+        q.setParameter("user", user.getEmail());
+        return q.getResultList();
+    }
+
 }

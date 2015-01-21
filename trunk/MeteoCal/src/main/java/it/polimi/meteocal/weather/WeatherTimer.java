@@ -111,12 +111,14 @@ public class WeatherTimer {
     }
 
     private void createNotifications(Event e, Date d, boolean forAll) {
-        List<User> participants = eventManager.getNonParticipant(e);
         if (forAll) {
+            List<User> participants = eventManager.getParticipant(e);
             for (User u : participants) {
+                deleteOldWeatherNot(u,e);
                 setNotificationParam(u, e, d);
             }
         } else {
+            deleteOldWeatherNot(e.getEventOwner(),e);
             setNotificationParam(e.getEventOwner(), e, d);
         }
     }
@@ -155,6 +157,13 @@ public class WeatherTimer {
                     }
                 }
             }
+        }
+    }
+
+    private void deleteOldWeatherNot(User u, Event e) {
+        List<WeatherNotification> nots = notificationManager.findWeatherNotificationByReceiverAndEvent(e,u);
+        for (WeatherNotification n: nots) {
+            notificationManager.removeWeatherNotification(n);
         }
     }
 

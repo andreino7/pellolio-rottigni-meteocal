@@ -39,6 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "WeatherNotification.findByState", query = "SELECT w FROM WeatherNotification w WHERE w.state = :state"),
     @NamedQuery(name = "WeatherNotification.findByReceiver", query = "SELECT w FROM WeatherNotification w WHERE w.receiver.email = :user"),
     @NamedQuery(name = "WeatherNotification.findByAbout", query = "SELECT w FROM WeatherNotification w WHERE w.about.id = :event"),
+    @NamedQuery(name = "WeatherNotification.findByReceiverAndEvent", query = "SELECT w FROM WeatherNotification w WHERE w.about.id = :event AND w.receiver.email = :user"),
     @NamedQuery(name = "WeatherNotification.findBySuggestedDate", query = "SELECT w FROM WeatherNotification w WHERE w.suggestedDate = :suggestedDate")})
 public class WeatherNotification implements Serializable, Notification {
     @Basic(optional = false)
@@ -49,6 +50,8 @@ public class WeatherNotification implements Serializable, Notification {
     
     public static final String findByReceiver= "WeatherNotification.findByReceiver";
     public static final String findByAbout= "WeatherNotification.findByAbout";
+    public static final String findByReceiverAndEvent="WeatherNotification.findByReceiverAndEvent";
+
 
 
     
