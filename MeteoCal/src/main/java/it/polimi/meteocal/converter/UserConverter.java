@@ -6,6 +6,7 @@
 package it.polimi.meteocal.converter;
 
 import it.polimi.meteocal.entity.User;
+import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -17,7 +18,7 @@ import javax.persistence.PersistenceContext;
  *
  * @author Filippo
  */
-@FacesConverter("UserConverter")
+@ManagedBean
 public class UserConverter implements Converter {
 
     @PersistenceContext

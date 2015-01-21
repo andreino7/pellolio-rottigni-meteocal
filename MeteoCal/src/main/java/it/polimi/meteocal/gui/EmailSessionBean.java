@@ -7,6 +7,7 @@ package it.polimi.meteocal.gui;
 
 import java.util.Date;
 import java.util.Properties;
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -38,9 +39,9 @@ public class EmailSessionBean {
     private String username = "infometeocal@gmail.com";
     private String password = "Meteocal1";
     private Protocol protocol = Protocol.TLS;
-    private boolean debug = false;
+    private boolean debug = true;
 
-    public void sendEmail(String to, String subject,String body) {
+    public  void sendEmail(String to, String subject,String body) {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
         props.put("mail.smtp.port", port);
