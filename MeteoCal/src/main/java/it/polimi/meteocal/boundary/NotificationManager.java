@@ -240,4 +240,11 @@ public class NotificationManager {
         return q.getResultList();
     }
 
+    public boolean existInvite(User visitor, Event event) {
+        Query q = em.createNamedQuery(InviteNotification.findByReceiverAndEvent, InviteNotification.class);
+        q.setParameter("event", event.getId());
+        q.setParameter("user", visitor.getEmail());
+        return !q.getResultList().isEmpty();
+    }
+
 }

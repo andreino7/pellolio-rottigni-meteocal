@@ -128,7 +128,6 @@ public class UserProfileBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         initParam();
-        this.user = new User();
         userProfile = userManager.findUserforId(value);
         if (userProfile!=null) {
             ownprofile = userManager.getLoggedUser().equals(userProfile);

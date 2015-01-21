@@ -27,6 +27,8 @@ import it.polimi.meteocal.weather.DateManipulator;
 import it.polimi.meteocal.weather.Forecast;
 import it.polimi.meteocal.weather.WeatherChecker;
 import it.polimi.meteocal.weather.WeatherConditions;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -54,6 +56,7 @@ public class EventPageBeanTest {
     private Event defaultEvent;
     private FacesContext context;
     private final List<Forecast> forecasts;
+    private User defaultUser;
 
     public EventPageBeanTest() {
         this.forecasts = new LinkedList<>();
@@ -61,6 +64,7 @@ public class EventPageBeanTest {
 
     @Before
     public void setUp() {
+        defaultUser = new User();
         pageBean = new EventPageBean();
         pageBean.calendarManager = mock(CalendarManager.class);
         pageBean.ecManager = mock(EventCalendarManager.class);
@@ -78,6 +82,11 @@ public class EventPageBeanTest {
         when(request.getParameter("id")).thenReturn("1");
         when(pageBean.eventManager.findEventForId("1")).thenReturn(defaultEvent);
         when(pageBean.weather.getWeatherForecast("Prevalle,IT")).thenReturn(forecasts);
+        when(pageBean.eventManager.isMyEvent("1")).thenReturn(Boolean.TRUE);
+        when(pageBean.userManager.getLoggedUser()).thenReturn(defaultUser);
+        List<User> part = new ArrayList<>();
+        part.add(defaultUser);
+        when(pageBean.eventManager.getParticipant(defaultEvent)).thenReturn(part);
         initForecasts();
     }
 
@@ -256,6 +265,6 @@ public class EventPageBeanTest {
         for (int i = 0; i < 10; i++) {
             forecasts.add(new Forecast(conditions.get(rand.nextInt(index)), addDays(new Date(), i), i, i));
         }
-    }
+    } 
 
 }

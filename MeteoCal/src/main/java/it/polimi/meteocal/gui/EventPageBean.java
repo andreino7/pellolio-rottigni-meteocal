@@ -37,6 +37,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
 
@@ -93,6 +94,7 @@ public class EventPageBean implements Serializable {
     private boolean presentInMyCalendar;
     private List<Calendar> calendars;
     private boolean notAnsweredYet;
+    private User visitor;
 
     /**
      * Creates a new instance of eventPageBean
@@ -217,15 +219,32 @@ public class EventPageBean implements Serializable {
     public boolean isNotAnsweredYet() {
         return notAnsweredYet;
     }
+    
+    public void prova() {
+        
+    }
+    
+    public void init2() {
+        System.out.println("cciiiiiiiaooo");
+    }
 
-    @PostConstruct
+   // @PostConstruct
     public void postConstruct() {
         System.out.println("EventBEan Created");
         initParam();
         this.event = eventManager.findEventForId(param);
         if (event != null) {
             ownedEvent = (eventManager.isMyEvent(param) && !(event.getDate().before(new Date())));
+            System.out.println(ownedEvent);
             participant = eventManager.getParticipant(event);
+            
+        } else {
+            redirect();
+            return;
+        }
+        visitor = userManager.getLoggedUser();
+        if (participant.contains(visitor) || notifManager.existInvite(visitor, event)) {
+            System.out.println("qui");
             userTypes = eventTypeManager.findTypesForUser();
             visibilities.add(Visibility.Private);
             visibilities.add(Visibility.Public);
@@ -241,11 +260,7 @@ public class EventPageBean implements Serializable {
                 }
             }
         } else {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
-            } catch (IOException ex) {
-                Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            redirect();
         }
     }
 
@@ -340,7 +355,6 @@ public class EventPageBean implements Serializable {
     private HttpServletRequest getServletRequest() {
         if (FacesContext.getCurrentInstance() != null) {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            System.out.println("not null");
             return request;
         } else {
             throw new NullPointerException("Invalid faces context");
@@ -421,6 +435,14 @@ public class EventPageBean implements Serializable {
     private void checkIfAlreadyAnsewerd() {
         if (inviteNotification) {
             notAnsweredYet = notifManager.notAnswered(event, userManager.getLoggedUser());
+        }
+    }
+
+    private void redirect() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
