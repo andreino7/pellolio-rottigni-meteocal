@@ -70,7 +70,7 @@
 
                             <h:outputLabel for="TypeForEvent" value="EventType:" />
                             <p:outputPanel>
-                                <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" disabled="#{!scheduleBean.modifiableEvent}" immediate="true" required="true" converter="#{EventTypeConverter}" >
+                                <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" disabled="#{!scheduleBean.modifiableEvent}" required="true" converter="EventTypeConverter" >
                                     <f:selectItem itemLabel="Select Type"  noSelectionOption="true" />
                                     <f:selectItems value="#{scheduleBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
                                     <p:ajax process="@this" update="eventTypeLink"/>

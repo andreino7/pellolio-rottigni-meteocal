@@ -41,6 +41,8 @@ public class EventManager {
 
     @EJB
     private EmailSessionBean emailBean;
+    
+    Event selEvent;
 
     public Event findEventForId(String id) {
         if (id != null) {
@@ -127,17 +129,17 @@ public class EventManager {
         return i != null;
     }
 
-    public void inviteUsersToEvent(List<String> toInvite, Event e) {
-        List<User> toInviteUsers= new LinkedList<>();
+    public void inviteUsersToEvent(List<User> toInvite, Event e) {
+      /*  List<User> toInviteUsers= new LinkedList<>();
         for (String s: toInvite){
             User u1= userManager.findUserforId(s);
             if (u1!=null) {
                 toInviteUsers.add(u1);
             }
         }
+*/        
         
-        
-        for (User u : toInviteUsers) {
+        for (User u : toInvite) {
             if (!UserAlreadyInvited(e, u)) {
                 InviteNotification invite = new InviteNotification(0, NotificationStatus.UNREADSEEN.toString());
                 invite.setReceiver(u);
