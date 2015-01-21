@@ -54,15 +54,15 @@
                     <h:form id="eventDetails" >
                         <h:panelGrid columns="2">
                             <h:outputLabel for="title" value="Title:" />
-                            <p:inputText id="title" value="#{scheduleBean.event.title}" required="true"/>
+                            <p:inputText id="title" value="#{scheduleBean.event.title}" disabled="#{!scheduleBean.modifiableEvent}" required="true"/>
                             <h:outputLabel for="startdatetime" value="From:" />
-                            <p:calendar id="startdatetime" value="#{scheduleBean.event.startDate}" pattern="MM/dd/yyyy HH:mm:ss" />
+                            <p:calendar id="startdatetime" value="#{scheduleBean.event.startDate}" disabled="#{!scheduleBean.modifiableEvent}" pattern="MM/dd/yyyy HH:mm:ss" />
 
                             <h:outputLabel for="enddatetime" value="To:" />
-                            <p:calendar id="enddatetime" value="#{scheduleBean.event.endDate}" pattern="MM/dd/yyyy HH:mm:ss" />
+                            <p:calendar id="enddatetime" value="#{scheduleBean.event.endDate}" disabled="#{!scheduleBean.modifiableEvent}" pattern="MM/dd/yyyy HH:mm:ss" />
 
                             <h:outputLabel for="CalendarForEvent" value="Calendar:" />
-                            <p:selectOneMenu id="CalendarForEvent"  value="#{scheduleBean.event.calendar}" required="true" converter="CalendarConverter" >
+                            <p:selectOneMenu id="CalendarForEvent"  value="#{scheduleBean.event.calendar}" disabled="#{!scheduleBean.modifiableEvent}" required="true" converter="CalendarConverter" >
                                 <f:selectItem itemLabel="Select Calendar"  noSelectionOption="true"  />
                                 <f:selectItems value="#{scheduleBean.userCalendars}" var="cal" itemValue="#{cal}"  itemLabel="#{cal.title}" />
                             </p:selectOneMenu>
@@ -70,7 +70,7 @@
 
                             <h:outputLabel for="TypeForEvent" value="EventType:" />
                             <p:outputPanel>
-                                <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" immediate="true" required="true" converter="EventTypeConverter" >
+                                <p:selectOneMenu id="TypeForEvent" value="#{scheduleBean.event.type}" disabled="#{!scheduleBean.modifiableEvent}" immediate="true" required="true" converter="EventTypeConverter" >
                                     <f:selectItem itemLabel="Select Type"  noSelectionOption="true" />
                                     <f:selectItems value="#{scheduleBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
                                     <p:ajax process="@this" update="eventTypeLink"/>
@@ -81,13 +81,13 @@
                             </p:outputPanel>    
 
                             <h:outputLabel for="VisForEvent" value="EventType:" />
-                            <p:selectOneMenu id="VisForEvent" required="true" value="#{scheduleBean.event.visibility}" >
+                            <p:selectOneMenu id="VisForEvent" required="true" disabled="#{!scheduleBean.modifiableEvent}" value="#{scheduleBean.event.visibility}" >
                                 <f:selectItems value="#{scheduleBean.visibilities}" var="vis" itemValue="#{vis}" itemLabel="#{vis}" />
                             </p:selectOneMenu>
 
                             <h:outputLabel for="addressForEvent" value="Location:" />
 
-                            <p:inputText id="addressForEvent" value="#{scheduleBean.geoLoc}" onblur="codeAddress()" onkeyup="codeAddress()" >
+                            <p:inputText id="addressForEvent" value="#{scheduleBean.geoLoc}" onblur="codeAddress()" disabled="#{!scheduleBean.modifiableEvent}" onkeyup="codeAddress()" >
                                 <f:validateLength minimum="1"/>
                             </p:inputText>
 
