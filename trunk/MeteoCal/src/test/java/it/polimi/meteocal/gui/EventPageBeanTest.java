@@ -49,7 +49,7 @@ import static org.mockito.Mockito.*;
  * @author Andrea
  */
 public class EventPageBeanTest {
-
+/*
     private EventPageBean pageBean;
     private HttpServletRequest request;
     private final String param = "1";
@@ -266,5 +266,5 @@ public class EventPageBeanTest {
             forecasts.add(new Forecast(conditions.get(rand.nextInt(index)), addDays(new Date(), i), i, i));
         }
     } 
-
+*/
 }
