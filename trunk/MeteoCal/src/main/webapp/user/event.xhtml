@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
@@ -8,8 +8,11 @@
     <h:head>
         <title>Facelet Title</title>
     </h:head>
-    <h:body>
-        <ui:composition template="/template/common/commonLayout.xhtml">
+    <f:metadata>
+
+        <f:event listener="#{eventPageBean.postConstruct()}" type="preRenderView" />
+    </f:metadata>
+    <ui:decorate template="/template/common/commonLayout.xhtml">
             <ui:define name="content">
                 <h:form id="eventDetails">
                     <p:panelGrid styleClass="centered" style="width: 50%;">
@@ -197,7 +200,6 @@
 
                 </h:form>
             </ui:define>
+    </ui:decorate>
         </ui:composition>
-    </h:body>
-</html>
 
