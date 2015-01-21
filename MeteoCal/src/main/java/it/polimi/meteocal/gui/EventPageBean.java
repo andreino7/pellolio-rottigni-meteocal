@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.component.UIComponent;
 import javax.inject.Named;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
@@ -97,7 +98,6 @@ public class EventPageBean implements Serializable {
     private boolean notAnsweredYet;
 
     private User visitor;
-
 
     /**
      * Creates a new instance of eventPageBean
@@ -224,15 +224,14 @@ public class EventPageBean implements Serializable {
     }
 
     public void prova() {
-        
+
     }
-    
+
     public void init2() {
         System.out.println("cciiiiiiiaooo");
     }
 
-
-   // @PostConstruct
+    // @PostConstruct
     public void postConstruct() {
 
         System.out.println("PostConstructCalled");
@@ -242,46 +241,30 @@ public class EventPageBean implements Serializable {
         if (event != null) {
             ownedEvent = (eventManager.isMyEvent(param) && !(event.getDate().before(new Date())));
             participant = eventManager.getParticipant(event);
-            userTypes = eventTypeManager.findTypesForUser();
-            visibilities.add(Visibility.Private);
-            visibilities.add(Visibility.Public);
-            InvitePermission = eventManager.invitePermission(event);
-            calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
-            updatePresentInMyCalendar();
-            checkIfAlreadyAnsewerd();
-            if (isNotFaraway()) {
-                forecasts = weather.getWeatherForecast(event.getLocation());
-                if (forecasts != null) {
-                    updateSuggestedDate();
-                    updateWeather();
+            
+            visitor = userManager.getLoggedUser();
+            if (participant.contains(visitor) || notifManager.existInvite(visitor, event)) {
+                System.out.println("qui");
+                userTypes = eventTypeManager.findTypesForUser();
+                visibilities.add(Visibility.Private);
+                visibilities.add(Visibility.Public);
+                InvitePermission = eventManager.invitePermission(event);
+                calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
+                updatePresentInMyCalendar();
+                checkIfAlreadyAnsewerd();
+                if (isNotFaraway()) {
+                    forecasts = weather.getWeatherForecast(event.getLocation());
+                    if (forecasts != null) {
+                        updateSuggestedDate();
+                        updateWeather();
+                    }
                 }
+            } else {
+                redirect();
             }
-        } else {
-            redirect();
-            return;
+
         }
 
-          
-        visitor = userManager.getLoggedUser();
-        if (participant.contains(visitor) || notifManager.existInvite(visitor, event)) {
-            System.out.println("qui");
-            userTypes = eventTypeManager.findTypesForUser();
-            visibilities.add(Visibility.Private);
-            visibilities.add(Visibility.Public);
-            InvitePermission = eventManager.invitePermission(event);
-            calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
-            updatePresentInMyCalendar();
-            checkIfAlreadyAnsewerd();
-            if (isNotFaraway()) {
-                forecasts = weather.getWeatherForecast(event.getLocation());
-                if (forecasts != null) {
-                    updateSuggestedDate();
-                    updateWeather();
-                }
-            }
-        } else {
-            redirect();
-        }
     }
 
     public List<User> complete(String query) {
@@ -361,7 +344,13 @@ public class EventPageBean implements Serializable {
 
     private void initParam() {
         HttpServletRequest request = getServletRequest();
-        param = request.getParameter("id");
+
+        param = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
+        String partial = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("javax.faces.partial.ajax");
+        if (param == null && partial == null) {
+            redirect();
+            return;
+        }
         String notType = request.getParameter("notificationType");
         if (notType != null) {
             notificationType = NotificationType.valueOf(notType);
