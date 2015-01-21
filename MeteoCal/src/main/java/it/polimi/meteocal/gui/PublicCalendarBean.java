@@ -16,9 +16,12 @@ import it.polimi.meteocal.boundary.UserManager;
 import it.polimi.meteocal.schedule.Visibility;
 import it.polimi.meteocal.schedule.MeteoCalScheduleEvent;
 import it.polimi.meteocal.schedule.MeteoCalScheduleModel;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -89,7 +92,15 @@ public class PublicCalendarBean implements Serializable {
     
     public void init() {
         this.user = userManager.findUserforId(value);
-        updateScheduleModel();
+        if (user!=null) {
+            updateScheduleModel();
+        } else {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
+            } catch (IOException ex) {
+                Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     public PublicCalendarBean(){

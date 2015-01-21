@@ -26,10 +26,13 @@ import it.polimi.meteocal.notification.NotificationType;
 import it.polimi.meteocal.boundary.UserManager;
 import it.polimi.meteocal.schedule.Visibility;
 import it.polimi.meteocal.weather.WeatherChecker;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -90,8 +93,7 @@ public class EventPageBean implements Serializable {
     private boolean presentInMyCalendar;
     private List<Calendar> calendars;
     private boolean notAnsweredYet;
-    
-    
+
     /**
      * Creates a new instance of eventPageBean
      */
@@ -102,7 +104,6 @@ public class EventPageBean implements Serializable {
         return param;
     }
 
-    
     public boolean isInvitePermission() {
         return InvitePermission;
     }
@@ -217,28 +218,33 @@ public class EventPageBean implements Serializable {
         return notAnsweredYet;
     }
 
-
-
     @PostConstruct
     public void postConstruct() {
         System.out.println("EventBEan Created");
         initParam();
         this.event = eventManager.findEventForId(param);
-        System.out.println(event);
-        ownedEvent = (eventManager.isMyEvent(param)&& !(event.getDate().before(new Date())));
-        participant = eventManager.getParticipant(event);
-        userTypes = eventTypeManager.findTypesForUser();
-        visibilities.add(Visibility.Private);
-        visibilities.add(Visibility.Public);
-        InvitePermission = eventManager.invitePermission(event);
-        calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
-        updatePresentInMyCalendar();
-        checkIfAlreadyAnsewerd();
-        if (isNotFaraway()) {
-            forecasts = weather.getWeatherForecast(event.getLocation());
-            if (forecasts != null) {
-                updateSuggestedDate();
-                updateWeather();
+        if (event != null) {
+            ownedEvent = (eventManager.isMyEvent(param) && !(event.getDate().before(new Date())));
+            participant = eventManager.getParticipant(event);
+            userTypes = eventTypeManager.findTypesForUser();
+            visibilities.add(Visibility.Private);
+            visibilities.add(Visibility.Public);
+            InvitePermission = eventManager.invitePermission(event);
+            calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
+            updatePresentInMyCalendar();
+            checkIfAlreadyAnsewerd();
+            if (isNotFaraway()) {
+                forecasts = weather.getWeatherForecast(event.getLocation());
+                if (forecasts != null) {
+                    updateSuggestedDate();
+                    updateWeather();
+                }
+            }
+        } else {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
+            } catch (IOException ex) {
+                Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -330,7 +336,7 @@ public class EventPageBean implements Serializable {
             }
         }
     }
-    
+
     private HttpServletRequest getServletRequest() {
         if (FacesContext.getCurrentInstance() != null) {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -340,7 +346,7 @@ public class EventPageBean implements Serializable {
             throw new NullPointerException("Invalid faces context");
         }
     }
-    
+
     private void checkNotifParam() {
         switch (notificationType) {
             case WEATHER:

@@ -65,6 +65,7 @@ public class UserProfileBean implements Serializable {
     private String name;
     private String surname;
     private Object FilenameUtils;
+    private User userProfile;
 
     public String getPhotoUrl() {
         return photoUrl;
@@ -128,7 +129,16 @@ public class UserProfileBean implements Serializable {
     public void postConstruct() {
         initParam();
         this.user = new User();
-        ownprofile = userManager.getLoggedUser().equals(userManager.findUserforId(value));
+        userProfile = userManager.findUserforId(value);
+        if (userProfile!=null) {
+            ownprofile = userManager.getLoggedUser().equals(userProfile);
+        } else {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
+            } catch (IOException ex) {
+                Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public void init() {
