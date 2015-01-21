@@ -105,12 +105,21 @@ public class ScheduleBean implements Serializable {
     private List<Calendar> userCalendars;
     private List<String> chosenCalendars;
     private List<Event> nextEvents;
-    private MeteoCalScheduleEvent event = new MeteoCalScheduleEvent();
+    private MeteoCalScheduleEvent event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
     private String title;
     private Calendar newCalendar;
+    private boolean modifiableEvent= true;
 
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
+
+    public boolean isModifiableEvent() {
+        return modifiableEvent;
+    }
+
+    public void setModifiableEvent(boolean modifiableEvent) {
+        this.modifiableEvent = modifiableEvent;
+    }
 
     public List<Event> getNextEvents() {
         nextEvents = eventManager.findFutureEventsForCalendars(chosenCalendars);
@@ -244,7 +253,8 @@ public class ScheduleBean implements Serializable {
             this.save();
             updateScheduleModel();
             event = new MeteoCalScheduleEvent(eventNotInDB, "", new Date(), new Date(), null, null);//reset dialog form
-
+            modifiableEvent=true;
+            
         } catch (BadEventException ex) {
 
         }
@@ -254,6 +264,7 @@ public class ScheduleBean implements Serializable {
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
 
         event = model.getMeteoEvent(ev.getId());
+        modifiableEvent= (eventManager.isMyEvent(event.getDbId().toString()) && !(event.getStartDate().before(new Date())));
         geoLoc = event.getLocation();
 
     }
@@ -290,7 +301,7 @@ public class ScheduleBean implements Serializable {
 
                 for (Event ev : evList) {
                     MeteoCalScheduleEvent scheduleEvent = new MeteoCalScheduleEvent(ev, calendarManager.findCalendarForId(c));
-                    scheduleEvent.setStyleClass(ev.getWeather() + " " + colorForCalendar.get(Integer.parseInt(c)));
+                    scheduleEvent.setStyleClass(ev.getWeather() + " " + colorForCalendar.get(Integer.parseInt(c))+" "+ (ev.getDate().before(new Date())?"old":""));
                     scheduleEvent.setDescription(ev.getWeather());
 
                     model.addEvent(scheduleEvent);
