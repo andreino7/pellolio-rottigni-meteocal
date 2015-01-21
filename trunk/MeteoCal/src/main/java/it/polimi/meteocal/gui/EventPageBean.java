@@ -59,6 +59,9 @@ public class EventPageBean implements Serializable {
 
     @EJB
     WeatherChecker weather;
+    
+    @EJB
+    SelectedEventStorageBean storage;
 
     @EJB
     CalendarManager calendarManager;
@@ -78,7 +81,7 @@ public class EventPageBean implements Serializable {
     private boolean ownedEvent;
     private Event event;
     private List<User> participant;
-    private List<String> toInvite;
+    private List<User> toInvite;
     private List<EventType> userTypes;
     private String geoLoc;
     private boolean InvitePermission;
@@ -159,11 +162,11 @@ public class EventPageBean implements Serializable {
         return userTypes;
     }
 
-    public List<String> getToInvite() {
+    public List<User> getToInvite() {
         return toInvite;
     }
 
-    public void setToInvite(List<String> toInvite) {
+    public void setToInvite(List<User> toInvite) {
         this.toInvite = toInvite;
     }
 
@@ -241,7 +244,7 @@ public class EventPageBean implements Serializable {
         if (event != null) {
             ownedEvent = (eventManager.isMyEvent(param) && !(event.getDate().before(new Date())));
             participant = eventManager.getParticipant(event);
-            
+            storage.store(param);
             visitor = userManager.getLoggedUser();
             if (participant.contains(visitor) || notifManager.existInvite(visitor, event)) {
                 System.out.println("qui");
@@ -350,6 +353,9 @@ public class EventPageBean implements Serializable {
         if (param == null && partial == null) {
             redirect();
             return;
+        }
+        if ("true".equals(partial)){
+            param= storage.retrieve();
         }
         String notType = request.getParameter("notificationType");
         if (notType != null) {

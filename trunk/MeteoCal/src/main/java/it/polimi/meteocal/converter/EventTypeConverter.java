@@ -9,7 +9,6 @@ import it.polimi.meteocal.entity.EventType;
 import it.polimi.meteocal.boundary.EventTypeManager;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -19,7 +18,7 @@ import javax.faces.convert.FacesConverter;
  *
  * @author Filippo
  */
-@ManagedBean
+@FacesConverter("EventTypeConverter")
 public class EventTypeConverter implements Converter{
 
     @EJB
@@ -30,7 +29,6 @@ public class EventTypeConverter implements Converter{
         if (value == null || value.isEmpty()) {
             return null;
         } 
-        System.out.println("Converter : "+ typeManager );
         return typeManager.findEventTypeforId(Integer.parseInt(value));
     }
 

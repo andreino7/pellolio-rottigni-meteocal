@@ -85,7 +85,7 @@
 
                             </p:column>
                             <p:column rendered="#{eventPageBean.ownedEvent?true:false}">
-                                <p:selectOneMenu id="TypeForEvent" value="#{eventPageBean.event.type}" immediate="true" required="true"  converter="#{eventTypeConverter}" >
+                                <p:selectOneMenu id="TypeForEvent" value="#{eventPageBean.event.type}" immediate="true" required="true"  converter="EventTypeConverter" >
                                     <f:selectItem itemLabel="Select Type"  noSelectionOption="true" /> 
                                     <f:selectItems value="#{eventPageBean.userTypes}" var="type" itemValue="#{type}" itemLabel="#{type.title}" />
                                     <p:ajax process="@this" update="eventTypeLink"/>
@@ -167,7 +167,7 @@
                             </p:column>
                             <p:column>
                                 <p:autoComplete id="toInvite" multiple="true" value="#{eventPageBean.toInvite}" completeMethod="#{eventPageBean.complete}"
-                                                var="user" itemLabel="#{user.title}" itemValue="#{user.email}" converter="#{UserConverter}" forceSelection="true">
+                                                var="user" itemLabel="#{user.title}" itemValue="#{user}" converter="UserConverter" forceSelection="true">
                    <f:param name="id" value="#{eventPageBean.event==null?0:eventPageBean.event.id  }"/>
 
                                     <p:column>

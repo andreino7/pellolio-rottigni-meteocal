@@ -39,8 +39,9 @@ public class EmailSessionBean {
     private String username = "infometeocal@gmail.com";
     private String password = "Meteocal1";
     private Protocol protocol = Protocol.TLS;
-    private boolean debug = true;
+    private boolean debug = false;
 
+    @Asynchronous
     public  void sendEmail(String to, String subject,String body) {
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
