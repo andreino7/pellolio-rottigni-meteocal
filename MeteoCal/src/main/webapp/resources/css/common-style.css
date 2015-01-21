@@ -336,6 +336,12 @@ ul.ui-menu {
     background-position: bottom right;
 }
 
+.SNOW {
+    background: url(img/snow.png) no-repeat center center;
+    background-size: auto 100%;
+    background-position: bottom right;    
+}
+
 .red{
     background-color: red !important;
 }
