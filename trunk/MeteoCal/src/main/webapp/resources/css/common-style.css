@@ -351,6 +351,8 @@ ul.ui-menu {
 
 .aqua{
     background-color: aqua !important;
+        color: black !important;
+
 }
 
 .blue{
@@ -382,6 +384,9 @@ ul.ui-menu {
     margin-left: 5px;
     display: box;
     float: right;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px; 
 }
 .ui-menu {
    height: 300px;

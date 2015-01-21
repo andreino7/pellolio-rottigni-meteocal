@@ -272,6 +272,7 @@ public class ScheduleBean implements Serializable {
     public void onDateSelect(SelectEvent e) {
         Date date = (Date) e.getObject();
         event = new MeteoCalScheduleEvent(eventNotInDB, "", date, date, null, null);
+        modifiableEvent= date.after(new Date());
         geoLoc = "";
     }
 

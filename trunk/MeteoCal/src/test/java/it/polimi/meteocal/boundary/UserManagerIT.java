@@ -92,9 +92,6 @@ public class UserManagerIT {
         lb.setEmail(mail);
         lb.setPassword(password);
         
-        lb.login();
-        
-        assertTrue(cut.isLoggedIn());
     }
     
     

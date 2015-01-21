@@ -96,7 +96,10 @@ public class EventManager {
 
     public boolean isMyEvent(String id) {
         Event ev = findEventForId(id);
+        if (ev!=null){
         return ev.getEventOwner().equals(userManager.getLoggedUser());
+        }
+        return false;
     }
 
     public List<User> getParticipant(Event e) {
@@ -124,8 +127,17 @@ public class EventManager {
         return i != null;
     }
 
-    public void inviteUsersToEvent(List<User> toInvite, Event e) {
-        for (User u : toInvite) {
+    public void inviteUsersToEvent(List<String> toInvite, Event e) {
+        List<User> toInviteUsers= new LinkedList<>();
+        for (String s: toInvite){
+            User u1= userManager.findUserforId(s);
+            if (u1!=null) {
+                toInviteUsers.add(u1);
+            }
+        }
+        
+        
+        for (User u : toInviteUsers) {
             if (!UserAlreadyInvited(e, u)) {
                 InviteNotification invite = new InviteNotification(0, NotificationStatus.UNREADSEEN.toString());
                 invite.setReceiver(u);

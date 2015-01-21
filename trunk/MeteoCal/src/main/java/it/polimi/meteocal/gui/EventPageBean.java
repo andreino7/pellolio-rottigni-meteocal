@@ -39,6 +39,7 @@ import javax.inject.Named;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.view.ViewScoped;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -76,7 +77,7 @@ public class EventPageBean implements Serializable {
     private boolean ownedEvent;
     private Event event;
     private List<User> participant;
-    private List<User> toInvite;
+    private List<String> toInvite;
     private List<EventType> userTypes;
     private String geoLoc;
     private boolean InvitePermission;
@@ -94,7 +95,9 @@ public class EventPageBean implements Serializable {
     private boolean presentInMyCalendar;
     private List<Calendar> calendars;
     private boolean notAnsweredYet;
+
     private User visitor;
+
 
     /**
      * Creates a new instance of eventPageBean
@@ -156,11 +159,11 @@ public class EventPageBean implements Serializable {
         return userTypes;
     }
 
-    public List<User> getToInvite() {
+    public List<String> getToInvite() {
         return toInvite;
     }
 
-    public void setToInvite(List<User> toInvite) {
+    public void setToInvite(List<String> toInvite) {
         this.toInvite = toInvite;
     }
 
@@ -219,7 +222,7 @@ public class EventPageBean implements Serializable {
     public boolean isNotAnsweredYet() {
         return notAnsweredYet;
     }
-    
+
     public void prova() {
         
     }
@@ -228,20 +231,37 @@ public class EventPageBean implements Serializable {
         System.out.println("cciiiiiiiaooo");
     }
 
+
    // @PostConstruct
     public void postConstruct() {
-        System.out.println("EventBEan Created");
+
+        System.out.println("PostConstructCalled");
         initParam();
         this.event = eventManager.findEventForId(param);
+
         if (event != null) {
             ownedEvent = (eventManager.isMyEvent(param) && !(event.getDate().before(new Date())));
-            System.out.println(ownedEvent);
             participant = eventManager.getParticipant(event);
-            
+            userTypes = eventTypeManager.findTypesForUser();
+            visibilities.add(Visibility.Private);
+            visibilities.add(Visibility.Public);
+            InvitePermission = eventManager.invitePermission(event);
+            calendars = calendarManager.findCalendarForUser(userManager.getLoggedUser());
+            updatePresentInMyCalendar();
+            checkIfAlreadyAnsewerd();
+            if (isNotFaraway()) {
+                forecasts = weather.getWeatherForecast(event.getLocation());
+                if (forecasts != null) {
+                    updateSuggestedDate();
+                    updateWeather();
+                }
+            }
         } else {
             redirect();
             return;
         }
+
+          
         visitor = userManager.getLoggedUser();
         if (participant.contains(visitor) || notifManager.existInvite(visitor, event)) {
             System.out.println("qui");
@@ -275,7 +295,9 @@ public class EventPageBean implements Serializable {
     }
 
     public void sendInvites() {
-        eventManager.inviteUsersToEvent(toInvite, event);
+        if (toInvite != null) {
+            eventManager.inviteUsersToEvent(toInvite, event);
+        }
         toInvite = new LinkedList<>();
     }
 
@@ -354,8 +376,10 @@ public class EventPageBean implements Serializable {
 
     private HttpServletRequest getServletRequest() {
         if (FacesContext.getCurrentInstance() != null) {
+
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             return request;
+
         } else {
             throw new NullPointerException("Invalid faces context");
         }
