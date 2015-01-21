@@ -1,18 +1,19 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition  xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="http://xmlns.jcp.org/jsf/html"
+       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Facelet Title</title>
     </h:head>
-    <f:metadata>
+    <ui:composition>
+        <f:metadata>
 
-        <f:event listener="#{eventPageBean.postConstruct()}" type="preRenderView" />
-    </f:metadata>
-    <ui:decorate template="/template/common/commonLayout.xhtml">
+            <f:event listener="#{eventPageBean.postConstruct()}" type="preRenderView" />
+        </f:metadata>
+        <ui:decorate template="/template/common/commonLayout.xhtml">
             <ui:define name="content">
                 <h:form id="eventDetails">
                     <p:panelGrid styleClass="centered" style="width: 50%;">
@@ -41,7 +42,7 @@
                                     </h:panelGrid>
                                 </p:panel>
                                 <h:outputLabel value="No suggested date available" style="font-weight: bold; float: right;" rendered="#{eventPageBean.weatherNotification and eventPageBean.ownedEvent and !eventPageBean.thereSuggestedDate}" />
-                                
+
                             </p:column>
                         </p:row>
                         <p:row>
@@ -200,6 +201,7 @@
 
                 </h:form>
             </ui:define>
-    </ui:decorate>
-        </ui:composition>
+        </ui:decorate>
+    </ui:composition>
+</html>
 

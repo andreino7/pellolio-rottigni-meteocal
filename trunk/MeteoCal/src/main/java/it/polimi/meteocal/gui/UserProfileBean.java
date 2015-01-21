@@ -124,9 +124,14 @@ public class UserProfileBean implements Serializable {
     public UserProfileBean() {
 
     }
+    
+    public void print() {
+        System.out.println("adfkldsfdaklfkndslànfl");
+    }
 
-    @PostConstruct
+  //  @PostConstruct
     public void postConstruct() {
+        System.out.println("adfkldsfdaklfkndslànfl");
         initParam();
         userProfile = userManager.findUserforId(value);
         if (userProfile!=null) {

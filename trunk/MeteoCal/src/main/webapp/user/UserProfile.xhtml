@@ -1,103 +1,107 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
 
         <title>Facelet Title</title>
     </h:head>
-    <ui:decorate template="/template/common/commonLayout.xhtml">
-        <f:metadata>
-            <f:viewParam name="id" value="#{userProfile.value}" />
-        </f:metadata>
+    <ui:composition>
+        <ui:decorate template="/template/common/commonLayout.xhtml">
+            <f:metadata>
+                <f:viewParam name="id" value="#{userProfile.value}" />
+                <f:event listener="#{userProfile.postConstruct()}" type="preRenderView" />
+                
+            </f:metadata>
 
-        <ui:define name="content">
-            <h:form id="profileGrid">
-                <p:panelGrid styleClass="centered">
-                    <p:row>
-                        <p:column colspan="2">
-                            <p:graphicImage value="#{userProfile.user.profilePhoto}"/>
-                        </p:column>
-                    </p:row>
+            <ui:define name="content">
+                <h:form id="profileGrid">
+                    <p:panelGrid styleClass="centered">
+                        <p:row>
+                            <p:column colspan="2">
+                                <p:graphicImage value="#{userProfile.user.profilePhoto}"/>
+                            </p:column>
+                        </p:row>
 
-                    <p:row rendered="#{userProfile.ownprofile?true:false}">
-                        <p:column>
-                            <h:outputText value="Profile photo URL:"></h:outputText>
-                        </p:column>
-                        <p:column>
-                            <h:inputText value="#{userProfile.user.profilePhoto}"></h:inputText>
-                        </p:column>
-                    </p:row>
-
-
-                    <p:row>
-                        <p:column>
-                            <h:outputText value="Name: "></h:outputText>
-                        </p:column>
-                        <p:column rendered="#{userProfile.ownprofile?true:false}">
-                            <h:inputText value="#{userProfile.user.name}"  />
-                        </p:column>
-                        <p:column rendered="#{userProfile.ownprofile?false:true}">
-                            <h:outputText value="#{userProfile.user.name}" />
-                        </p:column>
-                    </p:row>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputText value="Surname: "></h:outputText>
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{userProfile.user.surname}" rendered="#{userProfile.ownprofile?false:true}"/>
-                            <h:inputText value="#{userProfile.user.surname}" rendered="#{userProfile.ownprofile?true:false}" />
-                        </p:column>
-                    </p:row>
-
-                    <p:row>
-                        <p:column>
-                            <h:outputText value="PhoneNumber: "></h:outputText>
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{userProfile.user.phoneNumber}" rendered="#{userProfile.ownprofile?false:true}"/>
-                            <h:inputText value="#{userProfile.user.phoneNumber}" rendered="#{userProfile.ownprofile?true:false}"/>
-                        </p:column>
-
-                    </p:row>
-                    <p:row>
-                        <p:column>
-                            <h:link outcome="/user/publicCalendar.xhtml" value="view public calendars" rendered="#{userProfile.ownprofile?false:true}">
-                                <f:param name="id" value="#{userProfile.user.email}"/>
-                            </h:link>
-                        </p:column>
-                    </p:row>
+                        <p:row rendered="#{userProfile.ownprofile?true:false}">
+                            <p:column>
+                                <h:outputText value="Profile photo URL:"></h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:inputText value="#{userProfile.user.profilePhoto}"></h:inputText>
+                            </p:column>
+                        </p:row>
 
 
-                    <p:row rendered="#{userProfile.ownprofile?true:false}">
-                        <p:column>
-                            <p:commandButton update="@form" value="Discard" action="#{userProfile.reset()}">
-                                <f:param name="id" value="#{userProfile.user.email}"/>
-                            </p:commandButton>
-                        </p:column>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Name: "></h:outputText>
+                            </p:column>
+                            <p:column rendered="#{userProfile.ownprofile?true:false}">
+                                <h:inputText value="#{userProfile.user.name}"  />
+                            </p:column>
+                            <p:column rendered="#{userProfile.ownprofile?false:true}">
+                                <h:outputText value="#{userProfile.user.name}" />
+                            </p:column>
+                        </p:row>
 
-                        <p:column>
-                            <p:commandButton update="@form" value="Save" action="#{userProfile.save}">
-                                <f:param name="id" value="#{userProfile.user.email}"/>
-                            </p:commandButton>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Surname: "></h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{userProfile.user.surname}" rendered="#{userProfile.ownprofile?false:true}"/>
+                                <h:inputText value="#{userProfile.user.surname}" rendered="#{userProfile.ownprofile?true:false}" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="PhoneNumber: "></h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{userProfile.user.phoneNumber}" rendered="#{userProfile.ownprofile?false:true}"/>
+                                <h:inputText value="#{userProfile.user.phoneNumber}" rendered="#{userProfile.ownprofile?true:false}"/>
+                            </p:column>
+
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:link outcome="/user/publicCalendar.xhtml" value="view public calendars" rendered="#{userProfile.ownprofile?false:true}">
+                                    <f:param name="id" value="#{userProfile.user.email}"/>
+                                </h:link>
+                            </p:column>
+                        </p:row>
 
 
-                        </p:column>
-                    </p:row>
+                        <p:row rendered="#{userProfile.ownprofile?true:false}">
+                            <p:column>
+                                <p:commandButton update="@form" value="Discard" action="#{userProfile.reset()}">
+                                    <f:param name="id" value="#{userProfile.user.email}"/>
+                                </p:commandButton>
+                            </p:column>
 
-                    <p:row>
+                            <p:column>
+                                <p:commandButton update="@form" value="Save" action="#{userProfile.save}">
+                                    <f:param name="id" value="#{userProfile.user.email}"/>
+                                </p:commandButton>
 
-                    </p:row>
 
-                </p:panelGrid>
-            </h:form>
+                            </p:column>
+                        </p:row>
 
-        </ui:define>
-    </ui:decorate>
-</ui:composition>
+                        <p:row>
+
+                        </p:row>
+
+                    </p:panelGrid>
+                </h:form>
+
+            </ui:define>
+        </ui:decorate>
+    </ui:composition>
+</html>
 
