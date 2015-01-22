@@ -23,8 +23,7 @@
             </ui:define>
             <ui:define id="mainContent" name="content">
                 <p:schedule id="schedule" value="#{publicCalendarBean.model}" aspectRatio="2" styleClass="scheduleHome"  
-                            ignoreTimezone="false" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
-                            tooltip="true">
+                            ignoreTimezone="false" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule">
                     <p:ajax event="eventSelect" listener="#{publicCalendarBean.onEventSelect}"
                             update="eventDetails" oncomplete="PF('eventDialog').show();" />
                 </p:schedule>
