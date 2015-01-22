@@ -323,6 +323,7 @@ public class EventPageBean implements Serializable {
             Date endDate = DateManipulator.toNewEndDate(event.getDate(), suggestedDate, event.getEndDate());
             event.setDate(suggestedDate);
             event.setEndDate(endDate);
+            event.setWeather(suggestedWeather.getCondition().toString().toUpperCase());
             eventManager.update(event);
             notifManager.createChangedEventNotification(event, participant);
             notifManager.removeWeatherNotification((WeatherNotification) notification);
@@ -406,6 +407,15 @@ public class EventPageBean implements Serializable {
             if (suggestedDate != null) {
                 System.out.println("suggested date!=null");
                 this.suggestedWeather = getWeather(this.suggestedDate);
+                System.out.println(suggestedWeather);
+                List<String> allowed = event.getType().getAllowedCondition();
+                for (String s: allowed) {
+                    System.out.println(s);
+                }
+                if (!event.getType().getAllowedCondition().contains(suggestedWeather.getCondition().toUpperCase())) {
+                    this.suggestedDate=null;
+                    this.suggestedWeather=null;
+                }
             } else {
                 System.out.println("suggested date=null");
             }

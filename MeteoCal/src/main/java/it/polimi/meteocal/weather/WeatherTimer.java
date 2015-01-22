@@ -53,7 +53,9 @@ public class WeatherTimer {
 
     private Date lookForOkDay(List<String> allowed, Map<Date, WeatherConditions> forecast, Date date, Event e) {
         for (Date d : forecast.keySet()) {
+            System.out.println("check: " + d);
             if (d.after(date) && allowed.contains(forecast.get(d).toString())) {
+                System.out.println("find suggested"+d);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(e.getDate());
                 int hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -138,7 +140,14 @@ public class WeatherTimer {
     
     public void setTimer(Integer id, Date date) {
         System.out.println("setting timer for weather");
-        timerService.createSingleActionTimer(date, new TimerConfig(id,false));
+        if (date.after(new Date())) {
+            timerService.createSingleActionTimer(date, new TimerConfig(id,false));
+        } else {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.MINUTE, 1);
+            timerService.createSingleActionTimer(cal.getTime(), new TimerConfig(id,false));
+        }
     }
     
     @Timeout

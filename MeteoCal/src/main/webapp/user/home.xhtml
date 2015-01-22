@@ -38,7 +38,7 @@
                     <p:commandButton value="#{scheduleBean.scheduleDisplay?'Agenda':'Schedule'}" styleClass="agendaButton" update="@this @form" action="#{scheduleBean.switchView()}" />
 
                 <p:schedule id="scheduleView" value="#{scheduleBean.model}" aspectRatio="2" styleClass="scheduleHome"  
-                            ignoreTimezone="true" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
+                            ignoreTimezone="false" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
                             rendered='#{scheduleBean.scheduleDisplay}'>
                     <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}"
                             update=":eventDetails" oncomplete="PF('eventDialog').show();" />
