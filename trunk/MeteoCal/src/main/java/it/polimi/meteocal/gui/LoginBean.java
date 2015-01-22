@@ -6,6 +6,9 @@
 package it.polimi.meteocal.gui;
 
 import it.polimi.meteocal.boundary.UserManager;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -79,7 +82,25 @@ public class LoginBean {
             
         }
     }
-
+    
+    public void checkAlreadyLogged(){
+        if (userManager.isLoggedIn()){
+            if ("ADMIN".equals(userManager.getLoggedUser().getClearance())){
+            redirectTo("faces/admin/adminHome.xhtml");
+        }else{
+                redirectTo("faces/user/home.xhtml");
+            }
+        }
+        
+    }
+    
+    public void redirectTo(String url){
+     try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+        } catch (IOException ex) {
+            Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
 }
 

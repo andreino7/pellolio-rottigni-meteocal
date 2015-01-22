@@ -24,6 +24,7 @@ import it.polimi.meteocal.weather.DateManipulator;
 import it.polimi.meteocal.weather.WeatherChecker;
 import it.polimi.meteocal.weather.WeatherConditions;
 import it.polimi.meteocal.weather.WeatherTimer;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +34,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -345,7 +348,7 @@ public class ScheduleBean implements Serializable {
                 weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
                 sendChangeEventNotification(ev);
             } catch (Exception ex) {
-                throw new BadEventException();
+                errorOccurred();
             }
         } else {
             //TODO location and visibility
@@ -370,8 +373,7 @@ public class ScheduleBean implements Serializable {
                 weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
                 weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
             } catch (Exception ex) {
-                System.err.println("ConstraintViolation");
-                throw new BadEventException();
+                errorOccurred();
 
             }
         }
@@ -395,6 +397,14 @@ public class ScheduleBean implements Serializable {
 
     public void switchView() {
         scheduleDisplay = !scheduleDisplay;
+    }
+    
+    private void errorOccurred() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../error.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
