@@ -46,7 +46,6 @@ public class NotificationManager {
          res.addAll(em.createNamedQuery(InviteNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
          res.addAll(em.createNamedQuery(AdminNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
          res.addAll(em.createNamedQuery(ChangedEventNotification.findByReceiver, ResponseNotification.class).setParameter("user", u.getEmail()).getResultList());
-         System.out.println(res);
          return res;
     }
 
@@ -136,7 +135,6 @@ public class NotificationManager {
         for (User u : partecipant) {
             if (!u.equals(owner)) {
                 ChangedEventNotification change = new ChangedEventNotification();
-                change.setId(-1);
                 change.setAbout(e);
                 change.setState(NotificationStatus.UNREADSEEN.toString());
                 change.setReceiver(u);
