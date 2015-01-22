@@ -230,17 +230,12 @@ public class EventPageBean implements Serializable {
 
     }
 
-    public void init2() {
-        System.out.println("cciiiiiiiaooo");
-    }
 
     // @PostConstruct
     public void postConstruct() {
 
-        System.out.println("PostConstructCalled");
         initParam();
         this.event = eventManager.findEventForId(param);
-
         if (event != null) {
             ownedEvent = (eventManager.isMyEvent(param) && !(event.getDate().before(new Date())));
             participant = eventManager.getParticipant(event);
@@ -271,20 +266,24 @@ public class EventPageBean implements Serializable {
     }
 
     public List<User> complete(String query) {
+        System.out.println("here");
         if (query != null & !query.isEmpty()) {
             while (!query.isEmpty() & query.charAt(0) == ' ') {
                 query = query.substring(1);
             }
+            System.out.println(event);
             return eventManager.getNonParticipantByPart(event, query);
         }
         return null;
     }
 
     public void sendInvites() {
+        System.out.println("sendinvites");
         if (toInvite != null) {
             eventManager.inviteUsersToEvent(toInvite, event);
         }
         toInvite = new LinkedList<>();
+        System.out.println(event);
     }
 
     public void onGeolocation() {

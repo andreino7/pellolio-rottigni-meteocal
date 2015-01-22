@@ -31,7 +31,9 @@
 
             </ui:define>
             <ui:define name="content">
-                 
+                <h:form>
+                    <p:remoteCommand update=":schedule" name="rc" autoRun="true" actionListener="#{scheduleBean.updateScheduleModel()}" />
+                </h:form>
                 <h:form id='schedule'>
                     <p:commandButton value="#{scheduleBean.scheduleDisplay?'Agenda':'Schedule'}" styleClass="agendaButton" update="@this @form" action="#{scheduleBean.switchView()}" />
 
