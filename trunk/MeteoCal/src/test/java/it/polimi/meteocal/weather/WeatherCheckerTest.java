@@ -58,7 +58,7 @@ public class WeatherCheckerTest {
             DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
             format.setTimeZone(TimeZone.getTimeZone("GMT"));
             Date date = format.parse(string);
-            dates.add(date);
+            dates.add(DateManipulator.toDefaultDate(date));
         }
     }
     

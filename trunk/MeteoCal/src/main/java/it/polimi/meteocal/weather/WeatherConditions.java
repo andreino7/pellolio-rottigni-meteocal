@@ -11,4 +11,18 @@ package it.polimi.meteocal.weather;
  */
 public enum WeatherConditions {
     CLEAR, RAIN, CLOUD, SNOW, UNAVAILABLE;
+    
+    private String title;
+    
+    static {
+        CLEAR.title = "CLEAR";
+        RAIN.title = "RAIN";
+        CLOUD.title = "SNOW";
+        SNOW.title = "CLOUD";
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
 }
