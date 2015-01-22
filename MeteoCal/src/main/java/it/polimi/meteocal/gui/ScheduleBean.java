@@ -282,7 +282,12 @@ public class ScheduleBean implements Serializable {
 
     public void onDateSelect(SelectEvent e) {
         Date date = (Date) e.getObject();
-        event = new MeteoCalScheduleEvent(eventNotInDB, "", date, date, null, null);
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 12);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        event = new MeteoCalScheduleEvent(eventNotInDB, "", cal.getTime(), cal.getTime(), null, null);
         modifiableEvent= date.after(new Date());
         geoLoc = "";
     }
