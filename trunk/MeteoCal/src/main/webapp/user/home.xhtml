@@ -20,11 +20,10 @@
 
                 <h:form id="calendarsForm"> 
                     <p:selectManyCheckbox id="calendarLeftBoxGrid" value="#{scheduleBean.chosenCalendars}" layout="grid" columns="1"  >
-                        <f:selectItems  value="#{scheduleBean.userCalendars}" var="cal" itemLabelEscaped="false" itemLabel="#{cal.title} #{scheduleBean.getColorBoxForCalendar(cal)}" itemValue="#{cal.id}" />
-
+                        <f:selectItems  value="#{scheduleBean.userCalendars}" var="cal" itemLabelEscaped="false" itemLabel="#{scheduleBean.getLinkForCalendar(cal)} #{scheduleBean.getColorBoxForCalendar(cal)}" itemValue="#{cal.id}" />
                     </p:selectManyCheckbox> 
                     <p:commandButton update=":schedule @form" value="Update" action="#{scheduleBean.updateScheduleModel()}"/>    
-                    <p:commandButton update="@form" value="Add Calendar" action="#{scheduleBean.newCalendar}" oncomplete="PF('addCalendarDialog').show();"/>    
+                    <h:link value="Add Calendar" outcome="calendar.xhtml?id=new" />    
 
                 </h:form>    
 
@@ -106,35 +105,7 @@
                         <p:remoteCommand name="updateDialog" process="@this" update="@form" />
                     </h:form>
                 </p:dialog>
-                <p:dialog widgetVar="addCalendarDialog" header="New Calendar" resizable="false" style="height:50% !important; height:40% !important; top:25% !important; left: 30% !important;">
-                    <h:form id='newCalendarForm'>
-                        <p:panelGrid>
-                            <p:row>
-                                <p:column>
-                                    <h:outputText value='Title:'/>
-                                </p:column>
-                                <p:column>
-                                    <p:inputText value="#{scheduleBean.newCalendar.title}" required="true"/>
-                                </p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column>
-                                    <h:outputText value='Visibility:'/>
-                                </p:column>
-                                <p:column>
-                                    <p:selectOneMenu id="VisForCalendar" required="true" value="#{scheduleBean.newCalendar.visibility}" >
-                                        <f:selectItems value="#{scheduleBean.visibilities}" var="vis" itemValue="#{vis}" itemLabel="#{vis}" />
-                                    </p:selectOneMenu>                               
-                                </p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column colspan="2">
-                                    <p:commandButton value='save' update=":calendarsForm" actionListener="#{scheduleBean.saveNewCalendar()}" oncomplete="if (args &amp;&amp; !args.validationFailed){PF('myschedule').update();PF('addCalendarDialog').hide();}" />
-                                </p:column>
-                            </p:row>
-                        </p:panelGrid>
-                    </h:form>
-                </p:dialog>
+                
                 <h:form>
                     <p:remoteCommand update="" name="gc" process="@this @form" autoRun="false"  actionListener="#{scheduleBean.onGeolocation()}" />
 

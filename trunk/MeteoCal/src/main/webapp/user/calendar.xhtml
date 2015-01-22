@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="http://xmlns.jcp.org/jsf/html"
+       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <ui:composition>
+        <f:metadata>
+            <f:event listener="#{scheduleBean.postConstruct()}" type="preRenderView" />
+        </f:metadata>
+        <ui:decorate template="/template/common/commonLayout.xhtml">
+            <ui:define name="content">
+                <h:form id="calDetails">
+                    <p:panelGrid styleClass="centered" style="width: 50%;">
+                        <p:row>
+                            <p:column colspan="2">
+                                <p:commandButton value="Remove" action="#{calendarPageBean.remove()}"/>
+                            </p:column>
+                           
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Name"/>
+                            </p:column>
+                            <p:column>
+                                <p:inputText value="#{calendarPageBean.calendar.title}" />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Visibility"/>
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="VisibilityForCalendar" value="#{calendarPageBean.calendar.visibility}" required="true">
+                                    <f:selectItems value="#{calendarPageBean.visibilities}" />
+                                </p:selectOneMenu>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:commandButton action="#{calendarPageBean.reset}" value="Reset" update="@form">
+                                <f:param name="id" value="#{calendarPageBean.calendar==null?0:calendarPageBean.calendar.id  }"/>
+
+                                </p:commandButton>
+
+                            </p:column>
+                            <p:column>
+                                <p:commandButton action="#{calendarPageBean.save}" value="Save" update="@form">
+                                    <f:param name="id" value="#{calendarPageBean.calendar==null?0:calendarPageBean.calendar.id  }"/>
+
+                                </p:commandButton>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:decorate>
+    </ui:composition>
+</html>
+

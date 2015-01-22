@@ -143,6 +143,11 @@ public class ScheduleBean implements Serializable {
         this.scheduleDisplay = scheduleDisplay;
     }
 
+    public void initNewCalendar(){
+        newCalendar=new Calendar();
+        newCalendar.setOwner(user);
+    }
+    
     public Calendar getNewCalendar() {
         return newCalendar;
     }
@@ -177,6 +182,11 @@ public class ScheduleBean implements Serializable {
 
     public String getColorBoxForCalendar(Calendar c) {
         return "<div class=\" colorbox " + getClassForCalendar(c) + "\" ></div>";
+        
+    }
+    
+    public String getLinkForCalendar(Calendar cal){
+        return "<a href=\"calendar.xhtml?id="+cal.getId()+"\" > "+cal.getTitle()+"</a>";
     }
 
     public List<String> getChosenCalendars() {
@@ -227,7 +237,7 @@ public class ScheduleBean implements Serializable {
     }
 
     @PostConstruct
-    void postConstruct() {
+    public void postConstruct() {
         user = userManager.getLoggedUser();
 
         visibilities.add(Visibility.Private);
@@ -399,15 +409,12 @@ public class ScheduleBean implements Serializable {
         }
     }
 
-    public void newCalendar() {
-        this.newCalendar = new Calendar();
-        newCalendar.setOwner(user);
-    }
+   
 
     public void saveNewCalendar() {
         calendarManager.save(newCalendar);
-        userCalendars = (List<Calendar>) em.createNamedQuery(Calendar.findByOwner, Calendar.class).setParameter("ownerEmail", user.getEmail()).getResultList();
-        this.newCalendar = new Calendar();
+        postConstruct();
+        initNewCalendar();
     }
 
     private void sendChangeEventNotification(Event ev) {
@@ -433,5 +440,11 @@ public class ScheduleBean implements Serializable {
         }
         updateScheduleModel();
     }
+    
+    public void selectCalendar(Calendar c){
+        newCalendar=c;
+    }
+    
+    
 
 }

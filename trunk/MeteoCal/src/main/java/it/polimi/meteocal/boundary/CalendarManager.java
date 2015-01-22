@@ -7,7 +7,9 @@ package it.polimi.meteocal.boundary;
 
 import it.polimi.meteocal.entity.Calendar;
 import it.polimi.meteocal.entity.User;
+import it.polimi.meteocal.gui.ScheduleBean;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,6 +23,8 @@ public class CalendarManager {
 
     @PersistenceContext
     EntityManager em;
+    
+   
 
     public Calendar findCalendarForId(String id) {
         if (id != null) {
@@ -48,6 +52,14 @@ public class CalendarManager {
     
     public void save(Calendar c){
         em.persist(c);
+    }
+    
+    public void update(Calendar c){
+        em.merge(c);
+    }
+    
+    public void remove(Calendar c){
+        em.remove(em.merge(c));
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
