@@ -124,6 +124,7 @@ public class WeatherTimer {
     }
 
     private void setNotificationParam(User u, Event e, Date d) {
+        System.out.println("set not par: "+ d);
         WeatherNotification wn = new WeatherNotification();
         wn.setState(NotificationStatus.UNREADSEEN.toString());
         wn.setId(1);
