@@ -25,7 +25,6 @@ function codeAddress() {
                 }
             }
             
-            alert(typeof city);
 
             if ((typeof city != 'undefined') | (typeof country != 'undefined')) {
                 city = "Milan";
@@ -58,7 +57,6 @@ function codeAddressInput() {
                 }
             }
 
-            alert(city);
             if ((city === "") | (country === "")) {
                 city = "Milan";
                 country = "IT"
