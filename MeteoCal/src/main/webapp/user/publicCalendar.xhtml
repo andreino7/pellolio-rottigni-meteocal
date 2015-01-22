@@ -53,14 +53,14 @@
 
                             <p:outputLabel id="addressForEvent" value="#{publicCalendarBean.event.location}" rendered="#{(publicCalendarBean.event.visible or publicCalendarBean.event.common)?true:false}" />
 
-                            <h:outputLabel for="CalendarForEvent" value="Calendar:" rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common)?true:false}"/>
-                            <p:selectOneMenu id="CalendarForEvent" value="#{publicCalendarBean.event.calendar}" required="true" converter="CalendarConverter" rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common)?true:false}">
+                            <h:outputLabel for="CalendarForEvent" value="Calendar:" rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common and publicCalendarBean.modifiableEvent)?true:false}"/>
+                            <p:selectOneMenu id="CalendarForEvent" value="#{publicCalendarBean.event.calendar}" required="true" converter="CalendarConverter" rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common and publicCalendarBean.modifiableEvent)?true:false}">
                                 <f:selectItem itemLabel="Select Calendar"  noSelectionOption="false" />
                                 <f:selectItems value="#{publicCalendarBean.loggedUserCalendars}" var="cal" itemValue="#{cal}" itemLabel="#{cal.title}" />
                             </p:selectOneMenu>
 
                             <p:messages autoUpdate="true" globalOnly="false"/>
-                            <p:commandButton id="button" value="Add" action="#{publicCalendarBean.add()}"  rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common)?true:false}"
+                            <p:commandButton id="button" value="Add" action="#{publicCalendarBean.add()}"  rendered="#{(publicCalendarBean.event.visible and !publicCalendarBean.event.common and publicCalendarBean.modifiableEvent)?true:false}"
                                              oncomplete="PF('eventDialog').hide();">
                                 <f:ajax execute="button" render="schedule" />
                             </p:commandButton>

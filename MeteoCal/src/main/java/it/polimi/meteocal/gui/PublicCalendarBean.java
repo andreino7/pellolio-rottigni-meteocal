@@ -18,6 +18,7 @@ import it.polimi.meteocal.schedule.MeteoCalScheduleEvent;
 import it.polimi.meteocal.schedule.MeteoCalScheduleModel;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -47,9 +48,9 @@ public class PublicCalendarBean implements Serializable {
     private MeteoCalScheduleModel model;
     private MeteoCalScheduleEvent event = new MeteoCalScheduleEvent();
     private boolean common;
-    private String geoLoc;
     private List<Calendar> loggedUserCalendars;
-    private EventManager eventManager;
+    private List<Event> events = new LinkedList<>();
+    private boolean modifiableEvent;
     @EJB
     UserManager userManager;
     @PersistenceContext
@@ -58,6 +59,8 @@ public class PublicCalendarBean implements Serializable {
     EventCalendarManager ecManager;
     @EJB
     CalendarManager cm;
+    @EJB
+    EventManager eventManager;
 
     public MeteoCalScheduleEvent getEvent() {
         return event;
@@ -71,6 +74,15 @@ public class PublicCalendarBean implements Serializable {
         this.loggedUserCalendars = loggedUserCalendars;
     }
 
+    public boolean isModifiableEvent() {
+        return modifiableEvent;
+    }
+
+    public void setModifiableEvent(boolean modifiableEvent) {
+        this.modifiableEvent = modifiableEvent;
+    }
+
+    
 
     public MeteoCalScheduleModel getModel() {
         return model;
@@ -128,18 +140,18 @@ public class PublicCalendarBean implements Serializable {
             if (allLoggedEvents.contains(e)) {
                 common = true;
                 MeteoCalScheduleEvent se = new MeteoCalScheduleEvent(e, common);
-                se.setStyleClass("blue");
+                se.setStyleClass(e.getWeather() + " sienna "+ (e.getDate().before(new Date())?"old":""));
                 model.addEvent(se);
             } else {
                 if (e.getVisibility().equals(Visibility.Private)) {
                     common = false;
                     MeteoCalScheduleEvent se = new MeteoCalScheduleEvent(e, common);
-                    se.setStyleClass("red");
+                    se.setStyleClass("gray old");
                     model.addEvent(se);
                 } else {
                     common = false;
                     MeteoCalScheduleEvent se = new MeteoCalScheduleEvent(e, common);
-                    se.setStyleClass("green");
+                    se.setStyleClass(e.getWeather() + " green "+ (e.getDate().before(new Date())?"old":""));
                     model.addEvent(se);
                 }
             }
@@ -162,26 +174,7 @@ public class PublicCalendarBean implements Serializable {
     public void onEventSelect(SelectEvent e) {
         System.out.println("select: " + e);
         event = (MeteoCalScheduleEvent) model.getMeteoEvent(((MeteoCalScheduleEvent) e.getObject()).getId());
-    /*    System.out.println(e);
-        Object o = e.getObject();
-        System.out.println(o);
-        ScheduleEvent ev = (ScheduleEvent) e.getObject();
-       
-        if (ev != null) {
-            System.out.println("qua");
-            event = model.getMeteoEvent(ev.getId());
-            geoLoc = event.getLocation();        
-        } else {
-            System.err.println("qua");
-        } */
-        List<ScheduleEvent> lista = model.getEvents();
-        if (lista.isEmpty()) {
-            System.out.println("vuota");
-        } else {
-            for (ScheduleEvent a: lista) {
-            }
-        }
-
+        modifiableEvent= !(event.getStartDate().before(new Date()));
     } 
     
     public void add() {
