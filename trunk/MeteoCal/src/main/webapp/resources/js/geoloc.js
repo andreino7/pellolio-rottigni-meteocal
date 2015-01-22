@@ -26,7 +26,7 @@ function codeAddress() {
             }
             
 
-            if ((typeof city != 'undefined') | (typeof country != 'undefined')) {
+            if ((typeof city == 'undefined') | (typeof country == 'undefined')) {
                 city = "Milan";
                 country = "IT"
             }
