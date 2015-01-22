@@ -374,6 +374,10 @@ ul.ui-menu {
     background-color: purple !important;
 }
 
+.grey {
+    background-color: gray !important;
+}
+
 .old{
     opacity: 0.5;
 }
