@@ -10,7 +10,6 @@
     </h:head>
     <ui:composition>
         <f:metadata>
-
             <f:event listener="#{eventPageBean.postConstruct()}" type="preRenderView" />
         </f:metadata>
         <ui:decorate template="/template/common/commonLayout.xhtml">
@@ -168,7 +167,7 @@
                             <p:column>
                                 <p:autoComplete id="toInvite" multiple="true" value="#{eventPageBean.toInvite}" completeMethod="#{eventPageBean.complete}"
                                                 var="user" itemLabel="#{user.title}" itemValue="#{user}" converter="UserConverter" forceSelection="true">
-                   <f:param name="id" value="#{eventPageBean.event==null?0:eventPageBean.event.id  }"/>
+                                    <f:param name="id" value="#{eventPageBean.event==null?0:eventPageBean.event.id  }"/>
 
                                     <p:column>
                                         <p:outputPanel style="height:50px; width: 100%; display: block; line-height: 50px;">
@@ -179,7 +178,7 @@
                                 </p:autoComplete>     
 
                                 <p:commandButton id="sendInvitesButton" value="Send Invites" action="#{eventPageBean.sendInvites}" update="@form" >
-                                                  <f:param name="id" value="#{eventPageBean.event==null?0:eventPageBean.event.id  }"/>
+                                    <f:param name="id" value="#{eventPageBean.event==null?0:eventPageBean.event.id  }"/>
 
                                 </p:commandButton>
                             </p:column>
@@ -191,7 +190,7 @@
                             </p:column>
                             <p:column>
                                 <p:commandButton action="#{eventPageBean.save}" value="Save" update="@form">
-                                                  <f:param name="id" value="#{eventPageBean.event==null?0:eventPageBean.event.id  }"/>
+                                    <f:param name="id" value="#{eventPageBean.event==null?0:eventPageBean.event.id  }"/>
 
                                 </p:commandButton>
                             </p:column>

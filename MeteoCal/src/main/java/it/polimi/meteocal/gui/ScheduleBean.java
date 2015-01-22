@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.PostActivate;
 import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerConfig;
@@ -103,7 +104,7 @@ public class ScheduleBean implements Serializable {
     private Integer calendarId;
     private String geoLoc;
 
-    private List<String> visibilities = new LinkedList<String>();
+    private List<String> visibilities = new LinkedList<>();
     private List<EventType> userTypes;
     private List<Calendar> userCalendars;
     private List<String> chosenCalendars;
@@ -115,6 +116,11 @@ public class ScheduleBean implements Serializable {
 
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
+    
+    public void print() {
+        System.out.println("andrea");
+        postConstruct();
+    }
 
     public boolean isModifiableEvent() {
         return modifiableEvent;
@@ -262,6 +268,8 @@ public class ScheduleBean implements Serializable {
 
         }
     }
+    
+
 
     public void onEventSelect(SelectEvent e) {
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
@@ -290,6 +298,7 @@ public class ScheduleBean implements Serializable {
     }
 
     public void updateScheduleModel() {
+        System.out.println("qua");
         model = new MeteoCalScheduleModel();
         colorclass = new LinkedList<>(Arrays.asList("red", "green", "aqua", "blue", "yellow", "sienna", "violet", "purple"));
         colorForCalendar = new HashMap<>();
