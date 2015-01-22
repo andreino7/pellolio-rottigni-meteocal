@@ -15,6 +15,7 @@
             </p:commandLink>
         </p:dataList>
         <p:commandLink value="New Default Type" update=":eventType" action="#{adminHomeBean.create()}" oncomplete="PF('eventTypeDialog').show(); "/>
+        <p:link style="margin-left: 20px;" outcome="/admin/logout.xhtml" value="Logout"/>
 
 
             <p:dialog widgetVar="eventTypeDialog" header="Type Details" resizable="false" style="height:50% !important; height:40% !important; top:25% !important; left: 30% !important;">

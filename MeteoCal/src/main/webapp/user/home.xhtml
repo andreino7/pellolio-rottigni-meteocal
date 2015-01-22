@@ -97,7 +97,7 @@
                             <h:link outcome="/user/event.xhtml" rendered="#{scheduleBean.event.dbId!=0}" value="Go to Event Page">
                                 <f:param name="id" value="#{scheduleBean.event.dbId!=0?scheduleBean.event.dbId:0}"/>
                             </h:link>
-                            <h:outputLabel value="  " rendered="#{scheduleBean.event.dbId!=0}"/>
+                            <h:commandLink  value="Remove Event" action="#{scheduleBean.removeEvent()}" rendered="#{scheduleBean.event.dbId!=0}"/>
                             <p:commandButton type="reset" value="Reset" />
                             <p:commandButton value="Save" actionListener="#{scheduleBean.addEvent}" onstart="codeAddress()"  
                                              oncomplete="if (args &amp;&amp; !args.validationFailed){PF('myschedule').update();PF('eventDialog').hide();}else{updateDialog();}"/>

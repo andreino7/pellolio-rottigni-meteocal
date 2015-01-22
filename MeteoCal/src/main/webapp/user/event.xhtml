@@ -19,6 +19,7 @@
                         <p:row>
                             <p:column colspan="2" >
                                 <h1 style="text-align: center">#{eventPageBean.event.title}</h1>
+                                <p:commandLink action="#{eventPageBean.remove()}" value="Remove" style="float:left;"/>
                                 <p:commandButton value="Decline" action="#{eventPageBean.declineInvite()}" rendered="#{(eventPageBean.inviteNotification and eventPageBean.notAnsweredYet and !eventPageBean.presentInMyCalendar)?true:false}" immediate="true" style="float: right" />
                                 <p:commandButton value="Join" action="#{eventPageBean.joinEvent()}" oncomplete="if (args &amp;&amp; !args.validationFailed)" rendered="#{(eventPageBean.inviteNotification and eventPageBean.notAnsweredYet and !eventPageBean.presentInMyCalendar)?true:false}" style="float: right"/> 
 
