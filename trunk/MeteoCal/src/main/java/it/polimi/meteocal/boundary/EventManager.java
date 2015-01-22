@@ -24,6 +24,7 @@ import javax.ejb.Stateless;
 import javax.persistence.Query;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+
 import javax.persistence.PersistenceContext;
 
 /**
@@ -34,13 +35,13 @@ import javax.persistence.PersistenceContext;
 public class EventManager {
 
     @PersistenceContext
-    private EntityManager em;
+    EntityManager em;
 
     @EJB
-    private UserManager userManager;
+    UserManager userManager;
 
     @EJB
-    private EmailSessionBean emailBean;
+    EmailSessionBean emailBean;
     
     Event selEvent;
 
@@ -171,6 +172,39 @@ public class EventManager {
 
     }
     
+    public void removeEvent(Event e){
+        User me= userManager.getLoggedUser();
+        
+        if (e!=null){
+            if(e.getEventOwner().getEmail() == null ? me.getEmail() == null : e.getEventOwner().getEmail().equals(me.getEmail())){
+                System.out.println("Erasing my event");
+                em.remove(em.merge(e));
+            }else{        
+                
+                  for (Calendar c:me.getCalendarCollection()){
+                      for (EventCalendar ec:e.getEventCalendarCollection()){
+                          if (ec.getCalendar().getId()==c.getId() && ec.getEvent().getId()==e.getId() ){
+                              toggleLink(e, c);
+                          }
+                      }
+                  }
+                  
+            }
+        }
+    }
+    
+    public void removeEvent(Event e,Calendar c){
+        User me= userManager.getLoggedUser();
+        
+        if (e!=null){
+            if(e.getEventOwner().getEmail() == null ? me.getEmail() == null : e.getEventOwner().getEmail().equals(me.getEmail())){
+                System.out.println("Erasing my event");
+                em.remove(em.merge(e));
+            }else{        
+                  toggleLink(e, c);
+            }
+        }
+    }
     
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

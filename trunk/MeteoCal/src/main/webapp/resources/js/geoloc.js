@@ -24,7 +24,13 @@ function codeAddress() {
                     var country = results[0].address_components[i].short_name;
                 }
             }
+            
+            alert(typeof city);
 
+            if ((typeof city != 'undefined') | (typeof country != 'undefined')) {
+                city = "Milan";
+                country = "IT"
+            }
 
             document.getElementById("eventDetails:addressForEvent").style.color = 'green';
             gc([{name: 'City', value: city}, {name: 'Country', value: country}]);//
@@ -50,6 +56,12 @@ function codeAddressInput() {
                 if (results[0].address_components[i].types[0] === 'country') {
                     var country = results[0].address_components[i].short_name;
                 }
+            }
+
+            alert(city);
+            if ((city === "") | (country === "")) {
+                city = "Milan";
+                country = "IT"
             }
 
 

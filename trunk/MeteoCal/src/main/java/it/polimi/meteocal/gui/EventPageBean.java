@@ -463,5 +463,10 @@ public class EventPageBean implements Serializable {
             Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void remove(){
+        eventManager.removeEvent(event);
+        redirect();
+    }
 
 }

@@ -356,6 +356,7 @@ public class ScheduleBean implements Serializable {
                     ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
                 } else {
                     ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+                    ev.setLocation("Milan,IT");
                 }
                 eventManager.update(ev);
                 if (event.getCalendar() != event.getOld()) {
@@ -424,6 +425,13 @@ public class ScheduleBean implements Serializable {
         } catch (IOException ex) {
             Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void removeEvent(){
+        if (this.event!=null){
+            eventManager.removeEvent(eventManager.findEventForId(event.getDbId()),event.getCalendar());
+        }
+        updateScheduleModel();
     }
 
 }

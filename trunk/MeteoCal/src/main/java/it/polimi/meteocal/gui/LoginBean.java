@@ -87,9 +87,9 @@ public class LoginBean {
     public void checkAlreadyLogged(){
         if (userManager.isLoggedIn()){
             if ("ADMIN".equals(userManager.getLoggedUser().getClearance())){
-            redirectTo("faces/admin/adminHome.xhtml");
+            redirectTo("/MeteoCal/faces/admin/adminHome.xhtml");
         }else{
-                redirectTo("faces/user/home.xhtml");
+                redirectTo("/MeteoCal/faces/user/home.xhtml");
             }
         }
         

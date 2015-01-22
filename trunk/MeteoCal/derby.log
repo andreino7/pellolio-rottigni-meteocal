@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Thu Jan 22 10:46:53 CET 2015:
-Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): istanza a816c00e-014b-1109-8c32-000007a6da40
-sulla directory di database /private/var/folders/8f/2tnrx8rn0b30c1sj2_w0xctw0000gn/T/gfembed1408744439313478958tmp/lib/databases/embedded_default con caricatore classi sun.misc.Launcher$AppClassLoader@29453f44 
+Thu Jan 22 15:59:36 CET 2015:
+Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): istanza a816c00e-014b-1227-db58-000006606410
+sulla directory di database /private/var/folders/8f/2tnrx8rn0b30c1sj2_w0xctw0000gn/T/gfembed2191169661399295313tmp/lib/databases/embedded_default con caricatore classi sun.misc.Launcher$AppClassLoader@29453f44 
 Caricato da file:/Users/Filippo/.m2/repository/org/glassfish/main/extras/glassfish-embedded-all/4.1/glassfish-embedded-all-4.1.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_25-b17
