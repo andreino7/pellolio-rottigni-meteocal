@@ -31,8 +31,10 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -57,6 +59,7 @@ public class EventPageBeanTest {
     private FacesContext context;
     private final List<Forecast> forecasts;
     private User defaultUser;
+    private Map<String, String> requestMap;
 
     public EventPageBeanTest() {
         this.forecasts = new LinkedList<>();
@@ -74,15 +77,16 @@ public class EventPageBeanTest {
         pageBean.userManager = mock(UserManager.class);
         pageBean.weather = mock(WeatherChecker.class);
         pageBean.storage = mock(SelectedEventStorageBean.class);
-        request = mock(HttpServletRequest.class);
         context = ContextMocker.mockFacesContext();
+        request = mock(HttpServletRequest.class);
         defaultEvent = new Event(1, "testing event", Visibility.Private, addDays(new Date(), 1), addDays(new Date(), 2), "Prevalle,IT");
         ExternalContext extContext = mock(ExternalContext.class);
         when(context.getExternalContext()).thenReturn(extContext);
         when(extContext.getRequest()).thenReturn(request);
-        when(request.getParameter("id")).thenReturn("1");
         when(request.getParameter("javax.faces.partial.ajax")).thenReturn(null);
-
+        requestMap = new HashMap<>();
+        requestMap.put("id", "1");
+        when(extContext.getRequestParameterMap()).thenReturn(requestMap);
         when(pageBean.storage.retrieve()).thenReturn("1");
         when(pageBean.eventManager.findEventForId("1")).thenReturn(defaultEvent);
         when(pageBean.weather.getWeatherForecast("Prevalle,IT")).thenReturn(forecasts);
@@ -253,7 +257,7 @@ public class EventPageBeanTest {
         assertTrue(pageBean.isOwnedEvent());
         assertNotNull(pageBean.getForecasts());
         assertNotNull(pageBean.getEvent());
-    }
+    } 
 
     private Date addDays(Date d, int amount) {
         java.util.Calendar cal = java.util.Calendar.getInstance();
