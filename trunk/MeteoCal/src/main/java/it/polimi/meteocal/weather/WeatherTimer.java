@@ -150,6 +150,7 @@ public class WeatherTimer {
             Event ev = eventManager.findEventForId(id);
             if (ev != null) {
                 if(DateManipulator.toDefaultDate(ev.getDate()).equals(DateManipulator.toDefaultDate(DateManipulator.addDays(new Date(), 3)))) {
+                    System.out.println("prog timeout 1");
                     checkWeather(ev, false);
                 } else {
                     if(DateManipulator.toDefaultDate(ev.getDate()).equals(DateManipulator.toDefaultDate(DateManipulator.addDays(new Date(), 1)))) {
