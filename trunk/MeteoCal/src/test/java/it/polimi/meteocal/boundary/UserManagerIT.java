@@ -92,7 +92,12 @@ public class UserManagerIT {
         lb.setEmail(mail);
         lb.setPassword(password);
         
+        assertNotNull(em.find(User.class, mail));
+        
     }
+    
+    
+    
     
     
     

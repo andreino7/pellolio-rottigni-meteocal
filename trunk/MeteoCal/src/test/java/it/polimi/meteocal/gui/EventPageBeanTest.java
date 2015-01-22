@@ -49,7 +49,7 @@ import static org.mockito.Mockito.*;
  * @author Andrea
  */
 public class EventPageBeanTest {
-/*
+
     private EventPageBean pageBean;
     private HttpServletRequest request;
     private final String param = "1";
@@ -73,6 +73,7 @@ public class EventPageBeanTest {
         pageBean.notifManager = mock(NotificationManager.class);
         pageBean.userManager = mock(UserManager.class);
         pageBean.weather = mock(WeatherChecker.class);
+        pageBean.storage = mock(SelectedEventStorageBean.class);
         request = mock(HttpServletRequest.class);
         context = ContextMocker.mockFacesContext();
         defaultEvent = new Event(1, "testing event", Visibility.Private, addDays(new Date(), 1), addDays(new Date(), 2), "Prevalle,IT");
@@ -80,6 +81,9 @@ public class EventPageBeanTest {
         when(context.getExternalContext()).thenReturn(extContext);
         when(extContext.getRequest()).thenReturn(request);
         when(request.getParameter("id")).thenReturn("1");
+        when(request.getParameter("javax.faces.partial.ajax")).thenReturn(null);
+
+        when(pageBean.storage.retrieve()).thenReturn("1");
         when(pageBean.eventManager.findEventForId("1")).thenReturn(defaultEvent);
         when(pageBean.weather.getWeatherForecast("Prevalle,IT")).thenReturn(forecasts);
         when(pageBean.eventManager.isMyEvent("1")).thenReturn(Boolean.TRUE);
@@ -266,5 +270,5 @@ public class EventPageBeanTest {
             forecasts.add(new Forecast(conditions.get(rand.nextInt(index)), addDays(new Date(), i), i, i));
         }
     } 
-*/
+
 }
