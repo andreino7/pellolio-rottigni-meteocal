@@ -310,6 +310,10 @@ public class ScheduleBean implements Serializable {
         Random r = new Random();
 
         if (chosenCalendars != null) {
+            while (chosenCalendars.size()>colorclass.size())
+            {
+                chosenCalendars.remove(chosenCalendars.size()-1);
+            }
             for (String c : chosenCalendars) {
                 Integer colid = r.nextInt(colorclass.size());
                 colorForCalendar.put(Integer.parseInt(c), colorclass.get(colid));
@@ -355,8 +359,9 @@ public class ScheduleBean implements Serializable {
                 }
                 eventManager.update(ev);
                 if (event.getCalendar() != event.getOld()) {
-                    eventManager.linkToCalendar(ev, event.getCalendar());
                     eventManager.toggleLink(ev, event.getOld());
+                    eventManager.linkToCalendar(ev, event.getCalendar());
+                    
                 }
                 weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
                 weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));

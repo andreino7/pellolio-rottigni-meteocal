@@ -52,6 +52,9 @@ public class UserProfileBean implements Serializable {
     private EntityManager em;
 
     @EJB
+    UserProfileStorageBean storage;
+    
+    @EJB
     private UserManager userManager;
 
     @Inject
@@ -153,7 +156,18 @@ public class UserProfileBean implements Serializable {
     public void initParam() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         value = request.getParameter("id");
-        System.out.println("id: " + value);
+        String partial = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("javax.faces.partial.ajax");
+        if (value == null && partial == null) {
+            redirect();
+            return;
+        }
+        if ("true".equals(partial)){
+            value= storage.retrieve();
+        }
+        
+        if (value!=null){
+            storage.store(value);
+        }
 
     }
 
@@ -166,6 +180,14 @@ public class UserProfileBean implements Serializable {
     public void save() {
     
         userManager.update(user);
+    }
+    
+    private void redirect() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

@@ -19,8 +19,8 @@
             <ui:define name="leftBar">
 
                 <h:form id="calendarsForm"> 
-                    <p:selectManyCheckbox id="calendarLeftBoxGrid" value="#{scheduleBean.chosenCalendars}" layout="grid" columns="1" >
-                        <f:selectItems value="#{scheduleBean.userCalendars}" var="cal" itemLabelEscaped="false" itemLabel="#{cal.title} #{scheduleBean.getColorBoxForCalendar(cal)}" itemValue="#{cal.id}" />
+                    <p:selectManyCheckbox id="calendarLeftBoxGrid" value="#{scheduleBean.chosenCalendars}" layout="grid" columns="1"  >
+                        <f:selectItems  value="#{scheduleBean.userCalendars}" var="cal" itemLabelEscaped="false" itemLabel="#{cal.title} #{scheduleBean.getColorBoxForCalendar(cal)}" itemValue="#{cal.id}" />
 
                     </p:selectManyCheckbox> 
                     <p:commandButton update=":schedule @form" value="Update" action="#{scheduleBean.updateScheduleModel()}"/>    
@@ -39,7 +39,7 @@
 
                 <p:schedule id="scheduleView" value="#{scheduleBean.model}" aspectRatio="2" styleClass="scheduleHome"  
                             ignoreTimezone="true" timeFormat="HH:mm{ - HH:mm}" widgetVar="myschedule"
-                            tooltip="true" rendered='#{scheduleBean.scheduleDisplay}'>
+                            rendered='#{scheduleBean.scheduleDisplay}'>
                     <p:ajax event="dateSelect" listener="#{scheduleBean.onDateSelect}"
                             update=":eventDetails" oncomplete="PF('eventDialog').show();" />
                     <p:ajax event="eventSelect" listener="#{scheduleBean.onEventSelect}"
