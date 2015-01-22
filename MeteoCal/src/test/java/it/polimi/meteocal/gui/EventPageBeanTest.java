@@ -103,8 +103,8 @@ public class EventPageBeanTest {
         context.release();
     }
 
-    @Test
-    public void testPostConstructFromWeatherNotification() {
+  //  @Test
+/*    public void testPostConstructFromWeatherNotification() {
         WeatherNotification not = mock(WeatherNotification.class);
         Date d = addDays(new Date(), 3);
         when(request.getParameter("id")).thenReturn("1");
@@ -132,7 +132,7 @@ public class EventPageBeanTest {
                 assertEquals(f.getCondition(), pageBean.getSuggestedWeather().getCondition());
             }
         }
-    }
+    } */
 
     @Test
     public void testPostConstructFromAdminNotification() {

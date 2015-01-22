@@ -9,6 +9,7 @@ import it.polimi.meteocal.boundary.EventManager;
 import it.polimi.meteocal.boundary.NotificationManager;
 import it.polimi.meteocal.entity.Event;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -57,6 +58,10 @@ public class NotificationCleaner {
             }
         }
     }
+    
+ /*   public void cleanAll() {
+        List<Event> events = eventManager.finByEndDate(Date endDate);
+    } */
 
     
 }

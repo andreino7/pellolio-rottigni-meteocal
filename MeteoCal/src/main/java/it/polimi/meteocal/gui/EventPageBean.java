@@ -26,8 +26,10 @@ import it.polimi.meteocal.notification.NotificationType;
 import it.polimi.meteocal.boundary.UserManager;
 import it.polimi.meteocal.schedule.Visibility;
 import it.polimi.meteocal.weather.WeatherChecker;
+import it.polimi.meteocal.weather.WeatherConditions;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +61,7 @@ public class EventPageBean implements Serializable {
 
     @EJB
     WeatherChecker weather;
-    
+
     @EJB
     SelectedEventStorageBean storage;
 
@@ -98,9 +100,12 @@ public class EventPageBean implements Serializable {
     private NotificationType notificationType;
     private boolean presentInMyCalendar;
     private List<Calendar> calendars;
+    private List<WeatherConditions> conditions = new LinkedList<>();
+    private List<String> chosenConditions = new LinkedList<>();
     private boolean notAnsweredYet;
 
     private User visitor;
+    private EventType newEventType = new EventType();
 
     /**
      * Creates a new instance of eventPageBean
@@ -150,6 +155,14 @@ public class EventPageBean implements Serializable {
         return suggestedDate;
     }
 
+    public List<String> getChosenConditions() {
+        return chosenConditions;
+    }
+
+    public void setChosenConditions(List<String> chosenConditions) {
+        this.chosenConditions = chosenConditions;
+    }
+
     public Forecast getSuggestedWeather() {
         return suggestedWeather;
     }
@@ -160,6 +173,14 @@ public class EventPageBean implements Serializable {
 
     public List<EventType> getUserTypes() {
         return userTypes;
+    }
+
+    public List<WeatherConditions> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(List<WeatherConditions> conditions) {
+        this.conditions = conditions;
     }
 
     public List<User> getToInvite() {
@@ -202,6 +223,14 @@ public class EventPageBean implements Serializable {
         this.forecasts = forecasts;
     }
 
+    public EventType getNewEventType() {
+        return newEventType;
+    }
+
+    public void setNewEventType(EventType newEventType) {
+        this.newEventType = newEventType;
+    }
+
     public List<Calendar> getCalendars() {
         return calendars;
     }
@@ -229,7 +258,6 @@ public class EventPageBean implements Serializable {
     public void prova() {
 
     }
-
 
     // @PostConstruct
     public void postConstruct() {
@@ -262,7 +290,42 @@ public class EventPageBean implements Serializable {
             }
 
         }
+        WeatherConditions[] conditionsTemp = WeatherConditions.values();
+        for (int i = 0; i < 4; i++) {
+            conditions.add(conditionsTemp[i]);
+        }
+    }
 
+    public void saveEventType() {
+        System.out.println("savingeventtype");
+        for (String w: chosenConditions) {
+            System.out.println(w);
+        }
+        if (chosenConditions.contains(WeatherConditions.CLEAR.getTitle())) {
+            newEventType.setSun(true);
+        } else {
+            newEventType.setSun(false);
+        }
+        if (chosenConditions.contains(WeatherConditions.RAIN.getTitle())) {
+            newEventType.setRain(true);
+        } else {
+            newEventType.setRain(false);
+        }
+        if (chosenConditions.contains(WeatherConditions.SNOW.getTitle())) {
+            newEventType.setSnow(true);
+        } else {
+            newEventType.setSnow(false);
+        }
+        if (chosenConditions.contains(WeatherConditions.CLOUD.getTitle())) {
+            newEventType.setCloud(true);
+        } else {
+            newEventType.setCloud(false);
+        }
+        newEventType.setOwner(visitor);
+        newEventType.setPersonalized(true);
+        if (newEventType.getTitle()!=null) {
+             eventTypeManager.save(newEventType);            
+        }
     }
 
     public List<User> complete(String query) {
@@ -323,7 +386,7 @@ public class EventPageBean implements Serializable {
             Date endDate = DateManipulator.toNewEndDate(event.getDate(), suggestedDate, event.getEndDate());
             event.setDate(suggestedDate);
             event.setEndDate(endDate);
-            event.setWeather(suggestedWeather.getCondition().toString().toUpperCase());
+            event.setWeather(suggestedWeather.getCondition().toUpperCase());
             eventManager.update(event);
             notifManager.createChangedEventNotification(event, participant);
             notifManager.removeWeatherNotification((WeatherNotification) notification);
@@ -354,8 +417,8 @@ public class EventPageBean implements Serializable {
             redirect();
             return;
         }
-        if ("true".equals(partial)){
-            param= storage.retrieve();
+        if ("true".equals(partial)) {
+            param = storage.retrieve();
         }
         String notType = request.getParameter("notificationType");
         if (notType != null) {
@@ -409,12 +472,12 @@ public class EventPageBean implements Serializable {
                 this.suggestedWeather = getWeather(this.suggestedDate);
                 System.out.println(suggestedWeather);
                 List<String> allowed = event.getType().getAllowedCondition();
-                for (String s: allowed) {
+                for (String s : allowed) {
                     System.out.println(s);
                 }
                 if (!event.getType().getAllowedCondition().contains(suggestedWeather.getCondition().toUpperCase())) {
-                    this.suggestedDate=null;
-                    this.suggestedWeather=null;
+                    this.suggestedDate = null;
+                    this.suggestedWeather = null;
                 }
             } else {
                 System.out.println("suggested date=null");
@@ -473,8 +536,8 @@ public class EventPageBean implements Serializable {
             Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void remove(){
+
+    public void remove() {
         eventManager.removeEvent(event);
         redirect();
     }

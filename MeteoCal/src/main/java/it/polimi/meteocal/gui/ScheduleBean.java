@@ -113,6 +113,7 @@ public class ScheduleBean implements Serializable {
     private String title;
     private Calendar newCalendar;
     private boolean modifiableEvent= true;
+    private EventType newEventType;
 
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
@@ -175,6 +176,8 @@ public class ScheduleBean implements Serializable {
     public void setUserTypes(List<EventType> userTypes) {
         this.userTypes = userTypes;
     }
+
+
 
     public String getClassForCalendar(Calendar c) {
         return colorForCalendar.get(c.getId());
