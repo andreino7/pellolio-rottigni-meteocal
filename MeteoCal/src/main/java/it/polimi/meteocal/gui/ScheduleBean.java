@@ -104,7 +104,7 @@ public class ScheduleBean implements Serializable {
     private Integer calendarId;
     private String geoLoc;
 
-    private List<String> visibilities = new LinkedList<>();
+    private List<String> visibilities;
     private List<EventType> userTypes;
     private List<Calendar> userCalendars;
     private List<String> chosenCalendars;
@@ -242,7 +242,7 @@ public class ScheduleBean implements Serializable {
     @PostConstruct
     public void postConstruct() {
         user = userManager.getLoggedUser();
-
+        visibilities = new LinkedList<>();
         visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
         event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
@@ -364,9 +364,9 @@ public class ScheduleBean implements Serializable {
             ev.setVisibility(event.getVisibility());
             try {
                // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
-                
-                if (weather.isValidCityFormat(event.getLocation())) {
-                    ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
+                if (weather.isValidCityFormat(cityNoSpace)) {
+                    ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
                 } else {
                     ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
                     ev.setLocation("Milan,IT");
