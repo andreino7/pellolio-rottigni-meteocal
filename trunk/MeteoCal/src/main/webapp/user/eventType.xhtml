@@ -14,8 +14,10 @@
                     <p:panelGrid class="centered">
                         <p:row>
                             <p:column colspan="3">
-                                <h1 style="text-align: center;">#{eventTypePageBean.eventType.title}</h1>
+                                <h:inputText id="evTitle" value="#{eventTypePageBean.eventType.title}" rendered="#{eventTypePageBean.mine}"/>
+                                <h:outputText id="evTitlenotMine" value="#{eventTypePageBean.eventType.title}" rendered="#{!eventTypePageBean.mine}" style="display: block; width: 200px;" />
                             </p:column>
+                            
                         </p:row>
                         <p:row>
                             <p:column>
