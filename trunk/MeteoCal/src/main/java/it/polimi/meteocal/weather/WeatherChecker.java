@@ -40,7 +40,7 @@ public class WeatherChecker {
             }
             return toWeatherConditions(s);
         } else {
-            throw new IllegalArgumentException("Invalid city or date");
+            return null;
         }
     }
     
@@ -53,7 +53,7 @@ public class WeatherChecker {
                 return null;
             }
         } else {
-            throw new IllegalArgumentException("Invalid city");
+            return null;
         }
         
     }
@@ -67,7 +67,7 @@ public class WeatherChecker {
                 return null;
             }
         } else {
-            throw new IllegalArgumentException("Invalid city");
+           return null;
         }
     }
    
@@ -150,7 +150,7 @@ public class WeatherChecker {
     
     public boolean isValidCityFormat(String city) {
         if (city != null) {
-            String regex = "[A-Z]?[a-z]+[,]{1}[A-Za-z]{2}([,]{1}[A-Za-z]{2})?";
+            String regex = "[A-Za-z_]+[,]{1}[A-Za-z]{2}([,]{1}[A-Za-z]{2})?";
             return city.matches(regex);
         } else {
             return false;
