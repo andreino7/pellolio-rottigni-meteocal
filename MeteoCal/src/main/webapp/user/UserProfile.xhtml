@@ -69,7 +69,7 @@
 
                         </p:row>
                         <p:row>
-                            <p:column>
+                            <p:column colspan="2">
                                 <h:link outcome="/user/publicCalendar.xhtml" value="view public calendars" rendered="#{userProfile.ownprofile?false:true}">
                                     <f:param name="id" value="#{userProfile.user.email}"/>
                                 </h:link>
