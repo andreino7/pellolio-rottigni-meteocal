@@ -77,23 +77,11 @@ public class WeatherCheckerTest {
         assertEquals(WeatherConditions.UNAVAILABLE, weatherChecker.addWeather(city, dates.get(10)));
         
     } 
-    
-    @Test(expected = IllegalArgumentException.class)
-    public void addWeatherNullDateTest() {
-        weatherChecker.addWeather(city, null);
-    }
-    
-     @Test(expected = IllegalArgumentException.class)
-    public void addWeatherNullCityTest() {
-        weatherChecker.addWeather(null, new Date());
-    }
+
     
 
     
-    @Test(expected = IllegalArgumentException.class)
-    public void getWeatherNullCityTest() {
-        weatherChecker.getForecast(null);
-    }
+
     
     
     @Test
@@ -136,11 +124,7 @@ public class WeatherCheckerTest {
         assertEquals(dates.get(9), forecasts.get(9).getDate());
     }
     
-    @Test
-    public void getWeatherForecastNullCityTest() {
-        assertNull(weatherChecker.getWeatherForecast(null));
-        
-    }
+
     
     public void isValidCityFormatTest() {
         assertTrue(weatherChecker.isValidCityFormat("Prevalle,IT"));
