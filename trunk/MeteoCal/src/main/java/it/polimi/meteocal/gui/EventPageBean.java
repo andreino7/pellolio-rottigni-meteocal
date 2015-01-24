@@ -279,7 +279,8 @@ public class EventPageBean implements Serializable {
                 updatePresentInMyCalendar();
                 checkIfAlreadyAnsewerd();
                 if (isNotFaraway()) {
-                    forecasts = weather.getWeatherForecast(event.getLocation());
+                    String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
+                    forecasts = weather.getWeatherForecast(cityNoSpace);
                     if (forecasts != null) {
                         updateSuggestedDate();
                         updateWeather();
@@ -296,37 +297,6 @@ public class EventPageBean implements Serializable {
         }
     }
 
-    public void saveEventType() {
-        System.out.println("savingeventtype");
-        for (String w: chosenConditions) {
-            System.out.println(w);
-        }
-        if (chosenConditions.contains(WeatherConditions.CLEAR.getTitle())) {
-            newEventType.setSun(true);
-        } else {
-            newEventType.setSun(false);
-        }
-        if (chosenConditions.contains(WeatherConditions.RAIN.getTitle())) {
-            newEventType.setRain(true);
-        } else {
-            newEventType.setRain(false);
-        }
-        if (chosenConditions.contains(WeatherConditions.SNOW.getTitle())) {
-            newEventType.setSnow(true);
-        } else {
-            newEventType.setSnow(false);
-        }
-        if (chosenConditions.contains(WeatherConditions.CLOUD.getTitle())) {
-            newEventType.setCloud(true);
-        } else {
-            newEventType.setCloud(false);
-        }
-        newEventType.setOwner(visitor);
-        newEventType.setPersonalized(true);
-        if (newEventType.getTitle()!=null) {
-             eventTypeManager.save(newEventType);            
-        }
-    }
 
     public List<User> complete(String query) {
         System.out.println("here");
