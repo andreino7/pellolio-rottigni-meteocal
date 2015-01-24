@@ -89,6 +89,10 @@ visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
         if (calendar==null){
             redirect();
+        }else{
+            if (calendar.getOwner().getEmail()!=um.getLoggedUser().getEmail()){
+                redirect();
+            }
         }
         
     }

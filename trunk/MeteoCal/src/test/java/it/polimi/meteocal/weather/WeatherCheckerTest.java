@@ -136,9 +136,10 @@ public class WeatherCheckerTest {
         assertEquals(dates.get(9), forecasts.get(9).getDate());
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void getWeatherForecastNullCityTest() {
-        weatherChecker.getWeatherForecast(null);
+        assertNull(weatherChecker.getWeatherForecast(null));
+        
     }
     
     public void isValidCityFormatTest() {

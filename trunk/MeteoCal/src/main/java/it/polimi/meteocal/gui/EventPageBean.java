@@ -279,8 +279,10 @@ public class EventPageBean implements Serializable {
                 updatePresentInMyCalendar();
                 checkIfAlreadyAnsewerd();
                 if (isNotFaraway()) {
+
                     String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
                     forecasts = weather.getWeatherForecast(cityNoSpace);
+
                     if (forecasts != null) {
                         updateSuggestedDate();
                         updateWeather();
