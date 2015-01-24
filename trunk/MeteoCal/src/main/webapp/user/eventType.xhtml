@@ -13,7 +13,10 @@
                 <h:form id="eventTypeDetails">
                     <p:panelGrid class="centered">
                         <p:row>
-                            <p:column colspan="3">
+                            <p:column>
+                                <h:outputText value="Title: " />
+                            </p:column>
+                            <p:column colspan="2">
                                 <h:inputText id="evTitle" value="#{eventTypePageBean.eventType.title}" rendered="#{eventTypePageBean.mine}"/>
                                 <h:outputText id="evTitlenotMine" value="#{eventTypePageBean.eventType.title}" rendered="#{!eventTypePageBean.mine}" style="display: block; width: 200px;" />
                             </p:column>

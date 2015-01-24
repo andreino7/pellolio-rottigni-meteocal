@@ -254,6 +254,10 @@ public class EventPageBean implements Serializable {
     public boolean isNotAnsweredYet() {
         return notAnsweredYet;
     }
+    
+    public boolean isPublic() {
+        return event.getVisibility().equals(Visibility.Public);
+    }
 
     public void prova() {
 
@@ -269,7 +273,7 @@ public class EventPageBean implements Serializable {
             participant = eventManager.getParticipant(event);
             storage.store(param);
             visitor = userManager.getLoggedUser();
-            if (participant.contains(visitor) || notifManager.existInvite(visitor, event)) {
+            if (participant.contains(visitor) || notifManager.existInvite(visitor, event) || isPublic()) {
                 System.out.println("qui");
                 userTypes = eventTypeManager.findTypesForUser();
                 visibilities.add(Visibility.Private);
@@ -343,7 +347,9 @@ public class EventPageBean implements Serializable {
         eventCal.setEvent(event);
         eventCal.setCalendar(calendar);
         ecManager.save(eventCal);
-        notifManager.createResponseNotification(setResponseNotificationParameter(true));
+        if (inviteNotification) {
+            notifManager.createResponseNotification(setResponseNotificationParameter(true));
+        }
         return "home?faces-redirect=true";
     }
 
