@@ -67,7 +67,7 @@ public class WeatherChecker {
                 return null;
             }
         } else {
-           return null;
+ return null;
         }
     }
    

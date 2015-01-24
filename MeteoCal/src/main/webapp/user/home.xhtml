@@ -98,8 +98,8 @@
                             </h:link>
                             <h:commandLink  value="Remove Event" action="#{scheduleBean.removeEvent()}" rendered="#{scheduleBean.event.dbId!=0}"/>
                             <p:commandButton type="reset" value="Reset" />
-                            <p:commandButton value="Save" actionListener="#{scheduleBean.addEvent}" onstart="codeAddress()"  
-                                             oncomplete="if (args &amp;&amp; !args.validationFailed){PF('myschedule').update();PF('eventDialog').hide();}else{updateDialog();}"/>
+                            <p:commandButton value="Save" actionListener="#{scheduleBean.addEvent}" onstart="codeAddress()" onclick="jQuery(this).addClass('ui-state-disabled')"  
+                                             oncomplete=" if (args &amp;&amp; !args.validationFailed){PF('myschedule').update();PF('eventDialog').hide();}else{updateDialog();} jQuery(this).removeClass('ui-state-disabled'); " />
                             
                         </h:panelGrid>
                         <p:remoteCommand name="updateDialog" process="@this" update="@form" />
