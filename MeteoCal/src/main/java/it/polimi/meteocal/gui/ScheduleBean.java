@@ -392,8 +392,9 @@ public class ScheduleBean implements Serializable {
             ev.setEventOwner(user);
 
             try {
-                if (weather.isValidCityFormat(event.getLocation())) {
-                    ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
+                if (weather.isValidCityFormat(cityNoSpace)) {
+                    ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
                 } else {
                     ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
                 }
