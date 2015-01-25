@@ -9,6 +9,7 @@
     </h:head>
     <h:body>
         Welcome Admin, these are the default Types:
+        <h:form id="eventType">
         <p:dataList value="#{adminHomeBean.eventTypes}" var="et">
             <p:commandLink value="#{et.title}" update=":eventType"  oncomplete="PF('eventTypeDialog').show(); ">
                 <f:setPropertyActionListener value="#{et}" target="#{adminHomeBean.selected}" />
@@ -19,7 +20,7 @@
 
 
             <p:dialog widgetVar="eventTypeDialog" header="Type Details" resizable="false" style="height:50% !important; height:40% !important; top:25% !important; left: 30% !important;">
-                <h:form id="eventType">
+                
                     <p:panelGrid>
                         <p:row>
                             <p:column colspan="2" style="text-align: center" rendered="#{adminHomeBean.selected.id!=0}">
@@ -70,14 +71,15 @@
                                 <p:commandButton value="Reset" update="@form" action="#{adminHomeBean.reset()}"/>
                             </p:column>
                             <p:column>
-                                <p:commandButton value="Save" update="@form" action="#{adminHomeBean.save()}"/>
+                                <p:commandButton value="Save" update="@form" action="#{adminHomeBean.save()}" oncomplete="PF('eventTypeDialog').hide()"/>
                             </p:column>
                         </p:row>
 
 
                     </p:panelGrid>
-                </h:form>
-            </p:dialog>
+               
+            </p:dialog> 
+        </h:form>
     </h:body>
 </html>
 
