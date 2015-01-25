@@ -459,6 +459,10 @@ public class ScheduleBean implements Serializable {
         newCalendar=c;
     }
     
+    public Date today(){
+        return new Date();
+    }
+    
     
 
 }

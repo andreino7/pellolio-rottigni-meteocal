@@ -31,7 +31,7 @@
             </ui:define>
             <ui:define name="content">
                 <h:form>
-                    <p:remoteCommand update=":schedule" name="rc" autoRun="true" actionListener="#{scheduleBean.updateScheduleModel()}" />
+                    <p:remoteCommand update=":schedule :calendarsForm" name="rc" autoRun="true" actionListener="#{scheduleBean.updateScheduleModel()}" />
                 </h:form>
                 <h:form id='schedule'>
                     <p:commandButton value="#{scheduleBean.scheduleDisplay?'Agenda':'Schedule'}" styleClass="agendaButton" update="@this @form" action="#{scheduleBean.switchView()}" />
@@ -57,10 +57,10 @@
                             <h:outputLabel for="title" value="Title:" />
                             <p:inputText id="title" value="#{scheduleBean.event.title}" disabled="#{!scheduleBean.modifiableEvent}" required="true"/>
                             <h:outputLabel for="startdatetime" value="From:" />
-                            <p:calendar id="startdatetime" value="#{scheduleBean.event.startDate}" disabled="#{!scheduleBean.modifiableEvent}" pattern="MM/dd/yyyy HH:mm:ss" />
+                            <p:calendar id="startdatetime" value="#{scheduleBean.event.startDate}" mindate="#{scheduleBean.today()}" disabled="#{!scheduleBean.modifiableEvent}" pattern="MM/dd/yyyy HH:mm:ss" />
 
                             <h:outputLabel for="enddatetime" value="To:" />
-                            <p:calendar id="enddatetime" value="#{scheduleBean.event.endDate}" disabled="#{!scheduleBean.modifiableEvent}" pattern="MM/dd/yyyy HH:mm:ss" />
+                            <p:calendar id="enddatetime" value="#{scheduleBean.event.endDate}" mindate="#{scheduleBean.today()}" disabled="#{!scheduleBean.modifiableEvent}" pattern="MM/dd/yyyy HH:mm:ss" />
 
                             <h:outputLabel for="CalendarForEvent" value="Calendar:" />
                             <p:selectOneMenu id="CalendarForEvent"  value="#{scheduleBean.event.calendar}" disabled="#{!scheduleBean.modifiableEvent}" required="true" converter="CalendarConverter" >
