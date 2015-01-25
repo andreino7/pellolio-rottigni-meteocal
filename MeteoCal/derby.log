@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Sun Jan 25 18:19:16 CET 2015:
-Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): istanza a816c00e-014b-221a-cbaf-000006b7d148
-sulla directory di database /private/var/folders/8f/2tnrx8rn0b30c1sj2_w0xctw0000gn/T/gfembed1378240555795234910tmp/lib/databases/embedded_default con caricatore classi sun.misc.Launcher$AppClassLoader@29453f44 
-Caricato da file:/Users/Filippo/.m2/repository/org/glassfish/main/extras/glassfish-embedded-all/4.1/glassfish-embedded-all-4.1.jar
+Sun Jan 25 22:27:02 CET 2015:
+Avvio della versione di Derby The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): istanza a816c00e-014b-22fd-a23a-000007557228
+sulla directory di database /private/var/folders/nt/twnp5cmn6sv00dvbk0jxf6n40000gn/T/gfembed8241036046211720855tmp/lib/databases/embedded_default con caricatore classi sun.misc.Launcher$AppClassLoader@29453f44 
+Caricato da file:/Users/Andrea/.m2/repository/org/glassfish/main/extras/glassfish-embedded-all/4.1/glassfish-embedded-all-4.1.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_25-b17
-user.dir=/Users/Filippo/NetBeansProjects/trunk/MeteoCal
+user.dir=/Users/Andrea/NetBeansProjects/MeteoCal
 os.name=Mac OS X
 os.arch=x86_64
 os.version=10.10.1
