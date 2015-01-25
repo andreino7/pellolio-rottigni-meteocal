@@ -72,14 +72,17 @@ public class AdminHomeBean implements Serializable {
         if (selected.getId()!=newInDB){
             etManager.update(selected);
             notificationManager.createAdminNotification(selected);
+            postConstruct();
         }else{
             etManager.save(selected);
+            postConstruct();
         }
     }
     
     public void reset(){
         if (selected.getId()!=newInDB){
             selected=etManager.findEventTypeforId(selected.getId());
+
         }else{
             selected= new EventType(newInDB);
             selected.setTitle("Name");
