@@ -87,7 +87,7 @@ public class CalendarPageBean implements Serializable {
         if (calendar == null) {
             redirect();
         } else {
-            if (calendar.getOwner().getEmail().equals(um.getLoggedUser().getEmail())) {
+            if (!calendar.getOwner().getEmail().equals(um.getLoggedUser().getEmail())) {
                 redirect();
             }
         }

@@ -187,7 +187,7 @@ public class ScheduleBean implements Serializable {
     }
 
     public String getLinkForCalendar(Calendar cal) {
-        return "<a href=\"calendar.xhtml?id=" + cal.getId() + "\" > " + cal.getTitle() + "</a>";
+        return "<a href=\"/MeteoCal/faces/user/calendar.xhtml?id=" + cal.getId() + "\" > " + cal.getTitle() + "</a>";
     }
 
     public List<String> getChosenCalendars() {
