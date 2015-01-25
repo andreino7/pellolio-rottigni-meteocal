@@ -88,7 +88,7 @@ public class ScheduleBean implements Serializable {
 
     @EJB
     WeatherChecker weather;
-    
+
     @EJB
     WeatherTimer weatherTimer;
 
@@ -112,12 +112,12 @@ public class ScheduleBean implements Serializable {
     private MeteoCalScheduleEvent event = new MeteoCalScheduleEvent(eventNotInDB, "", null, null, null, null);
     private String title;
     private Calendar newCalendar;
-    private boolean modifiableEvent= true;
+    private boolean modifiableEvent = true;
     private EventType newEventType;
 
     List<String> colorclass;
     Map<Integer, String> colorForCalendar;
-    
+
     public void print() {
         System.out.println("andrea");
         postConstruct();
@@ -144,11 +144,11 @@ public class ScheduleBean implements Serializable {
         this.scheduleDisplay = scheduleDisplay;
     }
 
-    public void initNewCalendar(){
-        newCalendar=new Calendar();
+    public void initNewCalendar() {
+        newCalendar = new Calendar();
         newCalendar.setOwner(user);
     }
-    
+
     public Calendar getNewCalendar() {
         return newCalendar;
     }
@@ -177,19 +177,17 @@ public class ScheduleBean implements Serializable {
         this.userTypes = userTypes;
     }
 
-
-
     public String getClassForCalendar(Calendar c) {
         return colorForCalendar.get(c.getId());
     }
 
     public String getColorBoxForCalendar(Calendar c) {
         return "<div class=\" colorbox " + getClassForCalendar(c) + "\" ></div>";
-        
+
     }
-    
-    public String getLinkForCalendar(Calendar cal){
-        return "<a href=\"calendar.xhtml?id="+cal.getId()+"\" > "+cal.getTitle()+"</a>";
+
+    public String getLinkForCalendar(Calendar cal) {
+        return "<a href=\"calendar.xhtml?id=" + cal.getId() + "\" > " + cal.getTitle() + "</a>";
     }
 
     public List<String> getChosenCalendars() {
@@ -275,20 +273,18 @@ public class ScheduleBean implements Serializable {
             this.save();
             updateScheduleModel();
             event = new MeteoCalScheduleEvent(eventNotInDB, "", new Date(), new Date(), null, null);//reset dialog form
-            modifiableEvent=true;
-            
+            modifiableEvent = true;
+
         } catch (BadEventException ex) {
 
         }
     }
-    
-
 
     public void onEventSelect(SelectEvent e) {
         ScheduleEvent ev = (ScheduleEvent) e.getObject();
 
         event = model.getMeteoEvent(ev.getId());
-        modifiableEvent= (eventManager.isMyEvent(event.getDbId().toString()) && !(event.getStartDate().before(new Date())));
+        modifiableEvent = (eventManager.isMyEvent(event.getDbId().toString()) && !(event.getStartDate().before(new Date())));
         geoLoc = event.getLocation();
 
     }
@@ -332,9 +328,8 @@ public class ScheduleBean implements Serializable {
         Random r = new Random();
 
         if (chosenCalendars != null) {
-            while (chosenCalendars.size()>colorclass.size())
-            {
-                chosenCalendars.remove(chosenCalendars.size()-1);
+            while (chosenCalendars.size() > colorclass.size()) {
+                chosenCalendars.remove(chosenCalendars.size() - 1);
             }
             for (String c : chosenCalendars) {
                 Integer colid = r.nextInt(colorclass.size());
@@ -345,7 +340,7 @@ public class ScheduleBean implements Serializable {
 
                 for (Event ev : evList) {
                     MeteoCalScheduleEvent scheduleEvent = new MeteoCalScheduleEvent(ev, calendarManager.findCalendarForId(c));
-                    scheduleEvent.setStyleClass(ev.getWeather() + " " + colorForCalendar.get(Integer.parseInt(c))+" "+ (ev.getDate().before(new Date())?"old":""));
+                    scheduleEvent.setStyleClass(ev.getWeather() + " " + colorForCalendar.get(Integer.parseInt(c)) + " " + (ev.getDate().before(new Date()) ? "old" : ""));
                     scheduleEvent.setDescription(ev.getWeather());
 
                     model.addEvent(scheduleEvent);
@@ -362,69 +357,67 @@ public class ScheduleBean implements Serializable {
 
     public void save() throws BadEventException {
         Event ev;
-        if (event.getStartDate().after(new Date())) {
-            if (eventManager.findEventForId(event.getDbId()) != null) {
-                ev = eventManager.findEventForId(event.getDbId());
-                ev.setId(event.getDbId());
-                ev.setTitle(event.getTitle());
-                ev.setDate(event.getStartDate());
-                ev.setEndDate(event.getEndDate());
-                ev.setType(event.getType());
-                ev.setLocation(event.getLocation());
-                ev.setVisibility(event.getVisibility());
-                try {
-                   // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
-                    String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
-                    if (weather.isValidCityFormat(cityNoSpace)) {
-                        ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
-                    } else {
-                        ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
-                        ev.setLocation("Milan,IT");
-                    }
-                    eventManager.update(ev);
-                    if (event.getCalendar() != event.getOld()) {
-                        eventManager.toggleLink(ev, event.getOld());
-                        eventManager.linkToCalendar(ev, event.getCalendar());
 
-                    }
-                    weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
-                    weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
-                    sendChangeEventNotification(ev);
-                } catch (Exception ex) {
-                    errorOccurred();
+        if (eventManager.findEventForId(event.getDbId()) != null) {
+            ev = eventManager.findEventForId(event.getDbId());
+            ev.setId(event.getDbId());
+            ev.setTitle(event.getTitle());
+            ev.setDate(event.getStartDate());
+            ev.setEndDate(event.getEndDate());
+            ev.setType(event.getType());
+            ev.setLocation(event.getLocation());
+            ev.setVisibility(event.getVisibility());
+            try {
+                // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
+                if (weather.isValidCityFormat(cityNoSpace)) {
+                    ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
+                } else {
+                    ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+                    ev.setLocation("Milan,IT");
                 }
-            } else {
-                //TODO location and visibility
-                ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
-                ev.setType(event.getType());
-                ev.setLocation(event.getLocation());
-                ev.setVisibility(event.getVisibility());
+                eventManager.update(ev);
+                if (event.getCalendar() != event.getOld()) {
+                    eventManager.toggleLink(ev, event.getOld());
+                    eventManager.linkToCalendar(ev, event.getCalendar());
+
+                }
+                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
+                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
+                sendChangeEventNotification(ev);
+            } catch (Exception ex) {
+                errorOccurred();
+            }
+        } else {
+            //TODO location and visibility
+            ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
+            ev.setType(event.getType());
+            ev.setLocation(event.getLocation());
+            ev.setVisibility(event.getVisibility());
+            ev.setEventOwner(user);
+
+            try {
+                String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
+                if (weather.isValidCityFormat(cityNoSpace)) {
+                    ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
+                } else {
+                    ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+                }
                 ev.setEventOwner(user);
 
-                try {
-                    String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
-                    if (weather.isValidCityFormat(cityNoSpace)) {
-                        ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
-                    } else {
-                        ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
-                    }
-                    ev.setEventOwner(user);
+                // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                eventManager.save(ev);
+                eventManager.linkToCalendar(ev, event.getCalendar());
+                cleaner.setTimer(ev.getId(), ev.getEndDate());
+                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
+                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
+            } catch (Exception ex) {
+                errorOccurred();
 
-    // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
-                    eventManager.save(ev);
-                    eventManager.linkToCalendar(ev, event.getCalendar());
-                    cleaner.setTimer(ev.getId(), ev.getEndDate());
-                    weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
-                    weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
-                } catch (Exception ex) {
-                    errorOccurred();
-
-                }
             }
         }
-    }
 
-   
+    }
 
     public void saveNewCalendar() {
         calendarManager.save(newCalendar);
@@ -440,7 +433,7 @@ public class ScheduleBean implements Serializable {
     public void switchView() {
         scheduleDisplay = !scheduleDisplay;
     }
-    
+
     private void errorOccurred() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("../error.xhtml");
@@ -448,22 +441,20 @@ public class ScheduleBean implements Serializable {
             Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void removeEvent(){
-        if (this.event!=null){
-            eventManager.removeEvent(eventManager.findEventForId(event.getDbId()),event.getCalendar());
+
+    public void removeEvent() {
+        if (this.event != null) {
+            eventManager.removeEvent(eventManager.findEventForId(event.getDbId()), event.getCalendar());
         }
         updateScheduleModel();
     }
-    
-    public void selectCalendar(Calendar c){
-        newCalendar=c;
+
+    public void selectCalendar(Calendar c) {
+        newCalendar = c;
     }
-    
-    public Date today(){
+
+    public Date today() {
         return new Date();
     }
-    
-    
 
 }
