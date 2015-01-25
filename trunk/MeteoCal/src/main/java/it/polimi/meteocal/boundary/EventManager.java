@@ -206,6 +206,13 @@ public class EventManager {
         }
     }
     
+    public List<Event> findEndedEvent() {
+        Query q = em.createNamedQuery(Event.findEndedEvent);
+        q.setParameter("actualDate", new Date());
+        List<Event> events = q.getResultList();
+        return events;    
+    }
+    
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 }

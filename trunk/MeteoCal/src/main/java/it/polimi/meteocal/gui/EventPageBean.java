@@ -340,6 +340,18 @@ public class EventPageBean implements Serializable {
     public void reset() {
         event = eventManager.findEventForId(event.getId());
     }
+    
+    public boolean isJoinable() {
+        return (((inviteNotification && notAnsweredYet) || (isPublic())) && !presentInMyCalendar && event.getDate().after(new Date()));
+    }
+    
+    public boolean isDeclinable() {
+        return (inviteNotification && notAnsweredYet && !presentInMyCalendar && event.getDate().after(new Date()));
+    }
+    
+    public boolean isPostponable() {
+        return weatherNotification && ownedEvent && isThereSuggestedDate();
+    }
 
     public String joinEvent() {
         EventCalendar eventCal = new EventCalendar();

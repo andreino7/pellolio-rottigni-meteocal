@@ -295,13 +295,21 @@ public class ScheduleBean implements Serializable {
 
     public void onDateSelect(SelectEvent e) {
         Date date = (Date) e.getObject();
+        System.out.println(date);
         java.util.Calendar cal = java.util.Calendar.getInstance();
+        java.util.Calendar calAux = java.util.Calendar.getInstance();
         cal.setTime(date);
-        cal.set(java.util.Calendar.HOUR_OF_DAY, 12);
-        cal.set(java.util.Calendar.MINUTE, 0);
-        cal.set(java.util.Calendar.SECOND, 0);
+        calAux.setTime(new Date());
+        int hour = calAux.get(java.util.Calendar.HOUR_OF_DAY);
+        int minute = calAux.get(java.util.Calendar.MINUTE);
+        int second = calAux.get(java.util.Calendar.SECOND);
+        cal.set(java.util.Calendar.HOUR_OF_DAY, hour);
+        cal.set(java.util.Calendar.MINUTE, minute);
+        cal.set(java.util.Calendar.SECOND, second);
+        calAux.set(java.util.Calendar.SECOND, 0);
+        System.out.println(cal.getTime());
         event = new MeteoCalScheduleEvent(eventNotInDB, "", cal.getTime(), cal.getTime(), null, null);
-        modifiableEvent= date.after(new Date());
+        modifiableEvent = cal.getTime().after(calAux.getTime());
         geoLoc = "";
     }
 
@@ -353,62 +361,64 @@ public class ScheduleBean implements Serializable {
 
     public void save() throws BadEventException {
         Event ev;
-        if (eventManager.findEventForId(event.getDbId()) != null) {
-            ev = eventManager.findEventForId(event.getDbId());
-            ev.setId(event.getDbId());
-            ev.setTitle(event.getTitle());
-            ev.setDate(event.getStartDate());
-            ev.setEndDate(event.getEndDate());
-            ev.setType(event.getType());
-            ev.setLocation(event.getLocation());
-            ev.setVisibility(event.getVisibility());
-            try {
-               // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
-                String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
-                if (weather.isValidCityFormat(cityNoSpace)) {
-                    ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
-                } else {
-                    ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
-                    ev.setLocation("Milan,IT");
-                }
-                eventManager.update(ev);
-                if (event.getCalendar() != event.getOld()) {
-                    eventManager.toggleLink(ev, event.getOld());
-                    eventManager.linkToCalendar(ev, event.getCalendar());
-                    
-                }
-                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
-                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
-                sendChangeEventNotification(ev);
-            } catch (Exception ex) {
-                errorOccurred();
-            }
-        } else {
-            //TODO location and visibility
-            ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
-            ev.setType(event.getType());
-            ev.setLocation(event.getLocation());
-            ev.setVisibility(event.getVisibility());
-            ev.setEventOwner(user);
+        if (event.getStartDate().after(new Date())) {
+            if (eventManager.findEventForId(event.getDbId()) != null) {
+                ev = eventManager.findEventForId(event.getDbId());
+                ev.setId(event.getDbId());
+                ev.setTitle(event.getTitle());
+                ev.setDate(event.getStartDate());
+                ev.setEndDate(event.getEndDate());
+                ev.setType(event.getType());
+                ev.setLocation(event.getLocation());
+                ev.setVisibility(event.getVisibility());
+                try {
+                   // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                    String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
+                    if (weather.isValidCityFormat(cityNoSpace)) {
+                        ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
+                    } else {
+                        ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+                        ev.setLocation("Milan,IT");
+                    }
+                    eventManager.update(ev);
+                    if (event.getCalendar() != event.getOld()) {
+                        eventManager.toggleLink(ev, event.getOld());
+                        eventManager.linkToCalendar(ev, event.getCalendar());
 
-            try {
-                String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
-                if (weather.isValidCityFormat(cityNoSpace)) {
-                    ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
-                } else {
-                    ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+                    }
+                    weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
+                    weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
+                    sendChangeEventNotification(ev);
+                } catch (Exception ex) {
+                    errorOccurred();
                 }
+            } else {
+                //TODO location and visibility
+                ev = new Event(event.getDbId(), event.getTitle(), "", event.getStartDate(), event.getEndDate(), "");
+                ev.setType(event.getType());
+                ev.setLocation(event.getLocation());
+                ev.setVisibility(event.getVisibility());
                 ev.setEventOwner(user);
 
-// ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
-                eventManager.save(ev);
-                eventManager.linkToCalendar(ev, event.getCalendar());
-                cleaner.setTimer(ev.getId(), ev.getEndDate());
-                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
-                weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
-            } catch (Exception ex) {
-                errorOccurred();
+                try {
+                    String cityNoSpace = event.getLocation().replaceAll("\\s+", "_");
+                    if (weather.isValidCityFormat(cityNoSpace)) {
+                        ev.setWeather(weather.addWeather(cityNoSpace, event.getStartDate()).toString());
+                    } else {
+                        ev.setWeather(WeatherConditions.UNAVAILABLE.toString());
+                    }
+                    ev.setEventOwner(user);
 
+    // ev.setWeather(weather.addWeather(event.getLocation(), event.getStartDate()).toString());
+                    eventManager.save(ev);
+                    eventManager.linkToCalendar(ev, event.getCalendar());
+                    cleaner.setTimer(ev.getId(), ev.getEndDate());
+                    weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 3));
+                    weatherTimer.setTimer(ev.getId(), DateManipulator.subtractDays(ev.getDate(), 1));
+                } catch (Exception ex) {
+                    errorOccurred();
+
+                }
             }
         }
     }
