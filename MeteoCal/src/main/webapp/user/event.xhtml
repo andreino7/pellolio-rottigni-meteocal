@@ -19,20 +19,19 @@
                         <p:row>
                             <p:column colspan="2" >
                                 <h1 style="text-align: center">#{eventPageBean.event.title}</h1>
-                                <p:commandLink action="#{eventPageBean.remove()}" value="Remove" style="float:left;"/>
-                                <p:commandButton value="Decline" action="#{eventPageBean.declineInvite()}" rendered="#{(eventPageBean.inviteNotification and eventPageBean.notAnsweredYet and !eventPageBean.presentInMyCalendar)?true:false}" immediate="true" style="float: right" />
-                                <p:commandButton value="Join" action="#{eventPageBean.joinEvent()}" oncomplete="if (args &amp;&amp; !args.validationFailed)" rendered="#{(((eventPageBean.inviteNotification and eventPageBean.notAnsweredYet) or (eventPageBean.public)) and !eventPageBean.presentInMyCalendar)?true:false}" style="float: right"/> 
-
-                                <p:selectOneMenu id="CalendarForEvent"  value="#{eventPageBean.calendar}" required="true" converter="CalendarConverter" rendered="#{(((eventPageBean.inviteNotification and eventPageBean.notAnsweredYet) or (eventPageBean.public)) and !eventPageBean.presentInMyCalendar)?true:false}" style="position: relative; bottom: -2px; float: right">
+                                <p:commandLink action="#{eventPageBean.remove()}" value="Remove" rendered="#{eventPageBean.ownedEvent}" style="float:left;"/>
+                                <p:commandButton value="Decline" action="#{eventPageBean.declineInvite()}" rendered="#{(eventPageBean.declinable)?true:false}" immediate="true" style="float: right" />
+                                <p:commandButton value="Join" action="#{eventPageBean.joinEvent()}" oncomplete="if (args &amp;&amp; !args.validationFailed)" rendered="#{(eventPageBean.joinable)?true:false}" style="float: right"/> 
+                                <p:selectOneMenu id="CalendarForEvent"  value="#{eventPageBean.calendar}" required="true" converter="CalendarConverter" rendered="#{(eventPageBean.joinable)?true:false}" style="position: relative; bottom: -2px; float: right">
                                     <f:selectItem itemValue="" itemLabel="Select Calendar"  />
                                     <f:selectItems value="#{eventPageBean.calendars}" var="cal" itemValue="#{cal}"  itemLabel="#{cal.title}" />
                                 </p:selectOneMenu>
-                                <p:commandButton value="Postpone" style="float: right; bottom: -152px" action="#{eventPageBean.postpone()}" immediate="true" rendered="#{(eventPageBean.weatherNotification and eventPageBean.ownedEvent and eventPageBean.thereSuggestedDate)?true:false}"/>
-                                <h:outputText id="suggestedDate" value="#{eventPageBean.suggestedDate}" style="position: relative; float: right; bottom: -160px" rendered="#{(eventPageBean.weatherNotification and eventPageBean.ownedEvent and eventPageBean.thereSuggestedDate)?true:false}" >
+                                <p:commandButton value="Postpone" style="float: right; bottom: -152px" action="#{eventPageBean.postpone()}" immediate="true" rendered="#{(eventPageBean.postponable)?true:false}"/>
+                                <h:outputText id="suggestedDate" value="#{eventPageBean.suggestedDate}" style="position: relative; float: right; bottom: -160px" rendered="#{(eventPageBean.postponable)?true:false}" >
                                     <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
                                 </h:outputText>
-                                <h:outputLabel for="suggestedDate" value='Suggested Date: ' style="font-weight: bold; position: relative; float: right; bottom: -160px" rendered="#{(eventPageBean.weatherNotification and eventPageBean.ownedEvent and eventPageBean.thereSuggestedDate)?true:false}"/>
-                                <p:panel header="Forecasted Weather:" style="text-align:center; vertical-align: middle; width: 85px; float: right; bottom: -152px" rendered="#{(eventPageBean.weatherNotification and eventPageBean.ownedEvent and eventPageBean.thereSuggestedDate)?true:false}" >
+                                <h:outputLabel for="suggestedDate" value='Suggested Date: ' style="font-weight: bold; position: relative; float: right; bottom: -160px" rendered="#{(eventPageBean.postponable)?true:false}"/>
+                                <p:panel header="Forecasted Weather:" style="text-align:center; vertical-align: middle; width: 85px; float: right; bottom: -152px" rendered="#{(eventPageBean.postponable)?true:false}" >
                                     <h:panelGrid columns="1" style="text-align: center; width:50px; height: 120px; ">
                                         <p:graphicImage name="img/#{eventPageBean.suggestedWeather.condition}.png" width="30px" /> 
 

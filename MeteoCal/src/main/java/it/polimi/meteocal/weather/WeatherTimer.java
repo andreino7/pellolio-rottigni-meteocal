@@ -54,6 +54,7 @@ public class WeatherTimer {
     private Date lookForOkDay(List<String> allowed, Map<Date, WeatherConditions> forecast, Date date, Event e) {
         for (Date d : forecast.keySet()) {
             System.out.println("check: " + d);
+            System.out.println(forecast.get(d));
             if (d.after(date) && allowed.contains(forecast.get(d).toString())) {
                 System.out.println("find suggested"+d);
                 Calendar cal = Calendar.getInstance();

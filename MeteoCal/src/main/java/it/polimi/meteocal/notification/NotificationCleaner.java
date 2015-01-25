@@ -59,9 +59,13 @@ public class NotificationCleaner {
         }
     }
     
- /*   public void cleanAll() {
-        List<Event> events = eventManager.finByEndDate(Date endDate);
-    } */
+    public void cleanAll() {
+        List<Event> events = eventManager.findEndedEvent();
+        for (Event e: events) {
+            System.out.println(e);
+            notificationManager.removeAllForEvent(e);
+        }
+    }
 
     
 }

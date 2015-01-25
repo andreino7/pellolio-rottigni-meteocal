@@ -30,27 +30,25 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Named(value = "calendarPageBean")
 @ViewScoped
-public class CalendarPageBean implements Serializable{
-    
+public class CalendarPageBean implements Serializable {
+
     String param;
-    
+
     @EJB
     CalendarManager cm;
-    
-     @Inject
+
+    @Inject
     ScheduleBean sb;
-     
-     @EJB 
-             UserManager um;
-    
+
+    @EJB
+    UserManager um;
+
     Calendar calendar;
     List<String> visibilities = new LinkedList<>();
 
     public List<String> getVisibilities() {
         return visibilities;
     }
-
-    
 
     public Calendar getCalendar() {
         return calendar;
@@ -60,43 +58,42 @@ public class CalendarPageBean implements Serializable{
         this.calendar = calendar;
     }
 
-    
     /**
      * Creates a new instance of CalendarPageBean
      */
     public CalendarPageBean() {
     }
-    
+
     @PostConstruct
-    public void postConstruct(){
+    public void postConstruct() {
         initParam();
-        boolean number=true;
-        try{
+        boolean number = true;
+        try {
             Integer.parseInt(param);
-        }catch (Exception e){
-            number=false;
+        } catch (Exception e) {
+            number = false;
         }
-        if (!number){
-             calendar=new Calendar(-1);
-             calendar.setOwner(um.getLoggedUser());
-        }else{
-              calendar= cm.findCalendarForId(param);
+        if (!number) {
+            calendar = new Calendar(-1);
+            calendar.setOwner(um.getLoggedUser());
+        } else {
+            calendar = cm.findCalendarForId(param);
 
         }
-        
-visibilities = new LinkedList<>();
-visibilities.add(Visibility.Private);
+
+        visibilities = new LinkedList<>();
+        visibilities.add(Visibility.Private);
         visibilities.add(Visibility.Public);
-        if (calendar==null){
+        if (calendar == null) {
             redirect();
-        }else{
-            if (calendar.getOwner().getEmail()!=um.getLoggedUser().getEmail()){
+        } else {
+            if (calendar.getOwner().getEmail().equals(um.getLoggedUser().getEmail())) {
                 redirect();
             }
         }
-        
+
     }
-    
+
     private void initParam() {
 
         param = (String) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
@@ -106,39 +103,39 @@ visibilities.add(Visibility.Private);
             return;
 
         }
-        if ("true".equals(partial)){
+        if ("true".equals(partial)) {
 
         }
-       
+
     }
 
-    
-     private void redirect() {
+    private void redirect() {
         try {
             FacesContext.getCurrentInstance().getExternalContext().redirect("home.xhtml");
         } catch (IOException ex) {
             Logger.getLogger(EventPageBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     
-      public void save() {
-          if(calendar.getId()!=-1){
-        cm.update(calendar);
-          }else{
-              cm.save(calendar);
-          }
+
+    public void save() {
+        if (calendar.getId() != -1) {
+            cm.update(calendar);
+        } else {
+            cm.save(calendar);
+        }
         sb.postConstruct();
+        redirect();
     }
 
     public void reset() {
         calendar = cm.findCalendarForId(calendar.getId().toString());
     }
-    
+
     public void remove() {
-        if (calendar.getId()!=-1){
-        cm.remove(calendar);
-        sb.postConstruct();
-        redirect();
+        if (calendar.getId() != -1) {
+            cm.remove(calendar);
+            sb.postConstruct();
+            redirect();
         }
     }
 }

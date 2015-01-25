@@ -21,7 +21,7 @@ public class StartUpOperation {
     NotificationCleaner cleaner;
     
     @PostConstruct
-    public void print() {
-        System.out.println("andreaaaaaaaaaa");
+    public void cleanNotification() {
+        cleaner.cleanAll();
     }
 }
