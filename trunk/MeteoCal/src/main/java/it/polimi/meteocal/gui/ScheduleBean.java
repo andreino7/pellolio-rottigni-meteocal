@@ -301,12 +301,13 @@ public class ScheduleBean implements Serializable {
         cal.setTime(date);
         calAux.setTime(new Date());
         int hour = calAux.get(java.util.Calendar.HOUR_OF_DAY);
-        int minute = calAux.get(java.util.Calendar.MINUTE);
-        int second = calAux.get(java.util.Calendar.SECOND);
         cal.set(java.util.Calendar.HOUR_OF_DAY, hour);
-        cal.set(java.util.Calendar.MINUTE, minute);
-        cal.set(java.util.Calendar.SECOND, second);
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+        cal.set(java.util.Calendar.MILLISECOND, 1);
+        calAux.set(java.util.Calendar.MINUTE, 0);
         calAux.set(java.util.Calendar.SECOND, 0);
+        calAux.set(java.util.Calendar.MILLISECOND, 0);
         System.out.println(cal.getTime());
         event = new MeteoCalScheduleEvent(eventNotInDB, "", cal.getTime(), cal.getTime(), null, null);
         modifiableEvent = cal.getTime().after(calAux.getTime());
